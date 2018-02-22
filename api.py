@@ -481,9 +481,7 @@ print (obj.exploitpoc())
 
 ['[+]存在robots.txt爬虫文件...(敏感信息)\tpayload: http://www.dedecms.com/robots.txt', '[+]存在svn源码泄露漏洞...(高危)\tpayload: http://www.dedecms.com/.svn/entries']
 
-'''
-'''
-
+---------------------------------------------------------------------------------------------------------------------
 
 exploit(keyword="dede",url="http://www.dedecms.com").keyword2num()
 #return:
@@ -493,7 +491,7 @@ exploit(keyword="php",url="http://www.dedecms.com").keyword2num()
 # return:
 {'cms': [0, 2, 3, 4, 6, 8, 9, 10, 11, 35, 36, 42, 48, 49, 50, 52, 70, 72, 74, 75, 91, 99, 100, 101, 116, 118, 134, 188, 189, 220, 221, 222, 223, 226, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 239, 240, 241, 242, 243, 244, 253], 'system': [3, 20, 21, 22, 29, 30, 31, 32], 'industrial': [], 'information': [], 'hardware': [1]}
 
-
+---------------------------------------------------------------------------------------------------------------------
 
 example:
 
@@ -501,6 +499,7 @@ obj=exploit(keyword="dede",url="http://www.dedecms.com")
 obj.keyword2num()
 obj.exploitpoc()
 来进行搜索+利用 功能类似：http://tools.hexlt.org/search
+
 
 还可以
 obj=exploit(url="http://www.dedecms.com")
