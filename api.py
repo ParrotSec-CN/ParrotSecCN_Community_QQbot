@@ -11,7 +11,7 @@ class portscan:
                  in self.port]
         res = grequests.map(tasks, size=30)
         for i in res:
-            result = json.loads(i.text)
+            result = i.json()
             if result['status']:
                 self.result.append(result['port'])
         return self.result
