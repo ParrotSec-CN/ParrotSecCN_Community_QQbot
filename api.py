@@ -1,5 +1,4 @@
 import grequests
-import json
 # port should be [80,81,82,83] or [21,80,3306]
 class portscan:
     def __init__(self, address, port):
