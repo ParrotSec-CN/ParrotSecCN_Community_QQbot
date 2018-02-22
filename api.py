@@ -498,7 +498,7 @@ exploit(keyword="php",url="http://www.dedecms.com").keyword2num()
 example:
 
 obj=exploit(keyword="dede",url="http://www.dedecms.com")
-obj.key2num()
+obj.keyword2num()
 obj.exploitpoc()
 来进行搜索+利用 功能类似：http://tools.hexlt.org/search
 
