@@ -16,4 +16,4 @@ class portscan:
                 self.result.append(result['port'])
         return self.result
 
-print (portscan("localhost",[21,80,81,888,443,5000,8000]).scan())
+print (portscan("localhost",[21,80,81,443,5000,8000]).scan())
