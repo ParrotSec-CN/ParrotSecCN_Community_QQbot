@@ -472,11 +472,11 @@ class exploit:
         return self.result # exp利用成功以列表形式返回结果,否则返回空列表 []
 
 
+'''
 obj=exploit(url="http://www.dedecms.com")
 obj.information()
 print (obj.exploitpoc())
 
-'''
 执行结果：
 
 ['[+]存在robots.txt爬虫文件...(敏感信息)\tpayload: http://www.dedecms.com/robots.txt', '[+]存在svn源码泄露漏洞...(高危)\tpayload: http://www.dedecms.com/.svn/entries']
