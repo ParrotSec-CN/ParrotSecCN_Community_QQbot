@@ -4,6 +4,18 @@ from scan import *
 import api
 
 headers = {'Content-Type': 'application/json'}
+url='http://127.0.0.1:5700/send_group_msg'
+
+group=160958474
+
+def send(msg):
+    data={'message':msg,'group_id': group}
+    rsg=requests.post(url,headers=headers,data=json.dumps(data)).text
+    print (rsg)
+    return rsg
+
+
+
 
 #group=570235189 #N
 group=160958474
