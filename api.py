@@ -10,6 +10,7 @@ import requests
 
 class whatweb(object):
     def __init__(self, url):
+        self.result=""
         self.tasks = Queue()
         self.url = url.rstrip('/')
         fp = open('cmslist1.json')
@@ -27,7 +28,6 @@ class whatweb(object):
     def _clearQueue(self):
         while not self.tasks.empty():
             self.tasks.get()
-
     def _worker(self):
         data = self.tasks.get()
         test_url = self.url + data['url']
