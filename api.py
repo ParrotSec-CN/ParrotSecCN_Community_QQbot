@@ -10,7 +10,7 @@ import requests
 
 class whatweb(object):
     def __init__(self, url):
-        self.result=""
+        self.result='Identify failed'
         self.tasks = Queue()
         self.url = url.rstrip('/')
         fp = open('cmslist1.json')
@@ -28,6 +28,7 @@ class whatweb(object):
     def _clearQueue(self):
         while not self.tasks.empty():
             self.tasks.get()
+
     def _worker(self):
         data = self.tasks.get()
         test_url = self.url + data['url']
@@ -72,11 +73,10 @@ class whatweb(object):
         return {'total':self.total,'url':self.url,'result':self.result,'time':'%.3f s' % self.time}
 
 
-'''
 
-whatweb("http://www.dedecms.com").scan() # return {'total': 1424, 'url': 'http://www.dedecms.com', 'result': 'DedeCMS(织梦)', 'time': '5.364 s'}
 
-'''
+#whatweb("http://www.dedecms.com").scan() # return {'total': 1424, 'url': 'http://www.dedecms.com', 'result': 'DedeCMS(织梦)', 'time': '5.364 s'}
+
 
 
 # 端口扫描
@@ -104,13 +104,10 @@ portscan("localhost", [21, 80, 81, 443, 5000, 8000]).scan()  # return [80, 443, 
 
 # 漏洞检测
 class exploit:
-    def __init__(self,*keyword, url):
-        if keyword:
-            self.keyword=keyword
-        else:
-            self.keyword=""
-        self.url=url
-        self.poclist={}
+    def __init__(self, url="", keyword=""):
+        self.url = url
+        self.keyword = keyword
+        self.poclist = {}
         self.cmspocdict = ["泛微OA downfile.php 任意文件下载漏洞",
                            "泛微OA 数据库配置泄露",
                            "phpok res_action_control.php 任意文件下载(需要cookies文件)",
@@ -434,6 +431,7 @@ class exploit:
                               "mongodb 未授权漏洞",
                               "深信服 AD4.5版本下命令执行漏洞"]
         self.result = []
+        self.searchresult=[]
 
     def keyword2num(self):
         self.poclist["cms"] = [x for x in range(len(self.cmspocdict)) if self.keyword.lower() in self.cmspocdict[x].lower()]
@@ -441,7 +439,19 @@ class exploit:
         self.poclist["industrial"] = [x for x in range(len(self.industrialpocdict)) if self.keyword.lower() in self.industrialpocdict[x].lower()]
         self.poclist["information"] = [x for x in range(len(self.informationpocdict)) if self.keyword.lower() in self.informationpocdict[x].lower()]
         self.poclist["hardware"] = [x for x in range(len(self.hardwarepocdict)) if self.keyword.lower() in self.hardwarepocdict[x].lower()]
-        return self.poclist
+        for type in ['cms','system', 'industrial', 'information', 'hardware']:
+            if self.poclist[type]:
+                for i in self.poclist[type]:
+                    eval('self.searchresult.append(self.'+type+'pocdict['+str(i)+'])') # 暴力一下
+        return self.searchresult
+    def show(self):
+        self.out="\n".join(self.cmspocdict)
+        self.out+="\n".join(self.hardwarepocdict)
+        self.out+="\n".join(self.systempocdict)
+        self.out+="\n".join(self.informationpocdict)
+        self.out+="\n".join(self.industrialpocdict)
+        return self.out
+
 
 
 
@@ -473,9 +483,10 @@ class exploit:
 
 
 '''
-obj=exploit(url="http://www.dedecms.com")
-obj.information()
-print (obj.exploitpoc())
+#obj=exploit(url="http://www.dedecms.com")
+#obj.information()
+#print (obj.exploitpoc())
+
 
 执行结果：
 
@@ -507,15 +518,5 @@ obj.information() // obj.cms() //obj.system 等等
 obj.exploitpoc()
 来对一个范围利用 功能类似 http://tools.hexlt.org/cms // http://tools.hexlt.org/hardware 等等
 
-结构就是
-obj=exploit(url="http://www.dedecms.com")   | obj=exploit(keyword="dede",url="http://www.dedecms.com")
-obj.system()  //obj.information() 等另外几个 | obj.keyword2num()
-obj.exploitpoc()                            | obj.exploitpoc()  
-
-
-
 
 '''
-
-
-
