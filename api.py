@@ -507,6 +507,13 @@ obj.information() // obj.cms() //obj.system 等等
 obj.exploitpoc()
 来对一个范围利用 功能类似 http://tools.hexlt.org/cms // http://tools.hexlt.org/hardware 等等
 
+结构就是
+obj=exploit(url="http://www.dedecms.com")   | obj=exploit(keyword="dede",url="http://www.dedecms.com")
+obj.system()  //obj.information() 等另外几个 | obj.keyword2num()
+obj.exploitpoc()                            | obj.exploitpoc()  
+
+
+
 
 '''
 
