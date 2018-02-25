@@ -105,19 +105,19 @@ def my_msg():
                         return Response(json.dumps(msg),mimetype='application/json')
                     elif ('help' in message or '--help' in message or '功能' in message):
                         function = '''
-                        | 功能列表 |
-                        --------------------------------------------------------------
-                        找骂： 直接@ME
-                        端口扫描： @ME portscan host portlist(1,2,3/1-3) (端口数量小于300)
-                        cms识别：@ME whatcms host
-                        cms漏洞扫描： @ME cms host
-                        信息搜集: @ME information host
-                        系统漏洞扫描： @ME system host
-                        物联网设备安全检测: @ME hardware host
-                        工控安全检测: @ME industrial host
-                        搜索POC： @ME search keywords
-                        搜索POC并使用搜索到的POC进行安全检测： @ME search keywords host
-                        --------------------------------------------------------------
+| 功能列表 |
+--------------------------------------------------------------
+找骂： 直接@ME
+端口扫描： @ME portscan host portlist(1,2,3/1-3) (端口数量小于300)
+cms识别：@ME whatcms host
+cms漏洞扫描： @ME cms host
+信息搜集: @ME information host
+系统漏洞扫描： @ME system host
+物联网设备安全检测: @ME hardware host
+工控安全检测: @ME industrial host
+搜索POC： @ME search keywords
+搜索POC并使用搜索到的POC进行安全检测： @ME search keywords host
+--------------------------------------------------------------
                         '''
                         msg={'reply':function}
                         return Response(json.dumps(msg),mimetype='application/json')
