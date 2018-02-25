@@ -24,8 +24,11 @@ def port_scan(host,port):
     ports=create_list(port)
     rsp= (portscan((host),ports).scan())
     result=''
-    for i in rsp:
-        result+="[+] %s open\n"%(i)
+    if rsp:
+        for i in rsp:
+            result+="[+] %s open\n"%(i)
+    else:
+        result+="Those ports are closed"
     return result
 
 
