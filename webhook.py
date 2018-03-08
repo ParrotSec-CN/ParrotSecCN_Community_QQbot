@@ -59,6 +59,7 @@ def my_json():
         return Response(json.dumps(res),mimetype='application/json')
     else:
         pass
+    
 
 
 def new_topic(topic):
