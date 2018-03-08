@@ -200,14 +200,14 @@ cms漏洞扫描： @ME cms host
                     elif len(message.split(' ')) == 4:
                         data = message.split(' ')
                         search_key = data[2]
-                        url = data[3]
-                        result = exploit_api(keyword=search_key, search=1, url=url)
-                        if result:
-                            msg = {'reply': "\n".join(result)}
-                        else:
-                            msg = {'reply': "[-]未发现安全漏洞"}
-                        return Response(json.dumps(msg), mimetype='application/json')
-                    
+                        if "search" in message:
+                            url = data[3]
+                            result = exploit_api(keyword=search_key, search=1, url=url)
+                            if result:
+                                msg = {'reply': "\n".join(result)}
+                            else:
+                                msg = {'reply': "[-]未发现安全漏洞"}
+                            return Response(json.dumps(msg), mimetype='application/json')
                     else:
                         msg={'reply':"你说j2呢???"}
                         return Response(json.dumps(msg), mimetype='application/json')
