@@ -195,7 +195,8 @@ cms漏洞扫描： @ME cms host
                                 msg = {'reply': "未识别成功"}
                             return Response(json.dumps(msg), mimetype='application/json')
                         else:
-                            msg={'reply': '嘤嘤嘤？？？'}
+                            reply=['你说j2呢???','不会用别瞎艾特劳资','什么玩意?你丫能看看help不?','???mdzz']
+                            msg={'reply':choice(reply)}
                             return Response(json.dumps(msg), mimetype='application/json')
                     elif len(message.split(' ')) == 4:
                         data = message.split(' ')
@@ -208,9 +209,15 @@ cms漏洞扫描： @ME cms host
                             else:
                                 msg = {'reply': "[-]未发现安全漏洞"}
                             return Response(json.dumps(msg), mimetype='application/json')
+                        else:
+                            reply=['你说j2呢???','不会用别瞎艾特劳资','什么玩意?你丫能看看help不?','???mdzz']
+                            msg={'reply':choice(reply)}
+                            return Response(json.dumps(msg), mimetype='application/json')
                     else:
-                        msg={'reply':"你说j2呢???"}
+                        reply=['你说j2呢???','不会用别瞎艾特劳资','什么玩意?你丫能看看help不?','???mdzz']
+                        msg={'reply':choice(reply)}
                         return Response(json.dumps(msg), mimetype='application/json')
+
                 else:
                     pass
             except Exception as e:
