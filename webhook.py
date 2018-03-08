@@ -155,7 +155,10 @@ cms漏洞扫描： @ME cms host
                             port=data[3]
                             port=port.replace('&#44;', ',')
                             result=port_scan(host, port)
-                            msg={'reply': result}
+                            if result:
+                                msg = {'reply': result}
+                            else:
+                                msg = {'reply': "[-]端口未开放"}
                             return Response(json.dumps(msg),mimetype='application/json')
                         else:
                             msg={'reply': 'Error parameter! \nExample: portscan 1.1.1.1 80\n        portscan www.baidu.com 22-443'}
@@ -171,7 +174,10 @@ cms漏洞扫描： @ME cms host
                         target = data[2]
                         if keyword == 'search':
                             result = exploit_api(keyword=target, search=1)
-                            msg={'reply': "\n".join(result)}
+                            if result:
+                                msg={'reply': "\n".join(result)}
+                            else:
+                                msg = {'reply': "[-]未发现该POC"}
                             return Response(json.dumps(msg), mimetype='application/json')
                         elif keyword in ['cms', 'information', 'system', 'hardware', 'industrial']:
                             result=exploit_api(keyword=keyword, url=target)
