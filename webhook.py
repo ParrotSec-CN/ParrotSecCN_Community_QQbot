@@ -15,6 +15,24 @@ def send(msg):
     return rsg
 
 
+def forum_search(keywords):
+    search_url='https://parrotsec-china.org/search.json'
+    data={'q':''}
+    data['q']=keywords
+    rsp=requests.get(search_url,params=data)
+    a=json.loads(rsp.text)
+    topics=a['topics']
+    result='搜索结果: \n'
+    for i in topics:
+        title=i['title']
+        slug=i['slug']
+        id=i['id']
+        url='https://parrotsec-china.org/t/'+str(slug)+'/'+str(id)+'\n'
+        result+=title
+        result+='\n'
+        result+=url
+    return result
+
 
 
 #group=570235189 #N
@@ -108,6 +126,7 @@ def my_msg():
 | 功能列表 |
 --------------------------------------------------------------
 找骂： 直接@ME
+搜索论坛: @ME searchforum keyword
 端口扫描： @ME portscan host portlist(1,2,3/1-3) (端口数量小于300)
 cms识别：@ME whatcms host
 cms漏洞扫描： @ME cms host
@@ -121,6 +140,13 @@ cms漏洞扫描： @ME cms host
                         '''
                         msg={'reply':function}
                         return Response(json.dumps(msg),mimetype='application/json')
+                    elif 'searchforum' in message:
+                        data=message.split(' ')
+                        keyword=data[2]
+                        result=forum_search(keyword)
+                        msg={'reply':result}
+                        return Response(json.dumps(msg),mimetype='application/json')
+
                     elif 'portscan' in message:
                         data=message.split(' ')
                         if len(data) ==4:
@@ -173,6 +199,10 @@ cms漏洞扫描： @ME cms host
                             msg = {'reply': "\n".join(result)}
                         else:
                             msg = {'reply': "[-]未发现安全漏洞"}
+                        return Response(json.dumps(msg), mimetype='application/json')
+                    
+                    else:
+                        msg={'reply':"你说j2呢???"}
                         return Response(json.dumps(msg), mimetype='application/json')
                 else:
                     pass
