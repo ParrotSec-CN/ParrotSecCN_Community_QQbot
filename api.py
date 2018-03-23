@@ -8,69 +8,26 @@ import requests
 
 
 
-class whatweb(object):
-    def __init__(self, url):
-        self.result='Identify failed'
-        self.tasks = Queue()
-        self.url = url.rstrip('/')
-        fp = open('cmslist1.json')
-        webdata = json.load(fp, encoding='utf-8')
-        for i in webdata:
-            self.tasks.put(i)
-        fp.close()
-        self.total = len(webdata)
+class gwhatweb:
+    def __init__(self,url):
+        self.url = url
+        self.time=0
 
-    def _GetMd5(self, body):
-        m2 = hashlib.md5()
-        m2.update(body)
-        return m2.hexdigest()
-
-    def _clearQueue(self):
-        while not self.tasks.empty():
-            self.tasks.get()
-
-    def _worker(self):
-        data = self.tasks.get()
-        test_url = self.url + data['url']
-        try:
-            r = requests.get(test_url, timeout=10)
-            if (r.status_code != 200):
-                return
-            rtext = r.text
-            if rtext is None:
-                return
-        except:
-            rtext = ''
-
-        if data["re"]:
-            if (rtext.find(data['re']) != -1):
-                result = data['name']
-                self.result = result
-                self._clearQueue()
-                return True
-        else:
-            try:
-                md5 = self._GetMd5(rtext)
-            except:
-                md5 = ''
-            if (md5 == data['md5']):
-                result = data["name"]
-                self.result = result
-                self._clearQueue()
-                return True
-
-    def _boss(self):
-        while not self.tasks.empty():
-            self._worker()
-
-    def scan(self,):
-        maxsize = 1000
+    def whatweb(self):
+        url = 'http://whatweb.bugscaner.com/what/'
         start = time.clock()
-        allr = [gevent.spawn(self._boss) for i in range(maxsize)]
-        gevent.joinall(allr)
+        headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:56.0) Gecko/20100101 Firefox/56.0','Referer':'http://whatweb.bugscaner.com/look/'}
+        cocokies = {'saeut': 'CkMPHlqbqdBQWl9NBG+uAg=='}
+        new_url = self.url.strip('/').replace('http://','').replace('https://','')
+        data = {'url': new_url, 'hash': '0eca8914342fc63f5a2ef5246b7a3b14_7289fd8cf7f420f594ac165e475f1479'}
+        content = json.loads(requests.post(url,headers=headers,data=data).text)
         end = time.clock()
         self.time = end - start
-        return {'total':self.total,'url':self.url,'result':self.result,'time':'%.3f s' % self.time}
+        if content['cms']:
+            return {'total':1424,'url':self.url,'result':content['cms'],'time':'%.3f s' % self.time}
+        else:
+            return {'total':1424,'url':self.url,'result':'未知CMS','time':'%.3f s' % self.time}
+
 
 
 
