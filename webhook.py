@@ -15,24 +15,28 @@ def send(msg):
 	return rsg
 
 
-def forum_search(keywords):
-	search_url='https://parrotsec-china.org/search.json'
-	data={'q':''}
-	data['q']=keywords
-	rsp=requests.get(search_url,params=data)
-	a=json.loads(rsp.text)
-	topics=a['topics']
-	result='搜索结果: \n'
-	for i in topics:
-		title=i['title']
-		slug=i['slug']
-		id=i['id']
-		url='https://parrotsec-china.org/t/'+str(slug)+'/'+str(id)+'\n'
-		result+=title
-		result+='\n'
-		result+=url
-	return result
 
+def forum_search(keywords):
+        search_url='https://parrotsec-china.org/search.json'
+        data={'q':''}
+        data['q']=keywords
+        rsp=requests.get(search_url,params=data)
+        try:
+                a=json.loads(rsp.text)
+                topics=a['topics']
+                result='搜索结果: \n'
+                for i in topics:
+                        title=i['title']
+                        slug=i['slug']
+                        id=i['id']
+                        url='https://parrotsec-china.org/t/'+str(slug)+'/'+str(id)+'\n'
+                        result+=title
+                        result+='\n'
+                        result+=url
+                return result
+        except:
+                result='未找到搜索结果'
+                return result
 
 
 #group=570235189 #N
