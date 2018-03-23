@@ -121,8 +121,8 @@ def my_msg():
         groupId=content['group_id']
         if groupId == 160958474 or groupId == 570235189:
                 print(content)
-                event = content['post_type']
-                if event == 'message':
+                postType = content['post_type']
+                if postType == 'message':
                         try:
                                 message=content['message']
                                 if atMe in message:
@@ -235,6 +235,12 @@ cms漏洞扫描： @ME cms host
                                         pass
                         except Exception as e:
                                 print(e)
+                                
+                 if postType=='event':
+                        event=content['event']
+                        if event=='group_increase':
+                                msg='欢迎大佬入群!'
+                                return send(msg)
         res={'msg': 'ok'}
         return Response(json.dumps(res),mimetype='application/json')
 
