@@ -46,7 +46,7 @@ def exploit_api(url="",keyword="",search=0):
         if url:
             obj = exploit(url)
             if keyword == 'whatcms':
-                rsp = whatweb(url).scan()
+                rsp = gwhatweb(url).whatweb()
                 return rsp['result']
             elif keyword == 'cms':
                 obj.cms()
