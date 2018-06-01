@@ -76,7 +76,7 @@ def new_topic(topic):
     topicName = str(content['topic']['title'])
     topicSlug = str(content['topic']['slug'])
     topicId = str(content['topic']['id'])
-    userName = str(content['topic']['details']['created_by']['username'])
+    userName = str(content['topic']['created_by']['username'])
     url = 'https://parrotsec-china.org/t/' + topicSlug + '/' + topicId
     msg = '%s 发表了新主题: "%s" \n %s' % (userName,topicName,url)
     print (msg)
@@ -85,7 +85,7 @@ def new_topic(topic):
 
 def new_post(post):
     content = post
-    name = str(content['post']['name'])
+    name = str(content['post']['username'])
     title = str(content['post']['topic_title'])
     topicSlug = str(content['post']['topic_slug'])
     topicId = str(content['post']['topic_id'])
