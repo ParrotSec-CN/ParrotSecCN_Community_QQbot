@@ -21,7 +21,7 @@ def send(msg):
 
 
 def forum_search(keywords):
-    search_url = 'https://parrotsec-china.org/search.json'
+    search_url = 'https://parrotsec-cn.org/search.json'
     data = {'q':''}
     data['q'] = keywords
     rsp = requests.get(search_url,params = data)
@@ -33,7 +33,7 @@ def forum_search(keywords):
             title = i['title']
             slug = i['slug']
             id = i['id']
-            url = 'https://parrotsec-china.org/t/' + str(slug) + '/' + str(id) + '\n'
+            url = 'https://parrotsec-cn.org/t/' + str(slug) + '/' + str(id) + '\n'
             result += title
             result += '\n'
             result += url
@@ -64,7 +64,7 @@ def my_json():
     event = (headers['X-Discourse-Event'])
     instance = (headers['X-Discourse-Instance'])
     content = request.json
-    if instance == 'https://parrotsec-china.org':
+    if instance == 'https://parrotsec-cn.org':
         res = {'msg':handle(event,content)}
         return Response(json.dumps(res),mimetype = 'application/json')
     else:
@@ -77,7 +77,7 @@ def new_topic(topic):
     topicSlug = str(content['topic']['slug'])
     topicId = str(content['topic']['id'])
     userName = str(content['topic']['created_by']['username'])
-    url = 'https://parrotsec-china.org/t/' + topicSlug + '/' + topicId
+    url = 'https://parrotsec-cn.org/t/' + topicSlug + '/' + topicId
     msg = '%s 发表了新主题: "%s" \n %s' % (userName,topicName,url)
     print (msg)
     return send(msg)
@@ -90,7 +90,7 @@ def new_post(post):
     topicSlug = str(content['post']['topic_slug'])
     topicId = str(content['post']['topic_id'])
     postNumber = str(content['post']['post_number'])
-    url = 'https://parrotsec-china.org/t/' + topicSlug + '/' + topicId + '/' + postNumber
+    url = 'https://parrotsec-cn.org/t/' + topicSlug + '/' + topicId + '/' + postNumber
     if 'reply_to_user' in content['post']:
         postTo = str(content['post']['reply_to_user']['username'])
         msg = '%s 在主题 "%s" 中回复了 %s \n %s' % (name,title,postTo,url)
