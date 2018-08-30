@@ -64,6 +64,7 @@ def my_json():
     event = (headers['X-Discourse-Event'])
     instance = (headers['X-Discourse-Instance'])
     content = request.json
+    print (event,content,instance)
     if instance == 'https://parrotsec-cn.org':
         res = {'msg':handle(event,content)}
         return Response(json.dumps(res),mimetype = 'application/json')
@@ -79,7 +80,6 @@ def new_topic(topic):
     userName = str(content['topic']['created_by']['username'])
     url = 'https://parrotsec-cn.org/t/' + topicSlug + '/' + topicId
     msg = '%s 发表了新主题: "%s" \n %s' % (userName,topicName,url)
-    print (msg)
     return send(msg)
 
 
@@ -146,7 +146,7 @@ cms漏洞扫描： @ME cms host
 搜索POC： @ME search keywords
 搜索POC并使用搜索到的POC进行安全检测： @ME search keywords host
 --------------------------------------------------------------
-												'''
+                                                                                                '''
                         msg = {'reply':function}
                         return Response(json.dumps(msg),mimetype = 'application/json')
                     elif 'searchforum' in message:
@@ -175,7 +175,7 @@ cms漏洞扫描： @ME cms host
                             return Response(json.dumps(msg),mimetype = 'application/json')
                         else:
                             msg = {
-                                'reply':'Error parameter! \nExample: portscan 1.1.1.1 80\n		 portscan www.baidu.com 22-443'}
+                                'reply':'Error parameter! \nExample: portscan 1.1.1.1 80\n               portscan www.baidu.com 22-443'}
                             return Response(json.dumps(msg),mimetype = 'application/json')
                     elif 'showallpoc' in message:
                         result = api.exploit().show()
