@@ -20,17 +20,6 @@ def create_list(x):
         ports.append(int(x))
     return ports
 
-def port_scan(host,port):
-    ports=create_list(port)
-    rsp= (portscan((host),ports).scan())
-    result=''
-    if rsp:
-        for i in rsp:
-            result+="[+] %s open\n"%(i)
-    else:
-        result+="Those ports are closed"
-    return result
-
 
 def exploit_api(url="",keyword="",search=0):
     if search and url:
