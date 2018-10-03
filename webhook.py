@@ -136,7 +136,6 @@ def my_msg():
 --------------------------------------------------------------
 找骂： 直接@ME
 搜索论坛: @ME searchforum keyword
-端口扫描： @ME portscan host portlist(1,2,3/1-3) (端口数量小于300)
 cms识别：@ME whatcms host
 cms漏洞扫描： @ME cms host
 信息搜集: @ME information host
@@ -157,26 +156,6 @@ cms漏洞扫描： @ME cms host
                         msg = {'reply':result}
                         return Response(json.dumps(msg),mimetype = 'application/json')
 
-
-                    elif 'portscan' in message:
-                        data = message.split(' ')
-                        if len(data) == 4:
-                            host = data[2]
-                            if host == '127.0.0.1' or host == 'localhost':
-                                msg = {'reply':'cnm,滚'}
-                                return Response(json.dumps(msg),mimetype = 'application/json')
-                            port = data[3]
-                            port = port.replace('&#44;',',')
-                            result = port_scan(host,port)
-                            if result:
-                                msg = {'reply':result}
-                            else:
-                                msg = {'reply':"[-]端口未开放"}
-                            return Response(json.dumps(msg),mimetype = 'application/json')
-                        else:
-                            msg = {
-                                'reply':'Error parameter! \nExample: portscan 1.1.1.1 80\n               portscan www.baidu.com 22-443'}
-                            return Response(json.dumps(msg),mimetype = 'application/json')
                     elif 'showallpoc' in message:
                         result = api.exploit().show()
                         msg = {'reply':result}
