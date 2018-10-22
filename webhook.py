@@ -136,6 +136,7 @@ def my_msg():
 --------------------------------------------------------------
 找骂： 直接@ME
 搜索论坛: @ME searchforum keyword
+nmap扫描：@ME nmap host
 cms识别：@ME whatcms host
 cms漏洞扫描： @ME cms host
 信息搜集: @ME information host
@@ -189,6 +190,12 @@ cms漏洞扫描： @ME cms host
                                 msg = {'reply':result}
                             else:
                                 msg = {'reply':"未识别成功"}
+                            return Response(json.dumps(msg),mimetype = 'application/json')
+                        elif keyword == 'nmap':
+                            try:
+                                msg={'reply':requests.get("https://api.hackertarget.com/nmap/?q={target}".format(target=target.replace("http:","").replace("https:","").replace("/",""))).text}
+                            except:
+                                msg = {'reply':"输入有误"}
                             return Response(json.dumps(msg),mimetype = 'application/json')
                         else:
                             msg = {'reply':choice(fuckoff)}
