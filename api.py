@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 import grequests
 import gevent
 from gevent.queue import Queue
@@ -7,33 +8,46 @@ import time
 import requests
 
 
-
 class gwhatweb:
-    def __init__(self,url):
+    def __init__(self, url):
         self.url = url
-        self.time=0
+        self.time = 0
 
     def whatweb(self):
         url = 'http://whatweb.bugscaner.com/what/'
         start = time.clock()
-        headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:56.0) Gecko/20100101 Firefox/56.0','Referer':'http://whatweb.bugscaner.com/look/'}
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:56.0) Gecko/20100101 Firefox/56.0',
+            'Referer': 'http://whatweb.bugscaner.com/look/'}
         cocokies = {'saeut': 'CkMPHlqbqdBQWl9NBG+uAg=='}
-        new_url = self.url.strip('/').replace('http://','').replace('https://','')
-        data = {'url': new_url, 'hash': '0eca8914342fc63f5a2ef5246b7a3b14_7289fd8cf7f420f594ac165e475f1479'}
-        content = json.loads(requests.post(url,headers=headers,data=data).text)
+        new_url = self.url.strip(
+            '/').replace('http://', '').replace('https://', '')
+        data = {
+            'url': new_url,
+            'hash': '0eca8914342fc63f5a2ef5246b7a3b14_7289fd8cf7f420f594ac165e475f1479'}
+        content = json.loads(
+            requests.post(
+                url,
+                headers=headers,
+                data=data).text)
         end = time.clock()
         self.time = end - start
         if content['cms']:
-            return {'total':1424,'url':self.url,'result':content['cms'],'time':'%.3f s' % self.time}
+            return {
+                'total': 1424,
+                'url': self.url,
+                'result': content['cms'],
+                'time': '%.3f s' % self.time}
         else:
-            return {'total':1424,'url':self.url,'result':'未知CMS','time':'%.3f s' % self.time}
+            return {
+                'total': 1424,
+                'url': self.url,
+                'result': '未知CMS',
+                'time': '%.3f s' % self.time}
 
 
-
-
-
-#whatweb("http://www.dedecms.com").scan() # return {'total': 1424, 'url': 'http://www.dedecms.com', 'result': 'DedeCMS(织梦)', 'time': '5.364 s'}
-
+# whatweb("http://www.dedecms.com").scan() # return {'total': 1424, 'url':
+# 'http://www.dedecms.com', 'result': 'DedeCMS(织梦)', 'time': '5.364 s'}
 
 
 # 端口扫描
@@ -42,16 +56,22 @@ class portscan:
         # port should be [80,81,82,83] or [21,80,3306]
         self.address = address
         self.port = port
-        self.result=[]
+        self.result = []
+
     def scan(self):
-        tasks = [grequests.post("http://tools.hexlt.org/api/portscan", json={"ip": self.address, "port": port}) for port
-                 in self.port]
+        tasks = [
+            grequests.post(
+                "http://tools.hexlt.org/api/portscan",
+                json={
+                    "ip": self.address,
+                    "port": port}) for port in self.port]
         res = grequests.map(tasks, size=30)
         for i in res:
             result = i.json()
             if result['status']:
                 self.result.append(result['port'])
         return self.result
+
 
 '''
 
@@ -60,6 +80,8 @@ portscan("localhost", [21, 80, 81, 443, 5000, 8000]).scan()  # return [80, 443, 
 '''
 
 # 漏洞检测
+
+
 class exploit:
     def __init__(self, url="", keyword=""):
         self.url = url
@@ -390,55 +412,90 @@ class exploit:
                               "mongodb 未授权漏洞",
                               "深信服 AD4.5版本下命令执行漏洞"]
         self.result = []
-        self.searchresult=[]
+        self.searchresult = []
 
     def keyword2num(self):
-        self.poclist["cms"] = [x for x in range(len(self.cmspocdict)) if self.keyword.lower() in self.cmspocdict[x].lower()]
-        self.poclist["system"] = [x for x in range(len(self.systempocdict)) if self.keyword.lower() in self.systempocdict[x].lower()]
-        self.poclist["industrial"] = [x for x in range(len(self.industrialpocdict)) if self.keyword.lower() in self.industrialpocdict[x].lower()]
-        self.poclist["information"] = [x for x in range(len(self.informationpocdict)) if self.keyword.lower() in self.informationpocdict[x].lower()]
-        self.poclist["hardware"] = [x for x in range(len(self.hardwarepocdict)) if self.keyword.lower() in self.hardwarepocdict[x].lower()]
-        for type in ['cms','system', 'industrial', 'information', 'hardware']:
+        self.poclist["cms"] = [x for x in range(
+            len(self.cmspocdict)) if self.keyword.lower() in self.cmspocdict[x].lower()]
+        self.poclist["system"] = [x for x in range(len(
+            self.systempocdict)) if self.keyword.lower() in self.systempocdict[x].lower()]
+        self.poclist["industrial"] = [x for x in range(len(
+            self.industrialpocdict)) if self.keyword.lower() in self.industrialpocdict[x].lower()]
+        self.poclist["information"] = [x for x in range(len(
+            self.informationpocdict)) if self.keyword.lower() in self.informationpocdict[x].lower()]
+        self.poclist["hardware"] = [x for x in range(len(
+            self.hardwarepocdict)) if self.keyword.lower() in self.hardwarepocdict[x].lower()]
+        for type in ['cms', 'system', 'industrial', 'information', 'hardware']:
             if self.poclist[type]:
                 for i in self.poclist[type]:
-                    eval('self.searchresult.append(self.'+type+'pocdict['+str(i)+'])') # 暴力一下
+                    eval('self.searchresult.append(self.' +
+                         type + 'pocdict[' + str(i) + '])')  # 暴力一下
         return self.searchresult
-    def show(self):
-        self.out="\n".join(self.cmspocdict)
-        self.out+="\n".join(self.hardwarepocdict)
-        self.out+="\n".join(self.systempocdict)
-        self.out+="\n".join(self.informationpocdict)
-        self.out+="\n".join(self.industrialpocdict)
+
+    def show(self, info):
+        if info == "cms":
+            self.out = "\n".join(self.cmspocdict)
+        elif info == "hardware":
+            self.out = "\n".join(self.hardwarepocdict)
+        elif info == "industrial":
+            self.out = "\n".join(self.industrialpocdict)
+        elif info == "system":
+            self.out = "\n".join(self.systempocdict)
+        elif info == "information":
+            self.out = "\n".join(self.informationpocdict)
+        else:
+            pass
         return self.out
 
-
-
-
     def information(self):
-        self.poclist = {'cms': [], 'system': [], 'industrial': [], 'information': range(len(self.informationpocdict)), 'hardware': []}
+        self.poclist = {'cms': [],
+                        'system': [],
+                        'industrial': [],
+                        'information': range(len(self.informationpocdict)),
+                        'hardware': []}
 
     def cms(self):
-        self.poclist = {'cms': range(len(self.informationpocdict)), 'system': [], 'industrial': [], 'information': [], 'hardware': []}
+        self.poclist = {'cms': range(len(self.informationpocdict)), 'system': [
+        ], 'industrial': [], 'information': [], 'hardware': []}
 
     def system(self):
-        self.poclist = {'cms': [], 'system': range(len(self.systempocdict)), 'industrial': [], 'information': [], 'hardware': []}
+        self.poclist = {'cms': [],
+                        'system': range(len(self.systempocdict)),
+                        'industrial': [],
+                        'information': [],
+                        'hardware': []}
 
     def industrial(self):
-        self.poclist = {'cms': [], 'system': [], 'industrial': range(len(self.industrialpocdict)), 'information': [], 'hardware': []}
+        self.poclist = {'cms': [], 'system': [], 'industrial': range(
+            len(self.industrialpocdict)), 'information': [], 'hardware': []}
 
     def hardware(self):
-        self.poclist = {'cms': [], 'system': [], 'industrial': [], 'information': [], 'hardware': range(len(self.hardwarepocdict))}
+        self.poclist = {'cms': [],
+                        'system': [],
+                        'industrial': [],
+                        'information': [],
+                        'hardware': range(len(self.hardwarepocdict))}
 
     def exploitpoc(self):
-        for poctype in ['cms','system', 'industrial', 'information', 'hardware']:
-            tasks = [grequests.post("http://tools.hexlt.org/api/"+poctype, json={"url":self.url,"type":type}) for type
-                    in self.poclist[poctype]]
+        for poctype in [
+            'cms',
+            'system',
+            'industrial',
+            'information',
+                'hardware']:
+            tasks = [
+                grequests.post(
+                    "http://tools.hexlt.org/api/" +
+                    poctype,
+                    json={
+                        "url": self.url,
+                        "type": type}) for type in self.poclist[poctype]]
             res = grequests.map(tasks, size=30)
             for i in res:
                 result = i.json()
                 if result['status']:
                     self.result.append(result['pocresult'])
-        return self.result # exp利用成功以列表形式返回结果,否则返回空列表 []
+        return self.result  # exp利用成功以列表形式返回结果,否则返回空列表 []
 
 
 '''
@@ -464,7 +521,6 @@ exploit(keyword="php",url="http://www.dedecms.com").keyword2num()
 ---------------------------------------------------------------------------------------------------------------------
 
 example:
-
 obj=exploit(keyword="dede",url="http://www.dedecms.com")
 obj.keyword2num()
 obj.exploitpoc()
@@ -476,6 +532,4 @@ obj=exploit(url="http://www.dedecms.com")
 obj.information() // obj.cms() //obj.system 等等
 obj.exploitpoc()
 来对一个范围利用 功能类似 http://tools.hexlt.org/cms // http://tools.hexlt.org/hardware 等等
-
-
 '''
