@@ -47,7 +47,7 @@ def recall_msg(u_msg_id):
 
 # set group ban
 def group_ban(group_id, qq_num):
-    data = {'group_id': group_id, "user_id": qq_num, "duration": 60}
+    data = {'group_id': group_id, "user_id": qq_num, "duration": 600}
     rsg = requests.post(ban_url, headers=headers, data=json.dumps(data)).text
     return rsg
 
@@ -223,14 +223,13 @@ def my_msg():
                 message = content['message'].encode('utf-8')
                 if any(['ssr' in "".join((message.lower().split())),
                         'vpn' in "".join((message.lower().split())),
-                        '暗网' in "".join((message.split())),
-                        '翻墙' in "".join((message.split())),
+                        '翻' in "".join((message.split())) and '墙' in "".join((message.split())),
+                        '暗' in "".join((message.split())) and '网' in "".join((message.split())),
                         '黑产' in "".join((message.split())),
-                        '反共' in "".join((message.split())),
                         '习近平' in "".join((message.split())),
                         'gfw' in "".join((message.lower().split()))]):
                     msg = {
-                        'reply': ', big brother is watching you! 禁言1分钟以示惩戒！！！'}
+                        'reply': ', big brother is watching you! 禁言10分钟以示惩戒！！！'}
                     # msg_id = content['message_id']
                     group_ban(groupId, userId)
                     return Response(
@@ -252,6 +251,19 @@ def my_msg():
                             '，干啥小崽子!!!',
                             '，哪凉快哪待着!!!']
                         msg = {'reply': choice(reply)}
+                        return Response(
+                            json.dumps(msg), mimetype='application/json')
+
+                    elif any(['傻' in "".join((message.split())) and '逼' in "".join((message.split())),
+                              '傻' in "".join((message.split())) and '屌' in "".join((message.split())),
+                              '傻' in "".join((message.split())) and '狗' in "".join((message.split())),
+                              '屎' in "".join((message.split())) and '狗' in "".join((message.split())),
+                              '垃' in "".join((message.split())) and '圾' in "".join((message.split())),
+                              '傻' in "".join((message.split())) and '吊' in "".join((message.split())),
+                              '笔' in "".join((message.split())) and '煞' in "".join((message.split()))]):
+                        msg = {
+                            'reply': ', 骂我? 小伙计你内心很浮躁嘛! 送你个禁言10分钟，不用谢！'}
+                        group_ban(groupId, userId)
                         return Response(
                             json.dumps(msg), mimetype='application/json')
 
@@ -387,7 +399,9 @@ CMS漏洞扫描： @ME cms host
                             return Response(
                                 json.dumps(msg), mimetype='application/json')
                         else:
-                            pass
+                            msg = {'reply': choice(fuckoff)}
+                            return Response(
+                                json.dumps(msg), mimetype='application/json')
 
                     elif len(message.split(' ')) == 4:
                         at_user, keyword, search_key, num_txt = message.split(
