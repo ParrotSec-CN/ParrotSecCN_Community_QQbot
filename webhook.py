@@ -46,8 +46,8 @@ def recall_msg(u_msg_id):
 
 
 # set group ban
-def group_ban(group_id, qq_num):
-    data = {'group_id': group_id, "user_id": qq_num, "duration": 600}
+def group_ban(group_id, qq_num, miu_num):
+    data = {'group_id': group_id, "user_id": qq_num, "duration": miu_num}
     rsg = requests.post(ban_url, headers=headers, data=json.dumps(data)).text
     return rsg
 
@@ -165,7 +165,7 @@ def handle(event, myjson):
 
 def forum_search(keywords):
     search_url = 'https://parrotsec-cn.org/search.json'
-    data = {'q': ''}
+    data = dict(q="")
     data['q'] = keywords
     rsp = requests.get(search_url, params=data)
     try:
@@ -223,21 +223,24 @@ def my_msg():
                 message = content['message'].encode('utf-8')
                 if any(['ssr' in "".join((message.lower().split())),
                         'vpn' in "".join((message.lower().split())),
-                        '翻' in "".join((message.split())) and '墙' in "".join((message.split())),
-                        '暗' in "".join((message.split())) and '网' in "".join((message.split())),
+                        'porn' in "".join((message.lower().split())),
+                        '翻' in message and '墙' in message,
+                        '暗' in message and '网' in message,
                         '黑产' in "".join((message.split())),
                         '习近平' in "".join((message.split())),
+                        '酸酸乳' in "".join((message.split())),
+                        'virtual' in "".join((message.lower().split())) and 'private' in "".join((message.lower().split())) and 'network' in "".join((message.lower().split())),
                         'gfw' in "".join((message.lower().split()))]):
                     msg = {
-                        'reply': ', big brother is watching you! 禁言10分钟以示惩戒！！！'}
+                        'reply': ', big brother is watching you! 禁言半小时以示惩戒！！！'}
                     # msg_id = content['message_id']
-                    group_ban(groupId, userId)
+                    group_ban(groupId, userId, miu_num=1800)
                     return Response(
                         json.dumps(msg), mimetype='application/json')
 
                 # 直接@我
                 elif atMe in message:
-                    if message == atMe:
+                    if "".join((message.split())) == atMe:
                         reply = [
                             '，艾特我干嘛? 有事儿说事儿，没事儿滚去日站!!!',
                             '，别瞎鸡儿艾特我!!!',
@@ -260,10 +263,14 @@ def my_msg():
                               '屎' in "".join((message.split())) and '狗' in "".join((message.split())),
                               '垃' in "".join((message.split())) and '圾' in "".join((message.split())),
                               '傻' in "".join((message.split())) and '吊' in "".join((message.split())),
+                              '智' in "".join((message.split())) and '障' in "".join((message.split())),
+                              '爸' in "".join((message.split())) and '爸' in "".join((message.split())),
+                              '子' in "".join((message.split())) and '儿' in "".join((message.split())),
+                              'sb' in "".join((message.lower().split())),
                               '笔' in "".join((message.split())) and '煞' in "".join((message.split()))]):
                         msg = {
-                            'reply': ', 骂我? 小伙计你内心很浮躁嘛! 送你个禁言10分钟，不用谢！'}
-                        group_ban(groupId, userId)
+                            'reply': ', 骂我? 小伙计你内心很浮躁嘛! 送你个禁言1小时，不用谢！'}
+                        group_ban(groupId, userId, miu_num=3600)
                         return Response(
                             json.dumps(msg), mimetype='application/json')
 
@@ -328,16 +335,14 @@ CMS漏洞扫描： @ME cms host
                     # 检索SSR服务器
                     elif any(['allpy' in message,
                               'allpython' in message]):
-                        ssr_list = ssr_work("ss_ssr.txt") + ssr_work("ss.txt")
+                        ssr_list = ssr_work("./spider/ss_ssr.txt") + ssr_work("../spider/ss.txt") 
                         ssr_info = ("\n".join(ssr_list))
                         send_msg(ssr_info, 'user_id', userId)
 
                     elif any(['py' in message,
                               'python' in message]):
-                        ssr_list = ssr_work("ss_ssr.txt")
-                        message = "free_ss: https://free-ss.site/" + "\n" + "free_ssr: https://doub.io/sszhfx/" + \
-                            "\n" + "free_ssr: http://ss.pythonic.life/" + "\n" + choice(ssr_list)
-                        send_msg(message, 'user_id', userId)
+                        ssr_list = ssr_work("./spider/ss_ssr.txt")
+                        send_msg(choice(ssr_list), 'user_id', userId)
 
                     elif "天气" in message:
                         at_user, keyword = message.split(' ')

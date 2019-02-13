@@ -94,7 +94,7 @@ def get_all_ssr_link():
 
 
 def write_file(list_ss):
-    with open('/home/ubuntu/qq_group_bot/test_bot/ss_ssr.txt', 'a+') as f:
+    with open('/.../ss_ssr.txt', 'w+') as f:
         for i in list_ss:
             print("正在写入SSR链接: %s" % i)
             f.writelines(i + '\n')

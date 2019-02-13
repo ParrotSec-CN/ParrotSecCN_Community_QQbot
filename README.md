@@ -1,6 +1,10 @@
 ## ParrotSecCN_Community_QQbot
 ## 食用方法
 
+## 安装docker
+**需root下**
+`sudo wget -qO- https://get.docker.com/ | sh`
+
 ## 服务器 和 coolq
 *相关外部访问的端口记得在服务器的控制面板开启*
 
@@ -14,7 +18,7 @@ sudo docker run -ti --rm --name cqhttp-test -v $(pwd)/coolq:/home/user/coolq -e 
 # 参数说明
 -v $(pwd)/coolq:/home/user/coolq \  # 将宿主目录挂载到容器内用于持久化酷Q的程序文件
 
--p 9000:9000 \  # noVNC端口(这端口意思类似只开放一个端口，如果改为8999:9001，估计是占用8999，9000，9001都可以访问登陆酷Q的控制面板了吧)，用于从浏览器登陆服务器，控制酷Q(当然你也可以搞为其他端口，类似7788:7788，这就你从服务器登陆控制面板就是 服务器ip:7788)
+-p 9000:9000 \  # noVNC端口(这端口意思类似只开放一个端口，官方指定9000端口)，用于从浏览器登陆服务器，控制酷Q)
 
 -p 5700:5700 \  # HTTP API 插件开放的端口(用于监听QQ群消息，端口都可以随意设置)
 
@@ -28,7 +32,7 @@ sudo docker run -ti --rm --name cqhttp-test -v $(pwd)/coolq:/home/user/coolq -e 
 *相关注意事项*
 - 嘤嘤机器人的flask后台，用于监听qq数据的api接口是http://127.0.0.1:8080/msg
 
-- 详见代码的163行
+- 详见代码的210行
 
 - 所以你启动docker的时候CQHTTP_POST_URL要改为下面的内容(或者docker启动后再修改coolq/app/io.github.richardchien.coolqhttpapi/config里面的ini文件或json文件)
 
@@ -84,7 +88,7 @@ post_message_format=string
 
 *比如我docker配置的CQHTTP_POST_URL端口是8080，那么我flask的启动端口就是8080*
 
-`http = WSGIServer(('', 8080), app)  # 449行`
+`http = WSGIServer(('', 8080), app)  # 470行`
 
 ## 启动机器人
 **安装依赖**
@@ -100,21 +104,22 @@ post_message_format=string
 
 *uwsgi --plugins python27 --http-socket :flask用的端口 -M -w 文件名:app*
 
-*终端直接运行下面命令*
+*屏蔽8，9，19，470，471行，终端运行下面命令*
 `uwsgi --plugins python27 --http-socket :8080 -M -w webhook:app`
 
 ## SSR爬虫（容易暴露服务器ip，换成ip池请求数据是下一步优化的时候再做的）
-*爬虫代码均在非国内网络环境下运行*
+*爬虫代码均在非国内网络环境下运行，运行请修改python路径，log路径，以及爬虫文件ssr链接写入的路径*
 
 **有点懒，所以选择放在了一个目录**
 
 - 目录说明
-- - spider.cron  # 爬虫的crontab定时爬取(20分钟爬一次free-ss, 凌晨2:30爬逗逼和ss.pythonic)
-- - doub.spider.py  # 逗逼根据地的ssr服务器爬虫
+- - crontab spider.cron  # 启动定时任务
+- - spider.cron  # 爬虫的crontab定时爬取(20分钟爬一次free-ss, 凌晨2:35爬ss.pythonic)
+- - doub.spider.py  # 逗逼根据地的ssr服务器爬虫(已凉)
 - - ss_pythonic_spider.py  # ss.pythonic.life的服务器爬虫
-- - free-ss_spider.py  # free-ss_spider的服务器爬虫
+- - free-ss_spider.py  # free-ss_spider的服务器爬虫(不支持日本IP，用则必ban)
 - - ss_ssr.txt  # 存放ssr服务器链接的txt文件
-- - ss.txt  # 存放free-ss链接的txt文件
+- - ss.txt  # 存放free-ss服务器链接的txt文件
 
 ## 相关搜索查询
 ```
@@ -153,8 +158,8 @@ Demo: @机器人 Beijing天气
  · 使用方法： @机器人 食用
 ```
 
-*子网工控设备端口扫描，需要用到Censys的UID和SECRET*
+**子网工控设备端口扫描，需要用到Censys的UID和SECRET**
 *58行，59行*
 
-*天气查询，需要用到openweathermap.org的appid
+**天气查询，需要用到openweathermap.org的appid**
 *104行*
