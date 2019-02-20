@@ -1,6 +1,7 @@
 ## Flask_Python2
 flask==1.0.2
 gevent==1.3.7
+uwsgi==2.0.18
 
 ## Spider_Python2
 lxml==4.2.4

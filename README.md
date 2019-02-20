@@ -1,14 +1,12 @@
 ## ParrotSecCN_Community_QQbot
-## 食用方法
 
 ## 安装docker
-**需root下**
 `sudo wget -qO- https://get.docker.com/ | sh`
 
 ## 服务器 和 coolq
 *相关外部访问的端口记得在服务器的控制面板开启*
 
-[酷Q Air for docker](https://cqhttp.cc/docs/4.5/#/Docker)
+[酷Q Air for docker](https://cqhttp.cc/docs/4.7/#/Docker)
 
 ```
 # docker部署coolq，所有操作都要sudo权限
@@ -18,9 +16,9 @@ sudo docker run -ti --rm --name cqhttp-test -v $(pwd)/coolq:/home/user/coolq -e 
 # 参数说明
 -v $(pwd)/coolq:/home/user/coolq \  # 将宿主目录挂载到容器内用于持久化酷Q的程序文件
 
--p 9000:9000 \  # noVNC端口(这端口意思类似只开放一个端口，官方指定9000端口)，用于从浏览器登陆服务器，控制酷Q)
+-p 9000:9000 \  # noVNC端口(这端口意思类似只开放一个端口，官方指定9000端口)，用于从浏览器登陆服务器，控制酷Q
 
--p 5700:5700 \  # HTTP API 插件开放的端口(用于监听QQ群消息，端口都可以随意设置)
+-p 5700:5700 \  # HTTP API 插件开放的端口(用于监听QQ群消息，HTTP API指定端口)
 
 -e COOLQ_ACCOUNT=212521306 \ # 要登录的 QQ 账号，可选但建议填
 
@@ -81,9 +79,11 @@ post_message_format=string
 
 ## 配置flask
 **填好你的机器人QQ号**
+
 `atMe = '[CQ:at,qq=xxxxxx]'  # 29行`
 
 **配置flask端口，端口是你docker启动后CQHTTP_POST_URL的端口**
+
 *CQHTTP_POST_URL配置的端口不是占用此端口，而是数据请求此端口*
 
 *比如我docker配置的CQHTTP_POST_URL端口是8080，那么我flask的启动端口就是8080*
@@ -100,11 +100,10 @@ post_message_format=string
 `python webhook.py`
 
 ### uwsgi启动flask
-*Demo*
-
 *uwsgi --plugins python27 --http-socket :flask用的端口 -M -w 文件名:app*
 
 *屏蔽8，9，19，470，471行，终端运行下面命令*
+
 `uwsgi --plugins python27 --http-socket :8080 -M -w webhook:app`
 
 ## SSR爬虫（容易暴露服务器ip，换成ip池请求数据是下一步优化的时候再做的）
@@ -158,8 +157,14 @@ Demo: @机器人 Beijing天气
  · 使用方法： @机器人 食用
 ```
 
-**子网工控设备端口扫描，需要用到Censys的UID和SECRET**
+> 外部导入相关密码，验证Key (17行)
+
+`from Secrets import SECRETS`
+
+**子网工控设备端口扫描，需要用到[Censys](https://censys.io/account)的UID和SECRET**
+
 *58行，59行*
 
-**天气查询，需要用到openweathermap.org的appid**
+**天气查询，需要用到[openweathermap.org](https://openweathermap.org/)的appid**
+
 *104行*
