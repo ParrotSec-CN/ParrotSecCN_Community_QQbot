@@ -92,6 +92,7 @@ post_message_format=string
 
 ## 启动机器人
 **安装依赖**
+
 `pip install -r requirements.txt`
 
 ### gevent启动flask
@@ -116,7 +117,8 @@ post_message_format=string
 - - spider.cron  # 爬虫的crontab定时爬取(20分钟爬一次free-ss, 凌晨2:35爬ss.pythonic)
 - - doub.spider.py  # 逗逼根据地的ssr服务器爬虫(已凉)
 - - ss_pythonic_spider.py  # ss.pythonic.life的服务器爬虫
-- - free-ss_spider.py  # free-ss_spider的服务器爬虫(不支持日本IP，用则必ban)
+- - share-shadowsocks.py  # share-shadowsocks的服务器爬虫
+- - free-ss_spider.py  # free-ss_spider的服务器爬虫(不支持日本IP，最近加了些验证，还没破解)
 - - ss_ssr.txt  # 存放ssr服务器链接的txt文件
 - - ss.txt  # 存放free-ss服务器链接的txt文件
 
