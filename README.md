@@ -37,6 +37,7 @@ sudo docker run -ti --rm --name cqhttp-test -v $(pwd)/coolq:/home/user/coolq -e 
 - CQHTTP_POST_URL=http://127.0.0.1:8080/msg
 
 *我的相关config配置文件*
+
 `你的QQ号.ini`
 ```
 [你的QQ号]
