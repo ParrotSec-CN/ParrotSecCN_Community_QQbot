@@ -454,7 +454,7 @@ CMS漏洞扫描： @ME cms host
         elif content['post_type'] == 'notice':
             if content['notice_type'] == 'group_increase':
                 msg = "欢迎大佬['" + str(content['user_id']) + \
-                    "']入群, 请爆照，爆三围, 否则会享受群内特殊Py照顾!"
+                    "']入群, 请牢记渗透千万条, 匿名第一条; 搞事不规范, 牢饭吃到早...!!!"
                 return send_msg(msg, 'group_id', groupId)
 
     res = {'msg': 'ok'}
