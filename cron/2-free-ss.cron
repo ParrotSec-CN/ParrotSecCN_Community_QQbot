@@ -1,1 +1,1 @@
-35 02 * * * /.../bin/python /.../free-ss_spider.py >> /.../logs.log 2>&1
+*/20 * * * * /.../bin/python /.../free-ss_spider.py >> /.../logs.log 2>&1

@@ -16,7 +16,7 @@ sudo docker run -ti --rm --name cqhttp-test -v $(pwd)/coolq:/home/user/coolq -e 
 # 参数说明
 -v $(pwd)/coolq:/home/user/coolq \  # 将宿主目录挂载到容器内用于持久化酷Q的程序文件
 
--p 9000:9000 \  # noVNC端口(这端口意思类似只开放一个端口，官方指定9000端口)，用于从浏览器登陆服务器，控制酷Q
+-p 9000:9000 \  # noVNC端口(这端口意思类似端口转发，docker指定9000端口，如果要更改的话，可以改为7878:9000，意思是把docker的9000端口转发到服务器的7878端口)，用于从浏览器登陆服务器，控制酷Q
 
 -p 5700:5700 \  # HTTP API 插件开放的端口(用于监听QQ群消息，HTTP API指定端口)
 
@@ -107,21 +107,6 @@ post_message_format=string
 
 `uwsgi --plugins python27 --http-socket :8080 -M -w webhook:app`
 
-## SSR爬虫（容易暴露服务器ip，换成ip池请求数据是下一步优化的时候再做的）
-*爬虫代码均在非国内网络环境下运行，运行请修改python路径，log路径，以及爬虫文件ssr链接写入的路径*
-
-**有点懒，所以选择放在了一个目录**
-
-- 目录说明
-- - crontab spider.cron  # 启动定时任务
-- - spider.cron  # 爬虫的crontab定时爬取(20分钟爬一次free-ss, 凌晨2:35爬ss.pythonic)
-- - doub.spider.py  # 逗逼根据地的ssr服务器爬虫(已凉)
-- - ss_pythonic_spider.py  # ss.pythonic.life的服务器爬虫
-- - share-shadowsocks.py  # share-shadowsocks的服务器爬虫
-- - free-ss_spider.py  # free-ss_spider的服务器爬虫(不支持日本IP，最近加了些验证，还没破解)
-- - ss_ssr.txt  # 存放ssr服务器链接的txt文件
-- - ss.txt  # 存放free-ss服务器链接的txt文件
-
 ## 相关搜索查询
 ```
  · 显示所有Poc:@我 showallpoc info(cms;hardware;industrial;system;information)
@@ -170,3 +155,44 @@ Demo: @机器人 Beijing天气
 **天气查询，需要用到[openweathermap.org](https://openweathermap.org/)的appid**
 
 *104行*
+
+## SSR爬虫（容易暴露服务器ip，换成ip池请求数据是下一步优化的时候再做的）
+*爬虫代码均在非国内网络环境下运行，运行请修改python路径，log路径，以及爬虫文件ssr链接写入的路径*
+
+**有点懒，所以选择放在了一个目录**
+
+
+> 目录说明
+
+<pre><code>.
+├─ LICENSE
+├─ README.md
+├─ cron
+│    ├─ 1-share-shadowsocks.cron  # 下午4点35启动share-shadowsocks的服务器爬虫
+│    └─ 2-free-ss.cron  # 每20分钟启动free-ss_spider的服务器爬虫(不支持日本IP，最近加了些验证，还没破解)
+├─ qqbot
+│    ├─ Secrets.py  # 相关密钥文件导入
+│    ├─ api  # 准备把重构相关api文件
+│    │    ├─ __init__.py
+│    │    ├─ hack_api.py
+│    │    └─ scan_api.py
+│    ├─ config.py  # 相关flask配置
+│    └─ run_qqbot.py  # 启动服务
+├─ requirements.txt # 依赖项
+└─ spider
+       ├─ doub.spider.py
+       ├─ free-ss_spider.py
+       ├─ share-shadowsocks.py
+       ├─ ss.txt  # free-ss的ss链接写入
+       ├─ ss_pythonic_spider.py
+       └─ ss_ssr.txt  # share-shadowsocks的ss/ssr链接写入
+</code></pre>
+
+
+> 未完成的迭代...
+
+* [ ] Py2转Py3
+
+* [ ] 重构，逻辑代码调优
+
+* [ ] 添加一些现有的工具
