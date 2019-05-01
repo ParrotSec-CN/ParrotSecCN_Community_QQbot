@@ -4,19 +4,20 @@
 from gevent import monkey
 monkey.patch_all()
 
-#import sys
-#import codecs
-#sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
-
-import api
-from random import choice
-from flask import request, Response
-from config import app, SECRETS
-import json
-import requests
-import yaml
-
 import ssl
+import json
+import yaml
+import requests
+from config import app
+from flask import request, Response
+from random import choice
+import api
+
+# import sys
+# import codecs
+# sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
+
+
 # 导入ssl模块，防止https报错
 ssl._create_default_https_context = ssl._create_unverified_context
 # from app.scan import *
@@ -29,74 +30,6 @@ group_url, user_url, recall_url, ban_url = config_content['url']['group_url'], c
     'url']['user_url'], config_content['url']['recall_url'], config_content['url']['ban_url']
 atMe = '[CQ:at,qq=212521306]'
 group = 160958474
-
-
-# scan protocols device
-def scan_protocols(ip_link, page_num, sub_num="24", rule=True):
-    API_URL = "https://www.censys.io/api/v1/search/ipv4"
-    UID = SECRETS['censys_scan']['UID']
-    SECRET = SECRETS['censys_scan']['SECRET']
-    IP_TXT = ip_link if rule else (ip_link + "/" + sub_num)
-
-    data = {
-        "query": IP_TXT,
-        "page": int(page_num),
-        "fields": ["ip", "protocols", "location.country"],
-        "flatten": True
-    }
-
-    res = requests.post(API_URL, data=json.dumps(data), auth=(UID, SECRET))
-
-    results = res.json()
-
-    if results['status'] == "ok":
-        if results['results']:
-            protocols_info = ""
-            for i in results['results']:
-                port_list = (", ".join(i['protocols']))
-                try:
-                    tt = "{}ip地址: {}, 国家: {}, 开放端口: {}{}".format(
-                        protocols_info, str(
-                            i['ip']), str(
-                            i['location.country']), port_list, '\n')
-                except BaseException:
-                    tt = "{}ip地址: {}, 开放端口: {}{}".format(
-                        protocols_info, str(i['ip']), port_list, '\n')
-                protocols_info = tt
-            return protocols_info
-        else:
-            return "列表超出索引范围!"
-    else:
-        return "未得到任何返回值!"
-
-
-# query ssr
-def ssr_work(file_name):
-    ssr_list = []
-    with open("../spider/" + file_name, 'r') as f:
-        for i in f.readlines():
-            ssr_list.append(i.strip().rstrip("\n"))
-
-    return ssr_list
-
-
-# query_weather
-def query_weather(city_name):
-    appid = SECRETS['openweather']['APPID']
-    link = "http://api.openweathermap.org/data/2.5/weather?q=" + \
-        city_name + "&appid=" + appid + "&lang=zh_cn&units=metric"
-    query_post = requests.get(link)
-    weather_info = query_post.json()
-    if weather_info['cod'] == 200:
-        city_weather = "查询城市：{}{}当前天气：{}{}当前温度：{}{}{} \
-        最高温度：{}{}{}最低温度：{}{}{}风力：{}{}".format(
-            weather_info['name'], "\n", weather_info['weather'][0]['description'], "\n", str(
-                weather_info['main']['temp']), " ℃", "\n", str(
-                weather_info['main']['temp_max']), " ℃", "\n", str(
-                weather_info['main']['temp_min']), " ℃", "\n", str(
-                    weather_info['wind']['speed']), " 级")
-
-        return city_weather
 
 
 def new_topic(topic):
@@ -192,8 +125,8 @@ def my_msg():
         if content['post_type'] == 'message':
             try:
                 message = content['message']
-                if "".join(
-                        (message.lower().split())) in config_content['ban_word']:
+                if "".join((message.lower().split())
+                           ) in config_content['ban_word']:
                     msg = {
                         'reply': ', big brother is watching you! 禁言半小时以示惩戒！！！'}
                     api.group_ban(groupId, userId, miu_num=1800)
@@ -217,7 +150,7 @@ def my_msg():
                               '智' in "".join(message.split()) and '障' in "".join(message.split()),
                               '爸' in "".join(message.split()) and '爸' in "".join(message.split()),
                               '子' in "".join(message.split()) and '儿' in "".join(message.split()),
-                              'sb' in "".join(message.lower().split()),
+                              'sb' in "".join(message.lower()),
                               '笔' in "".join(message.split()) and '煞' in "".join(message.split())]):
                         msg = {
                             'reply': ', 骂我? 小伙计你内心很浮躁嘛! 送你个禁言1小时，不用谢！'}
@@ -228,13 +161,15 @@ def my_msg():
                     elif "食用" in message:
                         use_msg = config_content['usage_method']
                         msg = use_msg.strip().lstrip("\n").rstrip("\n")
-                        api.send_msg(group_url, user_url, msg, 'user_id', userId)
+                        api.send_msg(
+                            group_url, user_url, msg, 'user_id', userId)
 
                     elif any(['help' in message,
                               '--help' in message,
                               '功能' in message,
                               '-h' in message]):
-                        function_list = "\n" + config_content['function_list'].rstrip("\n")
+                        function_list = "\n" + \
+                            config_content['function_list'].rstrip("\n")
                         msg = {'reply': function_list}
                         return Response(
                             json.dumps(msg), mimetype='application/json')
@@ -250,20 +185,20 @@ def my_msg():
                     # 检索SSR服务器
                     elif any(['allpy' in message,
                               'allpython' in message]):
-                        ssr_list = ssr_work(
-                            "../spider/ss_ssr.txt") + ssr_work("../spider/ss.txt")
+                        ssr_list = api.ssr_work(
+                            "../spider/ss_ssr.txt") + api.ssr_work("../spider/ss.txt")
                         ssr_info = ("\n".join(ssr_list))
                         api.send_msg(ssr_info, 'user_id', userId)
 
                     elif any(['py' in message,
                               'python' in message]):
-                        ssr_list = ssr_work("../spider/ss_ssr.txt")
+                        ssr_list = api.ssr_work("../spider/ss_ssr.txt")
                         api.send_msg(choice(ssr_list), 'user_id', userId)
 
                     elif "天气" in message:
                         at_user, keyword = message.split(' ')
                         city_name = keyword.decode("utf8", "ignore")
-                        msg = query_weather(city_name[:-2])
+                        msg = api.query_weather(city_name[:-2])
                         if msg:
                             return api.send_msg(
                                 msg.strip().lstrip("\n").strip("\n"), 'group_id', groupId)
@@ -339,7 +274,7 @@ def my_msg():
                                 json.dumps(msg), mimetype='application/json')
 
                         elif keyword == 'protocols':
-                            result = scan_protocols(
+                            result = api.scan_protocols(
                                 search_key, num_txt, rule=False)
                             api.send_msg(result, 'user_id', userId)
 
@@ -352,7 +287,7 @@ def my_msg():
                         at_user, keyword, sec_key, thir_key, four_key = message.split(
                             ' ')
                         if keyword == 'protocols':
-                            result = scan_protocols(
+                            result = api.scan_protocols(
                                 sec_key, four_key, thir_key, rule=False)
                             api.send_msg(result, 'user_id', userId)
 
@@ -361,7 +296,7 @@ def my_msg():
                             ' ')
                         if keyword == 'protocols':
                             if thir_key == "TO":
-                                result = scan_protocols(
+                                result = api.scan_protocols(
                                     "[" + sec_key + " " + thir_key + " " + four_key + "]", firt_key)
                                 api.send_msg(result, 'user_id', userId)
 
@@ -378,7 +313,8 @@ def my_msg():
             if content['notice_type'] == 'group_increase':
                 msg = "欢迎大佬['" + str(content['user_id']) + \
                     "']入群, 请牢记渗透千万条, 匿名第一条; 搞事不规范, 牢饭吃到早...!!!"
-                return api.send_msg(group_url, user_url, msg, 'group_id', groupId)
+                return api.send_msg(
+                    group_url, user_url, msg, 'group_id', groupId)
 
     res = {'msg': 'ok'}
     return Response(json.dumps(res), mimetype='application/json')
