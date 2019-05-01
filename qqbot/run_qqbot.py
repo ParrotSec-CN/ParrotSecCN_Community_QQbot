@@ -1,25 +1,24 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+# -*- coding:utf-8 -*_
 
+import api
+from random import choice
+from flask import request, Response
+from config import app, SECRETS
 import json
 import requests
+import yaml
 import ssl
 # 导入ssl模块，防止https报错
 ssl._create_default_https_context = ssl._create_unverified_context
-from config import app, SECRETS
-from flask import request, Response
-from random import choice
 # from app.scan import *
-import api
-# from gevent import monkey
-# from gevent.pywsgi import WSGIServer
 
-# monkey.patch_all()
+bot_config = open('bot_config.yaml', encoding='utf-8')
+content = yaml.safe_load(bot_config)
 
 headers = {'Content-Type': 'application/json'}
-group_url = 'http://127.0.0.1:5700/send_group_msg'
-user_url = 'http://127.0.0.1:5700/send_private_msg'
-recall_url = 'http://127.0.0.1:5700/delete_msg'
-ban_url = 'http://127.0.0.1:5700/set_group_ban'
+group_url, user_url, recall_url, ban_url = content['url']['group_url'], content[
+    'url']['user_url'], content['url']['recall_url'], content['url']['ban_url']
 atMe = '[CQ:at,qq=212521306]'
 group = 160958474
 
@@ -35,7 +34,10 @@ def send_msg(msg, id_type, qq_num):
 # recall message 酷Q Air 暂不支持撤回消息
 def recall_msg(u_msg_id):
     data = {'message_id': u_msg_id}
-    rsg = requests.post(recall_url, headers=headers, data=json.dumps(data)).text
+    rsg = requests.post(
+        recall_url,
+        headers=headers,
+        data=json.dumps(data)).text
     return rsg
 
 
@@ -70,11 +72,13 @@ def scan_protocols(ip_link, page_num, sub_num="24", rule=True):
             for i in results['results']:
                 port_list = (", ".join(i['protocols']))
                 try:
-                    tt = protocols_info + "ip地址: " + str(i['ip']) + ", " + "国家: " + str(
-                        i['location.country']) + ", " + "开放端口: " + str(port_list) + '\n'
+                    tt = "{}ip地址: {}, 国家: {}, 开放端口: {}{}".format(
+                        protocols_info, str(
+                            i['ip']), str(
+                            i['location.country']), port_list, '\n')
                 except BaseException:
-                    tt = protocols_info + "ip地址: " + \
-                        str(i['ip']) + ", " + "开放端口: " + str(port_list) + '\n'
+                    tt = "{}ip地址: {}, 开放端口: {}{}".format(
+                        protocols_info, str(i['ip']), port_list, '\n')
                 protocols_info = tt
             return protocols_info
         else:
@@ -101,54 +105,52 @@ def query_weather(city_name):
     query_post = requests.get(link)
     weather_info = query_post.json()
     if weather_info['cod'] == 200:
-        city_weather = "查询城市：" + weather_info['name'] + "\n" + "当前天气：" + \
-                       weather_info['weather'][0]['description']
-        tmp_wendu = "\n" + "当前温度：" + \
-                    str(weather_info['main']['temp']) + " ℃"
-        max_wendu = "\n" + "最高温度：" + \
-                    str(weather_info['main']['temp_max']) + " ℃"
-        min_wendu = "\n" + "最低温度：" + \
-                    str(weather_info['main']['temp_min']) + " ℃"
-        fengli = "\n" + "风力：" + \
-                 str(weather_info['wind']['speed']) + " 级"
-        info = city_weather + tmp_wendu + max_wendu + min_wendu + fengli
-        return info
+        city_weather = "查询城市：{}{}当前天气：{}{}当前温度：{}{}{} \
+        最高温度：{}{}{}最低温度：{}{}{}风力：{}{}".format(
+            weather_info['name'], "\n", weather_info['weather'][0]['description'], "\n", str(
+                weather_info['main']['temp']), " ℃", "\n", str(
+                weather_info['main']['temp_max']), " ℃", "\n", str(
+                weather_info['main']['temp_min']), " ℃", "\n", str(
+                    weather_info['wind']['speed']), " 级")
+
+        return city_weather
 
 
 def new_topic(topic):
     content = topic
-    topicName = str(content['topic']['title'])
-    topicSlug = str(content['topic']['slug'])
-    topicId = str(content['topic']['id'])
-    userName = str(content['topic']['created_by']['username'])
+    topicName, topicSlug, topicId, userName = str(
+        content['topic']['title']), str(
+        content['topic']['slug']), str(
+            content['topic']['id']), str(
+                content['topic']['created_by']['username'])
     url = 'https://parrotsec-cn.org/t/' + topicSlug + '/' + topicId
-    msg = '%s 发表了新主题: "%s" \n %s' % (userName, topicName, url)
+    msg = '{} 发表了新主题: "{}" {} {}'.format(userName, topicName, "\n", url)
     return send_msg(msg, 'group_id', group)
 
 
 def new_post(post):
     content = post
-    name = str(content['post']['username'])
-    title = str(content['post']['topic_title'])
-    topicSlug = str(content['post']['topic_slug'])
-    topicId = str(content['post']['topic_id'])
-    postNumber = str(content['post']['post_number'])
-    url = 'https://parrotsec-cn.org/t/' + \
-        topicSlug + '/' + topicId + '/' + postNumber
+    name, title, topicSlug, topicId, postNumber = str(
+        content['post']['username']), str(
+        content['post']['topic_title']), str(
+            content['post']['topic_slug']), str(
+                content['post']['topic_id']), str(
+                    content['post']['post_number'])
+
+    url = "https://parrotsec-cn.org/t/{}{}{}{}{}".format(
+        topicSlug, '/', topicId, '/', postNumber)
     if 'reply_to_user' in content['post']:
-        postTo = str(content['post']['reply_to_user']['username'])
-        msg = '%s 在主题 "%s" 中回复了 %s \n %s' % (name, title, postTo, url)
+        msg = '{} 在主题 "{}" 中回复了 {} {} {}'.format(name, title, str(
+            content['post']['reply_to_user']['username']), "\n", url)
         return send_msg(msg, 'group_id', group)
     else:
-        msg = '%s 在主题 "%s" 中发表了回复 \n %s' % (name, title, url)
+        msg = '{} 在主题 "{}" 中发表了回复 {} {}'.format(name, title, "\n", url)
         return send_msg(msg, 'group_id', group)
 
 
 def handle(event, myjson):
     if event == 'topic_created':
-        if myjson['topic']['user_id'] == -1:
-            pass
-        else:
+        if myjson['topic']['user_id'] != -1:
             return new_topic(myjson)
     elif event == 'post_created':
         if myjson['post']['post_number'] > 1:
@@ -167,14 +169,9 @@ def forum_search(keywords):
         topics = a['topics']
         result = '搜索结果: \n'
         for i in topics:
-            title = i['title']
-            slug = i['slug']
-            id = i['id']
-            url = 'https://parrotsec-cn.org/t/' + \
-                str(slug) + '/' + str(id) + '\n'
-            result += title
-            result += '\n'
-            result += url
+            url = "https://parrotsec-cn.org/t/{}{}{}{}".format(
+                str(i['slug']), '/', str(i['id']), '\n')
+            result = "".format(result, i['title'], "\n", url)
         return result
     except BaseException:
         return '未找到搜索结果'
@@ -188,8 +185,6 @@ def hello_world():
 
 @app.route('/json', methods=['POST'])
 def my_json():
-    # post_ip = request.remote_addr
-    # if post_ip == "xxx.xxx.xxx.xxx":
     headers = request.headers
     event = (headers['X-Discourse-Event'])
     instance = (headers['X-Discourse-Instance'])
@@ -198,8 +193,6 @@ def my_json():
     if instance == 'https://parrotsec-cn.org':
         res = {'msg': handle(event, content)}
         return Response(json.dumps(res), mimetype='application/json')
-    else:
-        pass
 
 
 @app.route('/msg', methods=['POST'])
@@ -218,16 +211,15 @@ def my_msg():
         if content['post_type'] == 'message':
             try:
                 message = content['message'].encode('utf-8')
-                if any(['ssr' in "".join((message.lower().split())),
-                        'vpn' in "".join((message.lower().split())),
-                        'porn' in "".join((message.lower().split())),
-                        '翻' in message and '墙' in message,
-                        '暗' in message and '网' in message,
-                        '黑产' in "".join((message.split())),
-                        '习近平' in "".join((message.split())),
-                        '酸酸乳' in "".join((message.split())),
-                        'virtual' in "".join((message.lower().split())) and 'private' in "".join((message.lower().split())) and 'network' in "".join((message.lower().split())),
-                        'gfw' in "".join((message.lower().split()))]):
+                if "".join(
+                        (message.lower().split())) in [
+                        "ssr",
+                        "vpn",
+                        "porn",
+                        "黑产",
+                        "习近平",
+                        "酸酸乳",
+                        "gfw"]:
                     msg = {
                         'reply': ', big brother is watching you! 禁言半小时以示惩戒！！！'}
                     group_ban(groupId, userId, miu_num=1800)
@@ -237,33 +229,22 @@ def my_msg():
                 # 直接@我
                 elif atMe in message:
                     if "".join((message.split())) == atMe:
-                        reply = [
-                            '，艾特我干嘛? 有事儿说事儿，没事儿滚去日站!!!',
-                            '，别瞎鸡儿艾特我!!!',
-                            '，滚粗，白了否恩?!!',
-                            '，走开，嘤嘤嘤!!!',
-                            '，敲里吗，听见没有!!!',
-                            '，人家用小拳拳锤你胸口，哼!!!',
-                            '，艾特我干啥, 我在重构!!!',
-                            '，去去去，一边玩儿去，滚蛋!!!',
-                            '，葫芦娃，葫芦娃，一棵藤上七朵花!!!',
-                            '，干啥小崽子!!!',
-                            '，哪凉快哪待着!!!']
+                        reply = content['fuck_reply']
                         msg = {'reply': choice(reply)}
                         return Response(
                             json.dumps(msg), mimetype='application/json')
 
-                    elif any(['傻' in "".join((message.split())) and '逼' in "".join((message.split())),
-                              '傻' in "".join((message.split())) and '屌' in "".join((message.split())),
-                              '傻' in "".join((message.split())) and '狗' in "".join((message.split())),
-                              '屎' in "".join((message.split())) and '狗' in "".join((message.split())),
-                              '垃' in "".join((message.split())) and '圾' in "".join((message.split())),
-                              '傻' in "".join((message.split())) and '吊' in "".join((message.split())),
-                              '智' in "".join((message.split())) and '障' in "".join((message.split())),
-                              '爸' in "".join((message.split())) and '爸' in "".join((message.split())),
-                              '子' in "".join((message.split())) and '儿' in "".join((message.split())),
-                              'sb' in "".join((message.lower().split())),
-                              '笔' in "".join((message.split())) and '煞' in "".join((message.split()))]):
+                    elif any(['傻' in "".join(message.split()) and '逼' in "".join(message.split()),
+                              '傻' in "".join(message.split()) and '屌' in "".join(message.split()),
+                              '傻' in "".join(message.split()) and '狗' in "".join(message.split()),
+                              '屎' in "".join(message.split()) and '狗' in "".join(message.split()),
+                              '垃' in "".join(message.split()) and '圾' in "".join(message.split()),
+                              '傻' in "".join(message.split()) and '吊' in "".join(message.split()),
+                              '智' in "".join(message.split()) and '障' in "".join(message.split()),
+                              '爸' in "".join(message.split()) and '爸' in "".join(message.split()),
+                              '子' in "".join(message.split()) and '儿' in "".join(message.split()),
+                              'sb' in "".join(message.lower().split()),
+                              '笔' in "".join(message.split()) and '煞' in "".join(message.split())]):
                         msg = {
                             'reply': ', 骂我? 小伙计你内心很浮躁嘛! 送你个禁言1小时，不用谢！'}
                         group_ban(groupId, userId, miu_num=3600)
@@ -330,7 +311,8 @@ CMS漏洞扫描： @ME cms host
                     # 检索SSR服务器
                     elif any(['allpy' in message,
                               'allpython' in message]):
-                        ssr_list = ssr_work("./spider/ss_ssr.txt") + ssr_work("../spider/ss.txt") 
+                        ssr_list = ssr_work(
+                            "./spider/ss_ssr.txt") + ssr_work("../spider/ss.txt")
                         ssr_info = ("\n".join(ssr_list))
                         send_msg(ssr_info, 'user_id', userId)
 
@@ -369,7 +351,8 @@ CMS漏洞扫描： @ME cms host
                                 json.dumps(msg), mimetype='application/json')
 
                         elif keyword in ['cms', 'information', 'system', 'hardware', 'industrial']:
-                            result = api.exploit_api(keyword=keyword, url=target)
+                            result = api.exploit_api(
+                                keyword=keyword, url=target)
                             print(result)
                             msg = {
                                 'reply': "\n".join(result)} if result else {
@@ -378,7 +361,8 @@ CMS漏洞扫描： @ME cms host
                                 json.dumps(msg), mimetype='application/json')
 
                         elif keyword == 'whatcms':
-                            result = api.exploit_api(keyword=keyword, url=target)
+                            result = api.exploit_api(
+                                keyword=keyword, url=target)
                             msg = {
                                 'reply': result} if result else {
                                 'reply': "未识别成功"}
@@ -466,4 +450,3 @@ if __name__ == '__main__':
     app.run(host="0.0.0.0", port=10086)
     # http = WSGIServer(('', 8000), app)
     # http.serve_forever()
-

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from flask import Flask
 from Secrets import SECRETS
 
