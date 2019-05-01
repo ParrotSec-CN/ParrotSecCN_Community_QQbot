@@ -31,31 +31,6 @@ atMe = '[CQ:at,qq=212521306]'
 group = 160958474
 
 
-# send message
-def send_msg(msg, id_type, qq_num):
-    data = {'message': msg, id_type: qq_num}
-    url = group_url if id_type == 'group_id' else user_url
-    rsg = requests.post(url, headers=headers, data=json.dumps(data)).text
-    return rsg
-
-
-# recall message 酷Q Air 暂不支持撤回消息
-def recall_msg(u_msg_id):
-    data = {'message_id': u_msg_id}
-    rsg = requests.post(
-        recall_url,
-        headers=headers,
-        data=json.dumps(data)).text
-    return rsg
-
-
-# set group ban
-def group_ban(group_id, qq_num, miu_num):
-    data = {'group_id': group_id, "user_id": qq_num, "duration": miu_num}
-    rsg = requests.post(ban_url, headers=headers, data=json.dumps(data)).text
-    return rsg
-
-
 # scan protocols device
 def scan_protocols(ip_link, page_num, sub_num="24", rule=True):
     API_URL = "https://www.censys.io/api/v1/search/ipv4"
@@ -133,7 +108,7 @@ def new_topic(topic):
                 content['topic']['created_by']['username'])
     url = 'https://parrotsec-cn.org/t/' + topicSlug + '/' + topicId
     msg = '{} 发表了新主题: "{}" {} {}'.format(userName, topicName, "\n", url)
-    return send_msg(msg, 'group_id', group)
+    return api.send_msg(group_url, user_url, msg, 'group_id', group)
 
 
 def new_post(post):
@@ -150,10 +125,10 @@ def new_post(post):
     if 'reply_to_user' in content['post']:
         msg = '{} 在主题 "{}" 中回复了 {} {} {}'.format(name, title, str(
             content['post']['reply_to_user']['username']), "\n", url)
-        return send_msg(msg, 'group_id', group)
+        return api.send_msg(group_url, user_url, msg, 'group_id', group)
     else:
         msg = '{} 在主题 "{}" 中发表了回复 {} {}'.format(name, title, "\n", url)
-        return send_msg(msg, 'group_id', group)
+        return api.send_msg(group_url, user_url, msg, 'group_id', group)
 
 
 def handle(event, myjson):
@@ -221,7 +196,7 @@ def my_msg():
                         (message.lower().split())) in config_content['ban_word']:
                     msg = {
                         'reply': ', big brother is watching you! 禁言半小时以示惩戒！！！'}
-                    group_ban(groupId, userId, miu_num=1800)
+                    api.group_ban(groupId, userId, miu_num=1800)
                     return Response(
                         json.dumps(msg), mimetype='application/json')
 
@@ -246,14 +221,14 @@ def my_msg():
                               '笔' in "".join(message.split()) and '煞' in "".join(message.split())]):
                         msg = {
                             'reply': ', 骂我? 小伙计你内心很浮躁嘛! 送你个禁言1小时，不用谢！'}
-                        group_ban(groupId, userId, miu_num=3600)
+                        api.group_ban(groupId, userId, miu_num=3600)
                         return Response(
                             json.dumps(msg), mimetype='application/json')
 
                     elif "食用" in message:
                         use_msg = config_content['usage_method']
                         msg = use_msg.strip().lstrip("\n").rstrip("\n")
-                        send_msg(msg, 'user_id', userId)
+                        api.send_msg(group_url, user_url, msg, 'user_id', userId)
 
                     elif any(['help' in message,
                               '--help' in message,
@@ -278,19 +253,19 @@ def my_msg():
                         ssr_list = ssr_work(
                             "../spider/ss_ssr.txt") + ssr_work("../spider/ss.txt")
                         ssr_info = ("\n".join(ssr_list))
-                        send_msg(ssr_info, 'user_id', userId)
+                        api.send_msg(ssr_info, 'user_id', userId)
 
                     elif any(['py' in message,
                               'python' in message]):
                         ssr_list = ssr_work("../spider/ss_ssr.txt")
-                        send_msg(choice(ssr_list), 'user_id', userId)
+                        api.send_msg(choice(ssr_list), 'user_id', userId)
 
                     elif "天气" in message:
                         at_user, keyword = message.split(' ')
                         city_name = keyword.decode("utf8", "ignore")
                         msg = query_weather(city_name[:-2])
                         if msg:
-                            return send_msg(
+                            return api.send_msg(
                                 msg.strip().lstrip("\n").strip("\n"), 'group_id', groupId)
 
                     elif len(message.split(' ')) == 3:
@@ -366,7 +341,7 @@ def my_msg():
                         elif keyword == 'protocols':
                             result = scan_protocols(
                                 search_key, num_txt, rule=False)
-                            send_msg(result, 'user_id', userId)
+                            api.send_msg(result, 'user_id', userId)
 
                         else:
                             msg = {'reply': choice(fuckoff)}
@@ -379,7 +354,7 @@ def my_msg():
                         if keyword == 'protocols':
                             result = scan_protocols(
                                 sec_key, four_key, thir_key, rule=False)
-                            send_msg(result, 'user_id', userId)
+                            api.send_msg(result, 'user_id', userId)
 
                     elif len(message.split(' ')) == 6:
                         at_user, keyword, sec_key, thir_key, four_key, firt_key = message.split(
@@ -388,7 +363,7 @@ def my_msg():
                             if thir_key == "TO":
                                 result = scan_protocols(
                                     "[" + sec_key + " " + thir_key + " " + four_key + "]", firt_key)
-                                send_msg(result, 'user_id', userId)
+                                api.send_msg(result, 'user_id', userId)
 
                     else:
                         msg = {'reply': choice(fuckoff)}
@@ -403,7 +378,7 @@ def my_msg():
             if content['notice_type'] == 'group_increase':
                 msg = "欢迎大佬['" + str(content['user_id']) + \
                     "']入群, 请牢记渗透千万条, 匿名第一条; 搞事不规范, 牢饭吃到早...!!!"
-                return send_msg(msg, 'group_id', groupId)
+                return api.send_msg(group_url, user_url, msg, 'group_id', groupId)
 
     res = {'msg': 'ok'}
     return Response(json.dumps(res), mimetype='application/json')

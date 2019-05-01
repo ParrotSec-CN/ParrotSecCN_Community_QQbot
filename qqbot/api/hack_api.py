@@ -1,10 +1,7 @@
 import json
-# import hashlib
 import time
 import grequests
 import requests
-# import gevent
-# from gevent.queue import Queue
 
 
 class gwhatweb:
