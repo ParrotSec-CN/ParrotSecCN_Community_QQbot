@@ -4,6 +4,8 @@ url:
     recall_url: http://127.0.0.1:5700/delete_msg
     ban_url: http://127.0.0.1:5700/set_group_ban
 
+fuck_off: ['你说j2呢???', '不会用别瞎艾特', '什么玩意?你看看能help(-h;--help)不?', '???mdzz']
+
 fuck_reply: [
     '，艾特我干嘛? 有事儿说事儿，没事儿滚去日站!!!',
     '，别瞎鸡儿艾特我!!!',
@@ -26,40 +28,37 @@ ban_word: [
     "酸酸乳",
     "gfw"]
 
-usage_method: ['''
-查询已知Poc：@我 showpoc system
-查询已知Poc：@我 showpoc hardware
-查询SSR: @我 py
-查询SSR: @我 python
-查询全部SSR: @我 allpy
-查询全部SSR: @我 allpython
-扫描子网工控设备：@我 protocols 111.200.232.0 1  --> 默认扫描子网 /24 返回第一页查询
-扫描子网工控设备：@我 protocols 111.200.232.0 24 2  --> 扫描子网 /24 返回第二页查询
-扫描子网工控设备：@我 protocols 111.200.232.0 16 1  --> 扫描子网段 /16 返回第一页查询
-扫描子网工控设备：@我 protocols 111.200.232.77 TO 111.200.234.222 1  --> 扫描网段 返回第一页查询
-查询天气：@我 北京市天气
-查询天气：@我 朝阳区天气
-查询天气：@我 Beijing天气
-                        ''']
+usage_method: "
+查询已知Poc：@我 showpoc system\n
+查询已知Poc：@我 showpoc hardware\n
+查询SSR: @我 py\n
+查询SSR: @我 python\n
+查询全部SSR: @我 allpy\n
+查询全部SSR: @我 allpython\n
+扫描子网工控设备：@我 protocols 111.200.232.0 1  --> 默认扫描子网 /24 返回第一页查询\n
+扫描子网工控设备：@我 protocols 111.200.232.0 24 2  --> 扫描子网 /24 返回第二页查询\n
+扫描子网工控设备：@我 protocols 111.200.232.0 16 1  --> 扫描子网段 /16 返回第一页查询\n
+扫描子网工控设备：@我 protocols 111.200.232.77 TO 111.200.234.222 1  --> 扫描网段 返回第一页查询\n
+查询天气：@我 北京市天气\n
+查询天气：@我 朝阳区天气\n
+查询天气：@我 Beijing天气"
 
-function_list: ['''
-| 功能列表 |
---------------------------------------------------------------
-找骂： 直接@ME
-搜索论坛: @ME searchforum keyword
-显示所有Poc：@ME showallpoc keyword(cms;hardware;industrial;system;information)
-TCP端口扫描：@ME nmap host
-CMS识别：@ME whatcms host
-CMS漏洞扫描： @ME cms host
-信息搜集: @ME information host
-系统漏洞扫描： @ME system host
-物联网设备安全检测: @ME hardware host
-工控安全检测: @ME industrial host
-搜索POC： @ME search keywords
-搜索并使用POC进行安全检测： @ME search keywords host
-神奇的梯子： @ME python(py)
-子网工控设备扫描(返回页内容)： @ME protocols subnet sub_num(16/24) pge_num
-查询天气： @ME ??市(区)天气
-使用方法： @ME 食用
---------------------------------------------------------------
-                        ''']
+function_list: "| 功能列表 |\n
+--------------------------------------------------------------\n
+找骂： 直接@ME\n
+搜索论坛: @ME searchforum keyword\n
+显示所有Poc：@ME showpoc keyword(cms;hardware;industrial;system;information)\n
+TCP端口扫描：@ME nmap host\n
+CMS识别：@ME whatcms host\n
+CMS漏洞扫描： @ME cms host\n
+信息搜集: @ME information host\n
+系统漏洞扫描： @ME system host\n
+物联网设备安全检测: @ME hardware host\n
+工控安全检测: @ME industrial host\n
+搜索POC： @ME search keywords\n
+搜索并使用POC进行安全检测： @ME search keywords host\n
+神奇的梯子： @ME python(py)\n
+子网工控设备扫描(返回页内容)： @ME protocols subnet sub_num(16/24) pge_num\n
+查询天气： @ME ??市(区)天气\n
+使用方法： @ME 食用\n
+--------------------------------------------------------------"

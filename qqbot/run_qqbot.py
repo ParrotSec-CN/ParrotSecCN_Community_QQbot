@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-# -*- coding:utf-8 -*_
+# -*- coding:utf-8 -*-
+
+from gevent import monkey
+monkey.patch_all()
+
+#import sys
+#import codecs
+#sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
 
 import api
 from random import choice
@@ -8,6 +15,7 @@ from config import app, SECRETS
 import json
 import requests
 import yaml
+
 import ssl
 # 导入ssl模块，防止https报错
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -197,9 +205,7 @@ def my_json():
 
 @app.route('/msg', methods=['POST'])
 def my_msg():
-    # post_ip = request.remote_addr
-    # if post_ip == "xxx.xxx.xxx.xxx":
-    fuckoff = ['你说j2呢???', '不会用别瞎艾特', '什么玩意?你看看能help(-h;--help)不?', '???mdzz']
+    fuckoff = config_content['fuck_off']
     content = request.json
     print("--------------开始打印相关日志！-----------------")
     try:
@@ -207,10 +213,10 @@ def my_msg():
     except BaseException:
         groupId = False
     userId = content['user_id']
-    if groupId and groupId in [160958474]:
+    if groupId and groupId in [134860850]:
         if content['post_type'] == 'message':
             try:
-                message = content['message'].encode('utf-8')
+                message = content['message']
                 if "".join(
                         (message.lower().split())) in config_content['ban_word']:
                     msg = {
@@ -245,7 +251,7 @@ def my_msg():
                             json.dumps(msg), mimetype='application/json')
 
                     elif "食用" in message:
-                        use_msg = config_content['usage_method'][0]
+                        use_msg = config_content['usage_method']
                         msg = use_msg.strip().lstrip("\n").rstrip("\n")
                         send_msg(msg, 'user_id', userId)
 
@@ -253,7 +259,7 @@ def my_msg():
                               '--help' in message,
                               '功能' in message,
                               '-h' in message]):
-                        function_list = "\n" + config_content['function_list'][0].strip().rstrip("\n")
+                        function_list = "\n" + config_content['function_list'].rstrip("\n")
                         msg = {'reply': function_list}
                         return Response(
                             json.dumps(msg), mimetype='application/json')
@@ -270,13 +276,13 @@ def my_msg():
                     elif any(['allpy' in message,
                               'allpython' in message]):
                         ssr_list = ssr_work(
-                            "./spider/ss_ssr.txt") + ssr_work("../spider/ss.txt")
+                            "../spider/ss_ssr.txt") + ssr_work("../spider/ss.txt")
                         ssr_info = ("\n".join(ssr_list))
                         send_msg(ssr_info, 'user_id', userId)
 
                     elif any(['py' in message,
                               'python' in message]):
-                        ssr_list = ssr_work("./spider/ss_ssr.txt")
+                        ssr_list = ssr_work("../spider/ss_ssr.txt")
                         send_msg(choice(ssr_list), 'user_id', userId)
 
                     elif "天气" in message:
@@ -405,6 +411,6 @@ def my_msg():
 
 if __name__ == '__main__':
     # app.run(host="0.0.0.0")
-    app.run(host="0.0.0.0", port=10086)
+    app.run(host="0.0.0.0", port=9001)
     # http = WSGIServer(('', 8000), app)
     # http.serve_forever()
