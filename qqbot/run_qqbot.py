@@ -14,11 +14,11 @@ ssl._create_default_https_context = ssl._create_unverified_context
 # from app.scan import *
 
 bot_config = open('bot_config.yaml', encoding='utf-8')
-content = yaml.safe_load(bot_config)
+config_content = yaml.safe_load(bot_config)
 
 headers = {'Content-Type': 'application/json'}
-group_url, user_url, recall_url, ban_url = content['url']['group_url'], content[
-    'url']['user_url'], content['url']['recall_url'], content['url']['ban_url']
+group_url, user_url, recall_url, ban_url = config_content['url']['group_url'], config_content[
+    'url']['user_url'], config_content['url']['recall_url'], config_content['url']['ban_url']
 atMe = '[CQ:at,qq=212521306]'
 group = 160958474
 
@@ -212,14 +212,7 @@ def my_msg():
             try:
                 message = content['message'].encode('utf-8')
                 if "".join(
-                        (message.lower().split())) in [
-                        "ssr",
-                        "vpn",
-                        "porn",
-                        "黑产",
-                        "习近平",
-                        "酸酸乳",
-                        "gfw"]:
+                        (message.lower().split())) in config_content['ban_word']:
                     msg = {
                         'reply': ', big brother is watching you! 禁言半小时以示惩戒！！！'}
                     group_ban(groupId, userId, miu_num=1800)
@@ -229,7 +222,7 @@ def my_msg():
                 # 直接@我
                 elif atMe in message:
                     if "".join((message.split())) == atMe:
-                        reply = content['fuck_reply']
+                        reply = config_content['fuck_reply']
                         msg = {'reply': choice(reply)}
                         return Response(
                             json.dumps(msg), mimetype='application/json')
@@ -252,21 +245,7 @@ def my_msg():
                             json.dumps(msg), mimetype='application/json')
 
                     elif "食用" in message:
-                        use_msg = '''
-查询已知Poc：@我 showpoc system
-查询已知Poc：@我 showpoc hardware
-查询SSR: @我 py
-查询SSR: @我 python
-查询全部SSR: @我 allpy
-查询全部SSR: @我 allpython
-扫描子网工控设备：@我 protocols 111.200.232.0 1  --> 默认扫描子网 /24 返回第一页查询
-扫描子网工控设备：@我 protocols 111.200.232.0 24 2  --> 扫描子网 /24 返回第二页查询
-扫描子网工控设备：@我 protocols 111.200.232.0 16 1  --> 扫描子网段 /16 返回第一页查询
-扫描子网工控设备：@我 protocols 111.200.232.77 TO 111.200.234.222 1  --> 扫描网段 返回第一页查询
-查询天气：@我 北京市天气
-查询天气：@我 朝阳区天气
-查询天气：@我 Beijing天气
-                        '''
+                        use_msg = config_content['usage_method'][0]
                         msg = use_msg.strip().lstrip("\n").rstrip("\n")
                         send_msg(msg, 'user_id', userId)
 
@@ -274,28 +253,7 @@ def my_msg():
                               '--help' in message,
                               '功能' in message,
                               '-h' in message]):
-                        function_list = '''
-| 功能列表 |
---------------------------------------------------------------
-找骂： 直接@ME
-搜索论坛: @ME searchforum keyword
-显示所有Poc：@ME showallpoc keyword(cms;hardware;industrial;system;information)
-TCP端口扫描：@ME nmap host
-CMS识别：@ME whatcms host
-CMS漏洞扫描： @ME cms host
-信息搜集: @ME information host
-系统漏洞扫描： @ME system host
-物联网设备安全检测: @ME hardware host
-工控安全检测: @ME industrial host
-搜索POC： @ME search keywords
-搜索并使用POC进行安全检测： @ME search keywords host
-神奇的梯子： @ME python(py)
-子网工控设备扫描(返回页内容)： @ME protocols subnet sub_num(16/24) pge_num
-查询天气： @ME ??市(区)天气
-使用方法： @ME 食用
---------------------------------------------------------------
-                        '''
-                        function_list = "\n" + function_list.strip().rstrip("\n")
+                        function_list = "\n" + config_content['function_list'][0].strip().rstrip("\n")
                         msg = {'reply': function_list}
                         return Response(
                             json.dumps(msg), mimetype='application/json')
