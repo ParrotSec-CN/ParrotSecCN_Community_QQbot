@@ -1,10 +1,10 @@
 ## Flask_Python2
+wheel==0.33.1
 flask==1.0.2
 gevent==1.4.0
 grequests==0.3.0
 uwsgi==2.0.18
 pyyaml==5.1
-wheel==0.33.1
 
 ## Spider_Python2
 lxml==4.3.3
