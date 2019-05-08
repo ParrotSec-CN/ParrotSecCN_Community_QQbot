@@ -185,10 +185,10 @@
 ├─ cron
 │    └─ spider.cron  # 启动服务器爬虫
 ├─ qqbot
-│    ├─ Secrets.py  # 相关密钥文件导入
 │    ├─ bot_config.yaml  # yaml配置
 │    ├─ api  # 准备把重构相关api文件
 │    │    ├─ __init__.py
+│    │    ├─ Secrets.py  # 相关密钥文件导入
 │    │    ├─ cmslist1.json
 │    │    ├─ hack_api.py
 │    │    ├─ other_api.py
