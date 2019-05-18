@@ -1,1 +1,1 @@
-30 02 * * * /.../bin/python3.5 /.../parrotsec_bot/spider/share-shadowsocks >> /.../parrotsec_bot/spider/logs.log 2>&1
+Nothing

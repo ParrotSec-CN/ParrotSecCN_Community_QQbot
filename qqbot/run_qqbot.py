@@ -181,17 +181,9 @@ def my_msg():
                             json.dumps(msg), mimetype='application/json')
 
                     # 检索SSR服务器
-                    elif any(['allpy' in message,
-                              'allpython' in message]):
-                        ssr_list = api.ssr_work(
-                            "../spider/ss_ssr.txt") + ssr_work("../spider/ss.txt")
-                        ssr_info = ("\n".join(ssr_list))
-                        api.send_msg(ssr_info, 'user_id', userId)
-
-                    elif any(['py' in message,
-                              'python' in message]):
-                        ssr_list = api.ssr_work("../spider/ss_ssr.txt")
-                        api.send_msg(choice(ssr_list), 'user_id', userId)
+                    elif 'py' in message:
+                        ssr_list = api.get_ssr_link()
+                        api.send_msg(ssr_list, 'user_id', userId)
 
                     elif "天气" in message:
                         at_user, keyword = message.split(' ')

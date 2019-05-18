@@ -198,7 +198,7 @@
 │    ├─ python27_pligin.so  # uwsgi的程序函数库
 │    └─ run_qqbot.py  # 启动机器人
 ├─ requirements.txt # 依赖项
-└─ spider
+└─ spider (当前SSR爬取用了函数，此文件夹作废)
        ├─ doub.spider.py
        ├─ free-ss_spider.py
        ├─ share-shadowsocks.py
