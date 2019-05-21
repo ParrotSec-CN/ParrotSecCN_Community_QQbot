@@ -30,7 +30,7 @@
 - 相关注意事项
   - 嘤嘤机器人的flask后台，用于监听qq数据的api接口是http://127.0.0.1:8080/msg
 
-  - 详见代码的111行
+  - 详见代码 `qqbot/run_qqbot.py` 的110行
 
   - 所以你启动docker的时候CQHTTP_POST_URL要改为下面的内容(或者docker启动后再修改coolq/app/io.github.richardchien.coolqhttpapi/config里面的ini文件或json文件)
 
@@ -79,9 +79,9 @@
     ```
 
 ## 配置flask
-- 填好你的机器人QQ号
+- 填好你的机器人QQ号，以及QQ群号码
 
-  `atMe = '[CQ:at,qq=xxxxxx]'  # 29行`
+  `atMe, group = '[CQ:at,qq=212521306]', 160958474'  # 28行`
 
 - 配置flask端口，端口是你docker启动后CQHTTP_POST_URL的端口
 
@@ -89,7 +89,7 @@
 
   - 比如我docker配置的CQHTTP_POST_URL端口是8080，那么我flask的启动端口就是8080*
 
-  - `http = WSGIServer(('', 8080), app)  # 319行`
+  - `http = WSGIServer(('', 8080), app)  # 310行`
 
 ## 启动机器人
 **安装依赖**
@@ -106,7 +106,7 @@
   
   `uwsgi --plugins python27 --http-socket :flask用的端口 -M -w 文件名:app`
 
-  **屏蔽15，319，320行，终端运行下面命令**
+  **屏蔽4，310，311行，终端运行下面命令**
 
   **示例:**
   
@@ -118,13 +118,11 @@
 
 - 子网工控设备端口扫描，需要用到[Censys](https://censys.io/account)的UID和SECRET**
 
-  *10行，11行*
-
 - 天气查询，需要用到[openweathermap.org](https://openweathermap.org/)的appid**
 
-  *60行*
-
 ## 已有功能
+- **搜索论坛:@机器人 searchforum keyword**
+
 - **显示所有Poc:@机器人 showallpoc info(cms;hardware;industrial;system;information)**
 
   Demo: `@机器人 showallpoc system`
@@ -151,11 +149,9 @@
 
 - **搜索并使用POC进行安全检测：`@机器人 search keywords host`**
 
-- **神奇的梯子：@机器人 python(py)**
+- **神奇的梯子：@机器人 py**
 
   Demo: `@机器人 py`
-
-  Demo: `@机器人 python`
 
 - **子网工控设备扫描(返回页内容)：@机器人 protocols subnet sub_num(16/24) pge_num**
 
@@ -188,12 +184,12 @@
 │    ├─ bot_config.yaml  # yaml配置
 │    ├─ api  # 准备把重构相关api文件
 │    │    ├─ __init__.py
-│    │    ├─ Secrets.py  # 相关密钥文件导入
 │    │    ├─ cmslist1.json
 │    │    ├─ hack_api.py
 │    │    ├─ other_api.py
 │    │    ├─ qq_group_api.py
 │    │    └─ scan_api.py
+│    ├─ Secrets.py  # 相关密钥文件导入
 │    ├─ config.py  # 相关flask配置
 │    ├─ python27_pligin.so  # uwsgi的程序函数库
 │    └─ run_qqbot.py  # 启动机器人

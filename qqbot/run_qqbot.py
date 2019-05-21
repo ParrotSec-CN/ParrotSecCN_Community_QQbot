@@ -12,7 +12,7 @@ from config import app
 from flask import request, Response
 from random import choice
 import api
-from gevent.pywsgi import WSGIServer
+# from gevent.pywsgi import WSGIServer
 # 导入ssl模块，防止https报错
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -25,8 +25,7 @@ bot_config = open('bot_config.yaml')
 config_content = yaml.safe_load(bot_config)
 
 headers = {'Content-Type': 'application/json'}
-atMe = '[CQ:at,qq=212521306]'
-group = 160958474
+atMe, group = '[CQ:at,qq=212521306]', 160958474
 
 
 def new_topic(topic):
@@ -74,17 +73,17 @@ def handle(event, myjson):
 
 def forum_search(keywords):
     search_url = 'https://parrotsec-cn.org/search.json'
-    data = dict(q="")
-    data['q'] = keywords
+    data = dict(q=keywords)
     rsp = requests.get(search_url, params=data)
     try:
-        a = json.loads(rsp.text)
-        topics = a['topics']
-        result = '搜索结果: \n'
-        for i in topics:
-            url = "https://parrotsec-cn.org/t/{}{}{}{}".format(
-                str(i['slug']), '/', str(i['id']), '\n')
-            result = "".format(result, i['title'], "\n", url)
+        result = "".join(["{}{}https://parrotsec-cn.org/t/"
+                          "{}{}{}{}".format(i['title'],
+                                            "\n",
+                                            str(i['slug']),
+                                            '/',
+                                            str(i['id']),
+                                            '\n') for i in json.loads(rsp.text)['topics']])
+        result = "搜索结果:{}{}".format("\n", result)
         return result
     except BaseException:
         return '未找到搜索结果'
@@ -122,16 +121,16 @@ def my_msg():
         if content['post_type'] == 'message':
             try:
                 message = content['message'].encode('utf-8')
-                if "".join((message.lower().split())
-                           ) in config_content['ban_word']:
-                    msg = {
-                        'reply': ', big brother is watching you! 禁言半小时以示惩戒！！！'}
-                    api.group_ban(groupId, userId, miu_num=1800)
-                    return Response(
-                        json.dumps(msg), mimetype='application/json')
+                for ban_word in config_content['ban_word']:
+                    if ban_word in "".join(message.lower().split()):
+                        msg = {
+                            'reply': ', big brother is watching you! 禁言半小时以示惩戒！！！'}
+                        api.group_ban(groupId, userId, miu_num=1800)
+                        return Response(
+                            json.dumps(msg), mimetype='application/json')
 
                 # 直接@我
-                elif atMe in message:
+                if atMe in message:
                     if "".join((message.split())) == atMe:
                         reply = config_content['fuck_reply']
                         msg = {'reply': choice(reply)}
@@ -173,9 +172,7 @@ def my_msg():
 
                     elif 'searchforum' in message:
                         data = message.split(' ')
-                        keyword = data[2]
-                        result = forum_search(keyword)
-                        print(result)
+                        result = forum_search(data[2])
                         msg = {'reply': result}
                         return Response(
                             json.dumps(msg), mimetype='application/json')
@@ -215,7 +212,8 @@ def my_msg():
                                 json.dumps(msg), mimetype='application/json')
 
                         elif keyword in ['cms', 'information', 'system', 'hardware', 'industrial']:
-                            result = api.exploit_api(keyword=keyword, url=target)
+                            result = api.exploit_api(
+                                keyword=keyword, url=target)
                             print(result)
                             msg = {
                                 'reply': "\n".join(result)} if result else {
@@ -224,7 +222,8 @@ def my_msg():
                                 json.dumps(msg), mimetype='application/json')
 
                         elif keyword == 'whatcms':
-                            result = api.exploit_api(keyword=keyword, url=target)
+                            result = api.exploit_api(
+                                keyword=keyword, url=target)
                             msg = {
                                 'reply': result} if result else {
                                 'reply': "未识别成功"}
