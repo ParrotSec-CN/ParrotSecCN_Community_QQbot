@@ -81,13 +81,13 @@
 ## 配置flask
 - 填好你的机器人QQ号，以及QQ群号码
 
-  `atMe, group = '[CQ:at,qq=212521306]', 160958474'  # 28行`
+  `atMe, group = '[CQ:at,qq=212521306]', 160958474  # 28行`
 
 - 配置flask端口，端口是你docker启动后CQHTTP_POST_URL的端口
 
   - CQHTTP_POST_URL配置的端口不是占用此端口，而是数据请求此端口
 
-  - 比如我docker配置的CQHTTP_POST_URL端口是8080，那么我flask的启动端口就是8080*
+  - 比如我docker配置的CQHTTP_POST_URL端口是8080，那么我flask的启动端口就是8080
 
   - `http = WSGIServer(('', 8080), app)  # 310行`
 
@@ -116,9 +116,9 @@
 
 `from Secrets import SECRETS`
 
-- 子网工控设备端口扫描，需要用到[Censys](https://censys.io/account)的UID和SECRET**
+- 子网工控设备端口扫描，需要用到[Censys](https://censys.io/account)的UID和SECRET
 
-- 天气查询，需要用到[openweathermap.org](https://openweathermap.org/)的appid**
+- 天气查询，需要用到[openweathermap.org](https://openweathermap.org/)的appid
 
 ## 已有功能
 - **搜索论坛:@机器人 searchforum keyword**
@@ -182,7 +182,7 @@
 │    └─ spider.cron  # 启动服务器爬虫
 ├─ qqbot
 │    ├─ bot_config.yaml  # yaml配置
-│    ├─ api  # 准备把重构相关api文件
+│    ├─ api  # 准备重构的相关api文件
 │    │    ├─ __init__.py
 │    │    ├─ cmslist1.json
 │    │    ├─ hack_api.py

@@ -124,16 +124,17 @@ json_link = "https://shadowsocks-share.herokuapp.com/subscribeJson"
 def encode_ssr(ssr_info):
     server_encode = "{}:{}:{}:{}:{}:".format(ssr_info['server'],
                                              ssr_info['server_port'],
-                                             ssr_info['ssr_protocol'],
                                              ssr_info['method'],
+                                             ssr_info['password'],
+                                             ssr_info['ssr_protocol'],
                                              ssr_info['obfs'])
-    passwd_encode = str(
-        (base64.b64encode((ssr_info['password'] + "?").encode('utf-8'))))
-    param_encode = "obfsparam=&remarks=aHR0cHM6Ly9wYXJyb3RzZWMtY24ub3JnLw&group=UGFycm90c2VjLWNu"
-    ssr_source_encode = server_encode + passwd_encode + "?" + param_encode
-    ssr_encode = "ssr://" + \
-        str(base64.b64encode(ssr_source_encode.encode('utf-8')))
-    return ssr_encode
+    #passwd_encode = str(
+    #    (base64.b64encode((ssr_info['password'] + "?").encode('utf-8'))))
+    #param_encode = "obfsparam=&remarks=aHR0cHM6Ly9wYXJyb3RzZWMtY24ub3JnLw&group=UGFycm90c2VjLWNu"
+    #ssr_source_encode = server_encode + passwd_encode + "?" + param_encode
+    #ssr_encode = "ssr://" + \
+    #    str(base64.b64encode(ssr_source_encode.encode('utf-8')))
+    return server_encode
 
 
 def get_ssr_link():
@@ -141,5 +142,9 @@ def get_ssr_link():
         json_link, headers={
             "User-Agent": random.choice(user_agent)})
     json_encode = json.loads(json_info.text)
-    ssr_link = encode_ssr(json_encode)
+    if "status" not in json_encode.keys():
+        ssr_link = encode_ssr(json_encode)
+    else:
+        ssr_link = "当前查询服务器没有可用SSR"
     return ssr_link
+
