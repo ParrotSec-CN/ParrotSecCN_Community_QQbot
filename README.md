@@ -28,13 +28,13 @@
   ```
 
 - 相关注意事项
-  - 嘤嘤机器人的flask后台，用于监听qq数据的api接口是http://127.0.0.1:8080/msg
+  - 嘤嘤机器人的flask后台，用于监听qq数据的api接口是http://127.0.0.1:8080/api/msg
 
-  - 详见代码的210行
+  - 详见代码 `qqbot/run_qqbot.py` 的80行
 
   - 所以你启动docker的时候CQHTTP_POST_URL要改为下面的内容(或者docker启动后再修改coolq/app/io.github.richardchien.coolqhttpapi/config里面的ini文件或json文件)
 
-  - CQHTTP_POST_URL=http://127.0.0.1:8080/msg
+  - CQHTTP_POST_URL=http://127.0.0.1:8080/api/msg
 
 - 我的相关config配置文件
 
@@ -44,7 +44,7 @@
     host=0.0.0.0
     port=5700
     use_http=yes
-    post_url=http://内网ip:8080/msg
+    post_url=http://内网ip:8080/api/msg
     post_message_format=string
     ```
 
@@ -57,7 +57,7 @@
         "ws_host": "0.0.0.0",
         "ws_port": 6700,
         "use_ws": false,
-        "post_url": "http://127.0.0.1:8080/msg",
+        "post_url": "http://127.0.0.1:8080/api/msg",
         "ws_reverse_url": "",
         "ws_reverse_api_url": "",
         "ws_reverse_event_url": "",
@@ -79,63 +79,57 @@
     ```
 
 ## 配置flask
-- 填好你的机器人QQ号
+- 填好你的机器人QQ号，以及QQ群号码
 
-  `atMe = '[CQ:at,qq=xxxxxx]'  # 29行`
+  `atMe, group = '[CQ:at,qq=212521306]', 160958474  # 16行`
 
 - 配置flask端口，端口是你docker启动后CQHTTP_POST_URL的端口
 
   - CQHTTP_POST_URL配置的端口不是占用此端口，而是数据请求此端口
 
-  - 比如我docker配置的CQHTTP_POST_URL端口是8080，那么我flask的启动端口就是8080*
+  - 比如我docker配置的CQHTTP_POST_URL端口是8080，那么我flask的启动端口就是8080
 
-  - `http = WSGIServer(('', 8080), app)  # 470行`
+## 外部导入相关密码，验证Key
+
+`from Secrets import SECRETS`
+
+- Flask认证Key: secret_key
+
+  **qqbot/config/config.py**
+
+- 子网工控设备端口扫描，需要用到[Censys](https://censys.io/account)的UID和SECRET
+
+  **qqbot/api/other_api.py  # 12 13行**
+
+- 天气查询，需要用到[openweathermap.org](https://openweathermap.org/)的appid
+
+  **qqbot/api/other_api.py  # 62行**
 
 ## 启动机器人
 **安装依赖**
 
 `pip install -r requirements.txt`
 
-- gevent启动flask
-  
-  `python webhook.py`
-
-- uwsgi启动flask
-
-  **用法:**
-  
-  `uwsgi --plugins python27 --http-socket :flask用的端口 -M -w 文件名:app`
-
-  **屏蔽8，9，19，470，471行，终端运行下面命令**
-
-  **示例:**
-  
-  `uwsgi --plugins python27 --http-socket :8080 -M -w webhook:app`
-
-## 外部导入相关密码，验证Key
-
-`from Secrets import SECRETS (17行)`
-
-- 子网工控设备端口扫描，需要用到[Censys](https://censys.io/account)的UID和SECRET**
-
-  *58行，59行*
-
-- 天气查询，需要用到[openweathermap.org](https://openweathermap.org/)的appid**
-
-  *104行*
+* [ ] 启动方式及是否gevent uwsgi在考虑
 
 ## 已有功能
-- **显示所有Poc:@机器人 showallpoc info(cms;hardware;industrial;system;information)**
+- **搜索论坛:@机器人 search-forum keyword**
 
-  Demo: `@机器人 showallpoc system`
+  Demo: `@机器人 search-forum 学习资料`
+
+- **显示所有Poc:@机器人 show-poc info(cms;hardware;industrial;system;information)**
+
+  Demo: `@机器人 show-poc system`
+  
+  Demo: `@机器人 show-poc cms`
 
 - **TCP端口扫描:@机器人 nmap host**
 
   Demo: `@机器人 nmap 111.200.232.222`
 
-- **CMS识别：@机器人 whatcms host**
+- **CMS识别：@机器人 what-cms host**
 
-  Demo: `@机器人 whatcms club8s8f.host`
+  Demo: `@机器人 what-cms club8s8f.host`
 
 - **CMS漏洞扫描：`@机器人 cms host`**
 
@@ -147,35 +141,37 @@
 
 - **工控安全检测：`@机器人 industrial host`**
 
-- **搜索POC：`@机器人 search keywords`**
+- **搜索POC：`@机器人 search-poc keywords`**
 
-- **搜索并使用POC进行安全检测：`@机器人 search keywords host`**
+- **搜索并使用POC进行安全检测：`@机器人 poc-search-url keywords host`**
 
-- **神奇的梯子：@机器人 python(py)**
+- **SSR服务器：@机器人 py**
 
   Demo: `@机器人 py`
 
-  Demo: `@机器人 python`
+- **默认子网工控设备扫描：@机器人 protocols-default subnet pge_num  --> 默认扫描子网 /24 返回第一页查询**
 
-- **查询所有梯子：@机器人 allpython(allpy)**
+  Demo: `@机器人 protocols-default 111.200.232.0 1`
 
-- **子网工控设备扫描(返回页内容)：@机器人 protocols subnet sub_num(16/24) pge_num**
+- **扫描子网工控设备：@机器人 protocols-subnet subnet 24 pge_num  --> 扫描子网 /24 返回第二页查询**
 
-  Demo: `@机器人 protocols 111.200.232.0 1`  --> 默认扫描子网 /24 返回第一页查询
+  Demo: `@机器人 protocols-subnet 111.200.232.0 24 2`
 
-  Demo: `@机器人 protocols 111.200.232.0 24 2`  --> 默认扫描子网 /24 返回第二页查询
+- **扫描子网工控设备：@机器人 protocols-subnet subnet 16 pge_num  --> 扫描子网段 /16 返回第一页查询**
 
-  Demo: `@机器人 protocols 111.200.232.0 16 1`  --> 默认扫描子网 /16 返回第一页查询
+  Demo: `@机器人 protocols 111.200.232.0 16 1`
+
+- **扫描网段内工控设备：@机器人 protocols-vlan subnet TO subnet pge_num  --> 扫描网段 返回第一页查询**
 
   Demo: `@机器人 protocols 111.200.232.77 TO 111.200.234.222 1`
 
-- **查询天气： @机器人 ??市(区)天气**
+- **查询天气： @机器人 天气 ??市(区)**
 
-  Demo: `@机器人 北京市天气`
+  Demo: `@机器人 天气 北京市`
 
-  Demo: `@机器人 朝阳区天气`
+  Demo: `@机器人 天气 朝阳区`
 
-  Demo: `@机器人 Beijing天气`
+  Demo: `@机器人 天气 Beijing`
 
 - **使用方法： `@机器人 食用`**
 
@@ -185,22 +181,31 @@
 ├─ LICENSE
 ├─ README.md
 ├─ cron
-│    ├─ 1-share-shadowsocks.cron  # 下午4点35启动share-shadowsocks的服务器爬虫
-│    └─ 2-free-ss.cron  # 每20分钟启动free-ss_spider的服务器爬虫(不支持日本IP，最近加了些验证，还没破解)
+│    └─ spider.cron  # 定时SSR服务器爬虫
 ├─ qqbot
-│    ├─ Secrets.py  # 相关密钥文件导入
-│    ├─ api  # 准备把重构相关api文件
+│    ├─ config
 │    │    ├─ __init__.py
+│    │    ├─ bot_config.yaml  # yaml配置
+│    │    ├─ config.py  # flask配置
+│    ├─ utils
+│    │    ├─ __init__.py
+│    │    ├─ callback_function.py  # 字典映射
+│    │    ├─ function_hooks.py  # 字典映射的函数实现
+│    ├─ api
+│    │    ├─ __init__.py
+│    │    ├─ cmslist1.json
 │    │    ├─ hack_api.py
+│    │    ├─ other_api.py
+│    │    ├─ qq_group_api.py
 │    │    └─ scan_api.py
-│    ├─ config.py  # 相关flask配置
-│    └─ run_qqbot.py  # 启动服务
+│    ├─ Secrets.py  # 相关密钥文件导入
+│    └─ run_qqbot.py  # 启动机器人
 ├─ requirements.txt # 依赖项
-└─ spider
+├─ run_service.sh # Shell一键启动脚本
+└─ spider (当前SSR爬取用了函数，此文件夹作废)
        ├─ doub.spider.py
        ├─ free-ss_spider.py
        ├─ share-shadowsocks.py
-       ├─ ss.txt  # free-ss的ss链接写入
        ├─ ss_pythonic_spider.py
        └─ ss_ssr.txt  # share-shadowsocks的ss/ssr链接写入
 </code></pre>
@@ -208,8 +213,10 @@
 
 ## 未完成的迭代...
 
+* [ ] 重构阶段做测试
+
 * [ ] Py2转Py3
 
 * [ ] 重构，逻辑代码调优
 
-* [ ] 添加一些现有的工具
+* [ ] Poc查询接口改用vulners

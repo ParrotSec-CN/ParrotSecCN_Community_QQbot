@@ -1,3 +1,5 @@
+# -*- coding:utf-8 -*-
+
 from .hack_api import *
 
 

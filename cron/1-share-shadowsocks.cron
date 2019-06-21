@@ -1,1 +1,0 @@
-35 16 * * * /.../bin/python /.../parrotsec_bot/spider/share-sjadowsocks.py >> /.../parrotsec_bot/spider/logs.log 2>&1
