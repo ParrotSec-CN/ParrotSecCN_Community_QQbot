@@ -56,6 +56,11 @@ def query_ssr(user_id):
     api.send_msg(ssr_list, 'user_id', user_id)
 
 
+def query_free_ss(user_id):
+    ss_list = api.get_free_ss_link()
+    api.send_msg(ss_list, 'user_id', user_id)
+
+
 def query_weather(message, group_id):
     msg_city = message.split(' ')[2]
     msg_city = msg_city.decode("utf8", "ignore")

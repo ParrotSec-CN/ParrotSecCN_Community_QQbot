@@ -1,8 +1,12 @@
 # -*- coding:utf-8 -*-
 
 import json
+import base64
 import random
 import requests
+import cfscrape
+import bs4
+from prettytable import PrettyTable
 from config import SECRETS
 
 
@@ -124,8 +128,8 @@ json_link = "https://shadowsocks-share.herokuapp.com/subscribeJson"
 def encode_ssr(ssr_info):
     server_encode = "{}:{}:{}:{}:{}:{}".format(ssr_info['server'],
                                                ssr_info['server_port'],
-                                               ssr_info['method'],
                                                ssr_info['password'],
+                                               ssr_info['method'],
                                                ssr_info['ssr_protocol'],
                                                ssr_info['obfs'])
     # passwd_encode = str(
@@ -148,3 +152,22 @@ def get_ssr_link():
         ssr_link = "当前查询服务器没有可用SSR"
     return ssr_link
 
+
+def get_free_ss_link():
+    scraper = cfscrape.create_scraper()
+    soup = bs4.BeautifulSoup(scraper.get("https://www.youneed.win/free-ss").content,
+                             features="html.parser")
+    content = soup.tbody.get_text().strip("\n\n")
+    sslist = content.split("\n\n")
+
+    table = PrettyTable(["ip", "port", "update time", "country", "sslink"])
+    for text in sslist:
+        text = text.strip("\n")
+        tlist = text.split("\n")
+        ssconfig = tlist[3] + ":" + tlist[2] + "@" + tlist[0] + ":" + tlist[1]
+        ssurl = "ss://" + base64.b64encode(ssconfig.encode("utf8")).decode()
+        tlist.append(ssurl)
+        del tlist[2:4]
+        table.add_row(tlist)
+
+    return table
