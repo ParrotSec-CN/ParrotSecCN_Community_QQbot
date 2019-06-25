@@ -54,12 +54,22 @@ def new_post(post):
 
 
 def handle(event, myjson):
+    # 发表新文章
     if event == 'topic_created':
         if myjson['topic']['user_id'] != -1:
+            print(1)
             return new_topic(myjson)
+    # 发表回复
     elif event == 'post_created':
         if myjson['post']['post_number'] > 1:
+            print(2)
             return new_post(myjson)
+    # 修改文章
+    elif event == 'post_edited':
+        name, title = str(myjson['post']['username']), str(myjson['post']['topic_title'])
+        url = "https://parrotsec-cn.org/t/{}/{}".format(myjson['post']['topic_slug'], myjson['post']['topic_id'])
+        msg = '{} 修改了主题 "{}" {} {}'.format(name, title, "\n", url)
+        return qq_group.send_msg(msg, 'group_id', group)
 
 
 @app.route('/', methods=['GET'])
