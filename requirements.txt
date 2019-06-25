@@ -1,5 +1,8 @@
-wheel==0.33.1
-flask==1.0.2
-gevent==1.4.0
-grequests==0.3.0
-pyyaml==5.1
+wheel
+flask
+gevent
+grequests
+pyyaml
+cfscrape
+bs4
+prettytable

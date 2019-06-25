@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+from gevent import monkey
+monkey.patch_all()
+
 import json
 import yaml
 import api.qq_group_api as qq_group
@@ -59,13 +62,13 @@ def handle(event, myjson):
             return new_post(myjson)
 
 
-@app.route('/response', methods=['GET'])
+@app.route('/', methods=['GET'])
 def hello_world():
     if request.method == "GET":
         return 'hello world'
 
 
-@app.route('/forum/json', methods=['POST'])
+@app.route('/json', methods=['POST'])
 def my_json():
     headers = request.headers
     event = (headers['X-Discourse-Event'])
@@ -77,22 +80,26 @@ def my_json():
         return Response(json.dumps(res), mimetype='application/json')
 
 
-@app.route('/api/msg', methods=['POST'])
+@app.route('/msg', methods=['POST'])
 def my_msg():
-    fuckoff, usage_method, function_list = config_content['fuck_off'], \
-                                           config_content['usage_method'], \
-                                           config_content['function_list']
-    content = request.json
     print("------------------Print running log---------------------")
+
+    fuckoff, usage_method, function_list, function_keyword = config_content['fuck_off'], \
+                                           config_content['usage_method'], \
+                                           config_content['function_list'], \
+                                           config_content['function_keyword']
+    content = request.json
+
     try:
         groupId = content['group_id']
     except BaseException:
         groupId = False
     userId = content['user_id']
+
     if groupId and groupId in [160958474]:
         if content['post_type'] == 'message':
             try:
-                message = content['message'].encode('utf-8')
+                message = content['message']
                 # 判断违禁词
                 for ban_word in config_content['ban_word']:
                     if ban_word in "".join(message.lower().split()):
@@ -109,14 +116,6 @@ def my_msg():
                         return Response(
                             json.dumps(msg), mimetype='application/json')
 
-                    # search_info = QueryMsg(1001)(keyword=keyword)
-                    keyword = message.split(' ')[1]
-                    cf.QueryMsg(keyword)(usage_method=usage_method,
-                                         function_list=function_list,
-                                         message=message,
-                                         user_id=userId,
-                                         group_id=groupId)
-
                     # 判断骂机器人
                     for abuse_word in config_content['abuse_word']:
                         if abuse_word in "".join(message.lower().split()):
@@ -125,10 +124,24 @@ def my_msg():
                             qq_group.group_ban(groupId, userId, miu_num=choice(random_time))
                             return Response(
                                 json.dumps(msg), mimetype='application/json')
-                        else:
-                            msg = {'reply': choice(fuckoff)}
-                            return Response(
-                                json.dumps(msg), mimetype='application/json')
+
+                    keyword = message.split(' ')[1]
+
+                    if keyword not in function_keyword:
+                        msg = {'reply': choice(fuckoff)}
+                        return Response(
+                            json.dumps(msg), mimetype='application/json')
+
+                    # search_info = QueryMsg(1001)(keyword=keyword)
+                    function_result = cf.QueryMsg(keyword)(usage_method=usage_method,
+                                         function_list=function_list,
+                                         message=message,
+                                         user_id=userId,
+                                         group_id=groupId)
+                    if function_result:
+                        msg = {'reply': function_result}
+                        return Response(
+                            json.dumps(msg), mimetype='application/json')
 
             except Exception as e:
                 print(e)
@@ -143,4 +156,4 @@ def my_msg():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=9001)
+    app.run(host='0.0.0.0', port=9002)

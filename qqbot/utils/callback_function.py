@@ -4,6 +4,7 @@ import utils.function_hooks as fh
 
 QUERYMSG = {
     "食用": fh.how_to_use,
+    "-help": fh.bot_help,
     "help": fh.bot_help,
     "-h": fh.bot_help,
     "search-forum": fh.search_forum,

@@ -4,7 +4,31 @@ url:
     recall_url: http://127.0.0.1:5700/delete_msg
     ban_url: http://127.0.0.1:5700/set_group_ban
 
-fuck_off: ['你说j2呢???', '不会用别瞎艾特', '什么玩意?你看看能help(-h;--help)不?', '???mdzz']
+fuck_off: ['你说j2呢???', '不会用别瞎艾特, 滚粗!@#$%', '什么玩意?你看看能help(-h;-help)不?', '???mdzz', '你究竟会不会用啊，小伙计???']
+
+function_keyword: [
+    "食用",
+    "help",
+    "-help",
+    "-h",
+    "search-forum",
+    "py",
+    "all-py",
+    "天气",
+    "show-poc",
+    "search-poc",
+    "cms",
+    "information",
+    "system",
+    "hardware",
+    "industrial",
+    "what-cms",
+    "nmap",
+    "poc-search-url",
+    "protocols-default",
+    "protocols-subnet",
+    "protocols-vlan"
+]
 
 fuck_reply: [
     '，艾特我干嘛？有事儿说事儿，没事儿滚去日站!!!   /菜刀/菜刀',
@@ -24,6 +48,9 @@ ban_word: [
     "vpn",
     "翻墙",
     "黑产",
+    "海洛因",
+    "冰毒",
+    "摇头丸",
     "暗网",
     "习近平",
     "酸酸乳",
@@ -32,8 +59,11 @@ ban_word: [
 abuse_word: [
     "傻逼",
     "傻屌",
+    "白痴",
     "狗屎",
     "垃圾",
+    "nmsl",
+    "mlgb",
     "傻吊",
     "智障",
     "狗日的",
@@ -42,8 +72,20 @@ abuse_word: [
     "煞笔"]
 
 usage_method: "
+* 搜索论坛: @ME search-forum 学习资料\n
 * 查询已知Poc：@我 show-poc system\n
 * 查询已知Poc：@我 show-poc hardware\n
+* TCP端口扫描：@ME nmap www.exploit-db.com\n
+* CMS识别：@ME what-cms www.exploit-db.com\n
+* CMS漏洞扫描： @ME cms www.exploit-db.com\n
+* 信息搜集: @ME information www.exploit-db.com\n
+* 系统漏洞扫描： @ME system www.exploit-db.com\n
+* 物联网设备安全检测: @ME hardware www.exploit-db.com\n
+* 工控安全检测: @ME industrial www.exploit-db.com\n
+* 搜索POC： @ME search-poc discuz\n
+* 查询可用SSR： @ME py\n
+* 查询全部可用SS： @ME all-py\n
+* 搜索并使用POC进行安全检测： @ME poc-search-url discuz www.exploit-db.com\n
 * 默认子网工控设备扫描：@我 protocols-default 111.200.232.0 1  --> 默认扫描子网 /24 返回第一页查询\n
 * 扫描子网工控设备：@我 protocols-subnet 111.200.232.0 24 2  --> 扫描子网 /24 返回第二页查询\n
 * 扫描子网工控设备：@我 protocols-subnet 111.200.232.0 16 1  --> 扫描子网段 /16 返回第一页查询\n
@@ -56,7 +98,7 @@ function_list: "| 功能列表 |\n
 --------------------------------------------------------------\n
 * 找骂： 直接@ME\n
 * 搜索论坛: @ME search-forum keyword\n
-* 显示所有Poc：@ME show-poc keyword(cms;hardware;industrial;system;information)\n
+* 查询已知Poc：@ME show-poc keyword(cms;hardware;industrial;system;information)\n
 * TCP端口扫描：@ME nmap host\n
 * CMS识别：@ME what-cms host\n
 * CMS漏洞扫描： @ME cms host\n

@@ -146,10 +146,12 @@ def get_ssr_link():
         json_link, headers={
             "User-Agent": random.choice(user_agent)})
     json_encode = json.loads(json_info.text)
-    if "status" not in json_encode.keys():
+
+    try:
         ssr_link = encode_ssr(json_encode)
-    else:
+    except:
         ssr_link = "当前查询服务器没有可用SSR"
+
     return ssr_link
 
 
