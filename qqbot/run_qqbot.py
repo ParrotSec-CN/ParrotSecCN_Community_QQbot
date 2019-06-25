@@ -106,7 +106,7 @@ def my_msg():
         groupId = False
     userId = content['user_id']
 
-    if groupId and groupId in [160958474]:
+    if groupId and groupId == group:
         if content['post_type'] == 'message':
             try:
                 message = content['message']
