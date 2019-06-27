@@ -12,32 +12,79 @@ Blue_red_prefix="\033[46;31m"
 
 Info="${Font_color_suffix}${Green_font_prefix}[Info]${Clean_color_suffix}"
 
-echo -e "${Info} --> 安装相关包"
-apt install uwsgi uwsgi-plugin-python uwsgi-plugin-python3 python3-pip python3-dev python3-venv -y
+CURRRNT_DIR_PATH=`pwd`
+ENV_DIR="${CURRRNT_DIR_PATH}/venv-Py3"
 
-echo -e "${Info} --> 安装pip3 virtualenv"
-pip3 install virtualenv
+################################################################################
+# Function definitions
+################################################################################
 
-echo -e "${Info} --> 检测/root下是否存在venv-Py3"
-if ls /root/venv-Py3 >/dev/null 2>&1;
-then
-    echo -e "${Info} --> /root下存在venv-Py3"
-else
-    mkdir /root/venv-Py3 && cd /root/venv-Py3
+function install_linux_package()
+{
+    echo -e "${Info} --> 安装Linux包"
+    apt -y install python3-pip python3-dev python3-venv nodejs-legacy
+}
 
-    python3 -m venv .
+function install_py_env()
+{
+    echo -e "${Info} --> 安装pip及生成env环境"
+    pip3 install virtualenv
 
-    pip install -r requirements.txt
+    if ls ${ENV_DIR} >/dev/null 2>&1;
+    then
+        echo -e "${Info} --> 已存在venv-Py3"
+    else
+        echo -e "${Info} --> 创建venv文件夹"
+        mkdir ${ENV_DIR} && cd ${ENV_DIR}
+    
+        echo -e "${Info} --> 生成初始环境"
+        python3 -m venv .
 
-    cp /usr/lib/uwsgi/plugins/python3?_plugin.so ./qqbot/
-fi
+        echo -e "cd ${CURRRNT_DIR_PATH}"
+        cd ${CURRRNT_DIR_PATH}
+    
+        echo -e "${Info} --> 安装机器人项目依赖包"
+        pip install -r requirements.txt
 
-echo -e "${Info} --> 应用py3环境"
-source /root/venv-Py3/bin/activate
+        echo -e "${Info} --> 请手动应用Python环境，命令如下："
+        echo "source ${ENV_DIR}/bin/activate"
+    fi
+}
 
-cd ./qqbot/
+function usage_exit()
+{
+    echo "用法: $(basename ${0}) <command>" >&2
+    echo "  命令: install | pip | start | stop" >&2
+    exit 3
+}
 
-Python_env=`ls ./python3?_plugin.so`
+################################################################################
+# Main logic
+################################################################################
 
-echo -e "${Info} --> 启动机器人"
-uwsgi --plugins ${Python_env:2:8} --enable-threads --http-socket :9001 -M -w run_qqbot:app
+LOGDIR="/root/logs"
+LOGFILE="${LOGDIR}/qq_bot_logs.log"
+ACCESSLOG="${LOGDIR}/qq_bot_access_logs.log"
+
+#mkdir -p $LOGDIR
+
+case "$1" in
+    install)
+        install_linux_package
+        ;;
+    pip)
+        install_py_env
+        ;;
+    start)
+        cd ${CURRRNT_DIR_PATH}/qqbot
+        gunicorn -b 0.0.0.0:9002 -k gevent -w 4 -D --log-file $LOGFILE --access-logfile $ACCESSLOG run_qqbot:app
+        echo "${Info} --> gunicorn gevent 4线程已启动!"
+        ;;
+    stop)
+        ps -aux | grep "run_qqbot" | grep -v grep | awk 'print {$2}' | xargs sudo kill -9
+        echo -e "${Info} --> 进程已关闭!"
+        ;;
+    *)
+        usage_exit
+        ;;
+esac

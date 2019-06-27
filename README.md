@@ -1,13 +1,20 @@
 ## ParrotSecCN_Community_QQbot
 
-## 安装docker
+## 1.安装docker
+
+**安装Docker**
+
 `wget -qO- https://get.docker.com/ | sh`
+
+**下载Docker coolq**
 
 `docker pull richardchien/cqhttp:latest`
 
+**创建coolq文件夹**
+
 `mkdir coolq`
 
-## 服务器 和 coolq
+## 2.配置 服务器 和 coolq
 **相关外部访问的端口记得在服务器的控制面板开启**
 
 - [酷Q Air for docker](https://cqhttp.cc/docs/4.7/#/Docker)
@@ -15,7 +22,7 @@
   ```
   # docker部署coolq，所有操作都要sudo权限
 
-  docker run -ti --rm --name cqhttp-test -v $(pwd)/coolq:/home/user/coolq -e VNC_PASSWD=12345678 -p 9000:9000 -p 127.0.0.1:5700:5700 -e COOLQ_ACCOUNT=212521306 -e CQHTTP_POST_URL=http://127.0.0.1:8080/ -e CQHTTP_SERVE_DATA_FILES=no richardchien/cqhttp:latest
+  docker run -ti --rm --name cqhttp-test -v $(pwd)/coolq:/home/user/coolq -e VNC_PASSWD=12345678 -p 9000:9000 -p 127.0.0.1:5700:5700 -e COOLQ_ACCOUNT=212521306 -e CQHTTP_POST_URL=http://127.0.0.1:9002/ -e CQHTTP_SERVE_DATA_FILES=no richardchien/cqhttp:latest
 
   # 参数说明
   -v $(pwd)/coolq:/home/user/coolq \  # 将宿主目录挂载到容器内用于持久化酷Q的程序文件
@@ -26,21 +33,21 @@
 
   -e COOLQ_ACCOUNT=212521306 \ # 要登录的 QQ 账号，可选但建议填
 
-  -e CQHTTP_POST_URL=http://127.0.0.1:8080/ \  # 相当于request api，把群里的信息上报(访问)到地址，如果提示端口占用，那么就相应得修改此参数的端口值
+  -e CQHTTP_POST_URL=http://127.0.0.1:9002/ \  # 相当于request api，把群里的信息上报(访问)到地址，如果提示端口占用，那么就相应得修改此参数的端口值
 
   -e CQHTTP_SERVE_DATA_FILES=no \  # 不允许通过 HTTP 接口访问酷 Q 数据文件
   ```
 
 - 相关注意事项
-  - 嘤嘤机器人的flask后台，用于监听qq数据的api接口是http://127.0.0.1:8080/api/msg
+  - 嘤嘤机器人的flask后台，用于监听qq数据的api接口是http://127.0.0.1:9002/msg
 
   - 详见代码 `qqbot/run_qqbot.py` 的93行
 
   - 所以你启动docker的时候CQHTTP_POST_URL要改为下面的内容(或者docker启动后再修改coolq/app/io.github.richardchien.coolqhttpapi/config里面的ini文件或json文件)
 
-  - CQHTTP_POST_URL=http://127.0.0.1:8080/msg
+  - CQHTTP_POST_URL=http://127.0.0.1:9002/msg
 
-- 我的相关config配置文件
+- 我的相关config配置文件 (ini文件会自动生成，再自行创建一个json配置文件)
 
   - `你的QQ号.ini`
     ```
@@ -48,7 +55,7 @@
     host=0.0.0.0
     port=5700
     use_http=yes
-    post_url=http://内网ip:8080/msg
+    post_url=http://内网ip:9002/msg
     post_message_format=string
     ```
 
@@ -61,7 +68,7 @@
         "ws_host": "0.0.0.0",
         "ws_port": 6700,
         "use_ws": false,
-        "post_url": "http://127.0.0.1:8080/msg",
+        "post_url": "http://127.0.0.1:9002/msg",
         "ws_reverse_url": "",
         "ws_reverse_api_url": "",
         "ws_reverse_event_url": "",
@@ -82,7 +89,7 @@
     }
     ```
 
-## 配置flask
+## 3.配置flask
 - 填好你的机器人QQ号，以及QQ群号码
 
   `atMe, group = '[CQ:at,qq=212521306]', 160958474  # 19行`
@@ -91,13 +98,13 @@
 
   - CQHTTP_POST_URL配置的端口不是占用此端口，而是数据请求此端口
 
-  - 比如我docker配置的CQHTTP_POST_URL端口是8080，那么我flask的启动端口就是8080
+  - 比如我docker配置的CQHTTP_POST_URL端口是9002，那么我flask的启动端口就是9002
 
-## 外部导入相关密码，验证Key
+## 4.外部导入相关密码，验证Key
 
 `from Secrets import SECRETS`
 
-- Flask认证Key: secret_key
+- Flask认证Key: secret_key [如何生成flask secret](https://www.jianshu.com/p/d0751d6b3cee)
 
   **qqbot/config/config.py**
 
@@ -109,18 +116,35 @@
 
   **qqbot/api/other_api.py  # 66行**
 
-## 启动机器人
-**安装依赖**
+## 5.启动及启动
 
-`pip install -r requirements.txt`
+- **鉴于很多新手在用，目前改写成了shell脚本启动方式**
 
-**如果查询免费SS服务器，需要先安装nodejs-legacy**
+- **给shell脚本添加可执行权限**
 
-`apt -y install nodejs-legacy`
+  `chmod +x run_service.sh`
 
-* [ ] 启动方式及是否gevent uwsgi在考虑
+- **安装Linux相关包**
 
-## 已有功能
+  `./run_service.sh install`
+
+- **安装pip环境**
+
+  `./run_service.sh pip`
+
+- **安装完pip环境之后，会提示手动应用Python环境**
+
+  **输入并执行给出的代码，应用Python环境**
+
+- **启动机器人**
+
+  `./run_service.sh start`
+
+- **关闭机器人**
+
+  `./run_service.sh stop`
+
+## 6.已有功能
 - **搜索论坛:@机器人 search-forum keyword**
 
   Demo: `@机器人 search-forum 学习资料`
@@ -157,6 +181,10 @@
 
 - **共享SS服务器：@机器人 all-py**
 
+- **Weblogic扫描检测：@机器人  web-logic-scan ip port**
+
+  Demo: `@机器人 web-logic-scan 111.200.232.78 3389`
+
 - **默认子网工控设备扫描：@机器人 protocols-default subnet pge_num  --> 默认扫描子网 /24 返回第一页查询**
 
   Demo: `@机器人 protocols-default 111.200.232.0 1`
@@ -183,13 +211,13 @@
 
 - **使用方法： `@机器人 食用`**
 
-## 目录说明
+## 7.目录说明
 
 <pre><code>.
 ├─ LICENSE
 ├─ README.md
 ├─ cron
-│    └─ spider.cron  # 定时SSR服务器爬虫
+│    └─ spider.cron  # 定时SSR服务器爬虫 (已作废)
 ├─ qqbot
 │    ├─ config
 │    │    ├─ __init__.py
@@ -205,7 +233,22 @@
 │    │    ├─ hack_api.py
 │    │    ├─ other_api.py
 │    │    ├─ qq_group_api.py
-│    │    └─ scan_api.py
+│    │    ├─ scan_api.py
+│    │    ├─ weblogicscan_api.py  # Weblogic扫描函数
+│    │    └─ poc  # Weblogic Poc
+│    │         ├─ __init__.py
+│    │         ├─ Console.py
+│    │         ├─ CVE_2014_4210.py
+│    │         ├─ CVE_2016_0638.py
+│    │         ├─ CVE_2016_3510.py
+│    │         ├─ CVE_2017_10271.py
+│    │         ├─ CVE_2017_3248.py
+│    │         ├─ CVE_2017_3506.py
+│    │         ├─ CVE_2018_2628.py
+│    │         ├─ CVE_2018_2893.py
+│    │         ├─ CVE_2018_2894.py
+│    │         ├─ CVE_2019_2725.py
+│    │         └─ CVE_2019_2729.py
 │    ├─ Secrets.py  # 相关密钥文件导入
 │    └─ run_qqbot.py  # 启动机器人
 ├─ requirements.txt # 依赖项
@@ -218,13 +261,16 @@
        └─ ss_ssr.txt  # share-shadowsocks的ss/ssr链接写入
 </code></pre>
 
-
-## 未完成的迭代...
+## 8.相关迭代...
 
 * [x] Py2转Py3
+
+* [x] Copy了 **rabbitmask提供的** [Weblogicscan](https://github.com/rabbitmask/WeblogicScan)
+
+* [ ] 准备Copy **HatBoy的** [Struts2全漏洞扫描利用工具](https://github.com/HatBoy/Struts2-Scan)
 
 * [ ] 重构阶段做测试
 
 * [ ] 逻辑代码优化
 
-* [ ] Poc查询接口改用vulners
+* [ ] Poc接口增加vulners查询
