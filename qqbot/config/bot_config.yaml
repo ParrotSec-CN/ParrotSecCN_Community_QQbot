@@ -23,6 +23,7 @@ function_keyword: [
     "hardware",
     "industrial",
     "what-cms",
+    "web-logic-scan",
     "nmap",
     "poc-search-url",
     "protocols-default",
@@ -86,6 +87,7 @@ usage_method: "
 * 查询可用SSR： @ME py\n
 * 查询全部可用SS： @ME all-py\n
 * 搜索并使用POC进行安全检测： @ME poc-search-url discuz www.exploit-db.com\n
+* Weblogic检测： @ME web-logic-scan 111.200.232.78 3389\n
 * 默认子网工控设备扫描：@我 protocols-default 111.200.232.0 1  --> 默认扫描子网 /24 返回第一页查询\n
 * 扫描子网工控设备：@我 protocols-subnet 111.200.232.0 24 2  --> 扫描子网 /24 返回第二页查询\n
 * 扫描子网工控设备：@我 protocols-subnet 111.200.232.0 16 1  --> 扫描子网段 /16 返回第一页查询\n
@@ -108,6 +110,7 @@ function_list: "| 功能列表 |\n
 * 工控安全检测: @ME industrial host\n
 * 搜索POC： @ME search-poc keywords\n
 * 搜索并使用POC进行安全检测： @ME poc-search-url keywords host\n
+* Weblogic检测： @ME web-logic-scan ip port\n
 * 子网工控设备扫描： @ME protocols-default subnet pge_num\n
 * 子网段工控设备扫描： @ME protocols-subnet subnet sub_num(16/24) pge_num\n
 * 网段工控设备扫描： @ME protocols-vlan subnet TO subnet 1 pge_num\n

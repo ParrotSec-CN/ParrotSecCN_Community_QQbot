@@ -20,6 +20,7 @@ QUERYMSG = {
     "industrial": fh.known_leak_query_website,
     "what-cms": fh.query_whatcms,
     "nmap": fh.nmap_scan_port,
+    "web-logic-scan": fh.web_logic_scan,
     "poc-search-url": fh.poc_search_url,
     "protocols-default": fh.scan_protocols_default,
     "protocols-subnet": fh.scan_protocols_subnet,

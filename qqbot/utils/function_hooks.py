@@ -107,8 +107,14 @@ def nmap_scan_port(usage_method, user_id, function_list, message, group_id):
     return response_str.strip().lstrip("\n").strip("\n")
 
 
+def web_logic_scan(usage_method, user_id, function_list, message, group_id):
+    target, port_num = message.split(' ')[2], message.split(' ')[3]
+    scan_log = api.PocS(target, port_num)
+    return scan_log
+
+
 def poc_search_url(usage_method, user_id, function_list, message, group_id):
-    search_key, host_txt = message.split(' ')[3], message.split(' ')[4]
+    search_key, host_txt = message.split(' ')[2], message.split(' ')[3]
     result = api.exploit_api(
         keyword=search_key, search=1, url=host_txt)
 
@@ -117,7 +123,7 @@ def poc_search_url(usage_method, user_id, function_list, message, group_id):
 
 
 def scan_protocols_default(usage_method, user_id, function_list, message, group_id):
-    search_key, num_txt = message.split(' ')[3], message.split(' ')[4]
+    search_key, num_txt = message.split(' ')[2], message.split(' ')[3]
     result = api.scan_protocols(
         search_key, num_txt, rule=False)
     api.send_msg(result, 'user_id', user_id)
