@@ -42,12 +42,12 @@ function install_py_env()
 
         echo -e "cd ${CURRRNT_DIR_PATH}"
         cd ${CURRRNT_DIR_PATH}
-    
-        echo -e "${Info} --> 安装机器人项目依赖包"
-        pip install -r requirements.txt
-
+        
         echo -e "${Info} --> 请手动应用Python环境，命令如下："
         echo "source ${ENV_DIR}/bin/activate"
+    
+        echo -e "${Info} --> 再手动安装机器人项目依赖包，命令如下："
+        echo "pip install -r requirements.txt"
     fi
 }
 
