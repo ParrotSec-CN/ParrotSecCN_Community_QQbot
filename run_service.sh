@@ -66,7 +66,7 @@ LOGDIR="/root/logs"
 LOGFILE="${LOGDIR}/qq_bot_logs.log"
 ACCESSLOG="${LOGDIR}/qq_bot_access_logs.log"
 
-#mkdir -p $LOGDIR
+mkdir -p $LOGDIR
 
 case "$1" in
     install)
