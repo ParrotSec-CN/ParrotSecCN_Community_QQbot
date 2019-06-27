@@ -1,6 +1,7 @@
 wheel
 flask
 gevent
+gunicorn
 grequests
 pyyaml
 cfscrape
