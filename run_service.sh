@@ -81,7 +81,7 @@ case "$1" in
         echo "${Info} --> gunicorn gevent 4线程已启动!"
         ;;
     stop)
-        ps -aux | grep "run_qqbot" | grep -v grep | awk 'print {$2}' | xargs sudo kill -9
+        ps -aux | grep "run_qqbot" | grep -v grep | awk '{print $2}' | xargs kill -9
         echo -e "${Info} --> 进程已关闭!"
         ;;
     *)
