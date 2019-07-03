@@ -102,6 +102,8 @@
 
 ## 4.外部导入相关密码，验证Key
 
+**Secrets文件做了处理，逻辑做了修改，不添加Key也没问题**
+
 `from Secrets import SECRETS`
 
 - Flask认证Key: secret_key [如何生成flask secret](https://www.jianshu.com/p/d0751d6b3cee)
@@ -116,7 +118,7 @@
 
   **qqbot/api/other_api.py  # 66行**
 
-## 5.启动及启动
+## 5.启动机器人
 
 - **鉴于很多新手在用，目前改写成了shell脚本启动方式**
 
@@ -132,9 +134,9 @@
 
   `./run_service.sh pip`
 
-- **安装完pip环境之后，会提示手动应用Python环境**
+- **安装完pip环境之后，会提示手动应用Python环境，和安装环境**
 
-  **输入并执行给出的代码，应用Python环境**
+  **输入并执行给出的代码，应用以及安装Python环境**
 
 - **启动机器人**
 
