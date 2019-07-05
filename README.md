@@ -41,7 +41,7 @@
 - 相关注意事项
   - 嘤嘤机器人的flask后台，用于监听qq数据的api接口是http://127.0.0.1:9002/msg
 
-  - 详见代码 `qqbot/run_qqbot.py` 的93行
+  - 详见代码 `qqbot/run_qqbot.py` 的[93行](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/dev_Refactoring_Py3/qqbot/run_qqbot.py)
 
   - 所以你启动docker的时候CQHTTP_POST_URL要改为下面的内容(或者docker启动后再修改coolq/app/io.github.richardchien.coolqhttpapi/config里面的ini文件或json文件)
 
@@ -108,15 +108,15 @@
 
 - Flask认证Key: secret_key [如何生成flask secret](https://www.jianshu.com/p/d0751d6b3cee)
 
-  **qqbot/config/config.py**
+  **[qqbot/config/config.py](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/dev_Refactoring_Py3/qqbot/config/config.py)**
 
 - 子网工控设备端口扫描，需要用到[Censys](https://censys.io/account)的UID和SECRET
 
-  **qqbot/api/other_api.py  # 16 17行**
+  **[qqbot/api/other_api.py](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/dev_Refactoring_Py3/qqbot/api/other_api.py)  # 16 17行**
 
 - 天气查询，需要用到[openweathermap.org](https://openweathermap.org/)的appid
 
-  **qqbot/api/other_api.py  # 66行**
+  **[qqbot/api/other_api.py](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/dev_Refactoring_Py3/qqbot/api/other_api.py)  # 66行**
 
 ## 5.启动机器人
 
