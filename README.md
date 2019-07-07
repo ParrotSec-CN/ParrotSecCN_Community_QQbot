@@ -78,7 +78,7 @@
     }
     ```
 
-## 配置flask
+## 配置flask (当前主分支为Python2)
 - 填好你的机器人QQ号，以及QQ群号码
 
   `atMe, group = '[CQ:at,qq=212521306]', 160958474  # 28行`
@@ -205,8 +205,8 @@
 
 ## 未完成的迭代...
 
-* [ ] Py2转Py3
+* [x] [Py2转Py3](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/tree/dev_Refactoring_Py3)
 
-* [ ] 重构，逻辑代码调优
+* [x] 重构，逻辑代码调优
 
 * [ ] 添加一些现有的工具
