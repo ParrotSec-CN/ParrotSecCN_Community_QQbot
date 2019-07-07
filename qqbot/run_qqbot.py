@@ -64,11 +64,10 @@ def handle(event, myjson):
             return new_post(myjson)
     # 修改文章
     elif event == 'topic_edited':
-        title, edit_user, create_user = myjson['topic']['title'], \
-                                        myjson['topic']['last_poster']['username'], \
-                                        myjson['topic']['created_by']['username']
+        title, create_user = myjson['topic']['title'], \
+                myjson['topic']['created_by']['username']
         url = "https://parrotsec-cn.org/t/{}/{}".format(myjson['topic']['slug'], myjson['topic']['id'])
-        msg = '{} 修改了 {} 的主题 "{}" {} {}'.format(edit_user, create_user, title, "\n", url)
+        msg = '某位大佬 修改了 {} 的主题 "{}" {} {}'.format(create_user, title, "\n", url)
         return qq_group.send_msg(msg, 'group_id', group)
 
 
