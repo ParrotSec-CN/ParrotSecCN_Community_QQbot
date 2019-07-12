@@ -78,7 +78,7 @@ case "$1" in
     start)
         cd ${CURRRNT_DIR_PATH}/qqbot
         gunicorn -b 0.0.0.0:9002 -k gevent -w 4 -D --log-file $LOGFILE --access-logfile $ACCESSLOG run_qqbot:app
-        echo "${Info} --> gunicorn gevent 4线程已启动!"
+        echo -e "${Info} --> gunicorn gevent 4线程已启动!"
         ;;
     stop)
         ps -aux | grep "run_qqbot" | grep -v grep | awk '{print $2}' | xargs kill -9

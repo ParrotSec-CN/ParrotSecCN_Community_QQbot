@@ -13,6 +13,7 @@ QUERYMSG = {
     "天气": fh.query_weather,
     "show-poc": fh.show_poc,
     "search-poc": fh.search_poc,
+    "struts2-scan": fh.struts2_scan,
     "cms": fh.known_leak_query_website,
     "information": fh.known_leak_query_website,
     "system": fh.known_leak_query_website,

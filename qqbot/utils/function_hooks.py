@@ -77,7 +77,7 @@ def search_poc(usage_method, user_id, function_list, message, group_id):
 
 
 def known_leak_query_website(usage_method, user_id, function_list, message, group_id):
-    keyword, target = message.split(' ')[2], message.split(' ')[3]
+    keyword, target = message.split(' ')[1], message.split(' ')[2]
     result = api.exploit_api(
         keyword=keyword, url=target)
     msg = "\n".join(result) if result else "[-]未发现安全漏洞"
@@ -85,7 +85,7 @@ def known_leak_query_website(usage_method, user_id, function_list, message, grou
 
 
 def query_whatcms(message):
-    keyword, target = message.split(' ')[2], message.split(' ')[3]
+    keyword, target = message.split(' ')[1], message.split(' ')[2]
     result = api.exploit_api(
         keyword=keyword, url=target)
     msg = result if result else "未识别成功"
@@ -105,6 +105,17 @@ def nmap_scan_port(usage_method, user_id, function_list, message, group_id):
     except BaseException:
         return "输入有误!!!"
     return response_str.strip().lstrip("\n").strip("\n")
+
+
+def struts2_scan(usage_method, user_id, function_list, message, group_id):
+    if len(message.split(' ')) == 4:
+        target, proxy_link = message.split(' ')[2], message.split(' ')[3]
+        result_info = api.struts2_scan_function(target, proxy_link)
+        return result_info
+    else:
+        target = message.split(' ')[2]
+        result_info = api.struts2_scan_function(target)
+        return result_info
 
 
 def web_logic_scan(usage_method, user_id, function_list, message, group_id):

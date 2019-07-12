@@ -4,7 +4,7 @@ url:
     recall_url: http://127.0.0.1:5700/delete_msg
     ban_url: http://127.0.0.1:5700/set_group_ban
 
-fuck_off: ['你说j2呢???', '不会用别瞎艾特, 滚粗!@#$%', '什么玩意?你看看能help(-h;-help)不?', '???mdzz', '你究竟会不会用啊，小伙计???']
+fuck_off: ['你说j2呢???', '再瞎@信不信把你屎都打粗来!!!', '不会用别瞎艾特, 滚粗!@#$%', '什么玩意?你看看能help(-h;-help)不?', '???mdzz', '你究竟会不会用啊，小伙计???']
 
 function_keyword: [
     "食用",
@@ -12,6 +12,7 @@ function_keyword: [
     "-help",
     "-h",
     "search-forum",
+    "struts2-scan",
     "py",
     "all-py",
     "天气",
@@ -33,7 +34,8 @@ function_keyword: [
 
 fuck_reply: [
     '，艾特我干嘛？有事儿说事儿，没事儿滚去日站!!!   /菜刀/菜刀',
-    '，别瞎鸡儿艾特我!!!   /呸/呸/呸',
+    '，别瞎鸡儿@我!!!   /呸/呸/呸',
+    '，再瞎鸡儿@我，我真要把你打粗屎来!!!   //看我富婆快乐棒球棒的威力',
     '，滚粗，白了否恩?!!   /白眼/白眼',
     '，走开，嘤嘤嘤!!!   /讨厌/讨厌',
     '，敲里吗，听见没有!!!   /炸弹/炸弹',
@@ -62,6 +64,7 @@ abuse_word: [
     "傻屌",
     "白痴",
     "狗屎",
+    "jb",
     "垃圾",
     "nmsl",
     "mlgb",
@@ -73,21 +76,23 @@ abuse_word: [
     "煞笔"]
 
 usage_method: "
-* 搜索论坛: @ME search-forum 学习资料\n
+* 搜索论坛: @我 search-forum 学习资料\n
 * 查询已知Poc：@我 show-poc system\n
 * 查询已知Poc：@我 show-poc hardware\n
-* TCP端口扫描：@ME nmap www.exploit-db.com\n
-* CMS识别：@ME what-cms www.exploit-db.com\n
-* CMS漏洞扫描： @ME cms www.exploit-db.com\n
-* 信息搜集: @ME information www.exploit-db.com\n
-* 系统漏洞扫描： @ME system www.exploit-db.com\n
-* 物联网设备安全检测: @ME hardware www.exploit-db.com\n
-* 工控安全检测: @ME industrial www.exploit-db.com\n
-* 搜索POC： @ME search-poc discuz\n
-* 查询可用SSR： @ME py\n
-* 查询全部可用SS： @ME all-py\n
-* 搜索并使用POC进行安全检测： @ME poc-search-url discuz www.exploit-db.com\n
-* Weblogic检测： @ME web-logic-scan 111.200.232.78 3389\n
+* TCP端口扫描：@我 nmap www.exploit-db.com\n
+* CMS识别：@我 what-cms www.exploit-db.com\n
+* CMS漏洞扫描： @我 cms www.exploit-db.com\n
+* 信息搜集: @我 information www.exploit-db.com\n
+* 系统漏洞扫描： @我 system www.exploit-db.com\n
+* 物联网设备安全检测: @我 hardware www.exploit-db.com\n
+* 工控安全检测: @我 industrial www.exploit-db.com\n
+* 搜索POC： @我 search-poc discuz\n
+* 查询可用SSR： @我 py\n
+* 查询全部可用SS： @我 all-py\n
+* Struts2漏洞扫描(UTF-8编码)： @我 struts2-scan https://www.exploit-db.com:8899/index.action\n
+* Struts2漏洞使用代理扫描(UTF-8编码)： @我 struts2-scan https://www.exploit-db.com:8899/index.action http://8.8.8.8:8899\n
+* 搜索并使用POC进行安全检测： @我 poc-search-url discuz www.exploit-db.com\n
+* Weblogic检测： @我 web-logic-scan 111.200.232.78 3389\n
 * 默认子网工控设备扫描：@我 protocols-default 111.200.232.0 1  --> 默认扫描子网 /24 返回第一页查询\n
 * 扫描子网工控设备：@我 protocols-subnet 111.200.232.0 24 2  --> 扫描子网 /24 返回第二页查询\n
 * 扫描子网工控设备：@我 protocols-subnet 111.200.232.0 16 1  --> 扫描子网段 /16 返回第一页查询\n
@@ -109,6 +114,8 @@ function_list: "| 功能列表 |\n
 * 物联网设备安全检测: @ME hardware host\n
 * 工控安全检测: @ME industrial host\n
 * 搜索POC： @ME search-poc keywords\n
+* Struts2漏洞扫描(UTF-8编码)： @我 struts2-scan host\n
+* Struts2漏洞使用代理扫描(UTF-8编码)： @我 struts2-scan host proxy_ip\n
 * 搜索并使用POC进行安全检测： @ME poc-search-url keywords host\n
 * Weblogic检测： @ME web-logic-scan ip port\n
 * 子网工控设备扫描： @ME protocols-default subnet pge_num\n

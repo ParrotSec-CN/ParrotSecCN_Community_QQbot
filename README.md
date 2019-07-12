@@ -183,9 +183,17 @@
 
 - **共享SS服务器：@机器人 all-py**
 
-- **Weblogic扫描检测：@机器人  web-logic-scan ip port**
+- **Weblogic扫描检测：@机器人 web-logic-scan ip port**
 
   Demo: `@机器人 web-logic-scan 111.200.232.78 3389`
+
+- **Struts2漏洞扫描(UTF-8编码)： @机器人 struts2-scan host**
+
+  Demo: `@机器人 struts2-scan https://www.exploit-db.com:8899/index.action`
+
+- **Struts2漏洞使用代理扫描(UTF-8编码)： @我 struts2-scan host proxy_ip**
+
+  Demo: `@机器人 struts2-scan https://www.exploit-db.com:8899/index.action http://8.8.8.8:8899`
 
 - **默认子网工控设备扫描：@机器人 protocols-default subnet pge_num  --> 默认扫描子网 /24 返回第一页查询**
 
@@ -269,10 +277,14 @@
 
 * [x] Copy了 **rabbitmask提供的** [Weblogicscan](https://github.com/rabbitmask/WeblogicScan)
 
-* [ ] 准备Copy **HatBoy的** [Struts2全漏洞扫描利用工具](https://github.com/HatBoy/Struts2-Scan)
+* [x] Copy了 **HatBoy的** [Struts2全漏洞扫描利用工具](https://github.com/HatBoy/Struts2-Scan), 只用到了漏洞扫描函数
 
 * [ ] 重构阶段做测试
 
 * [ ] 逻辑代码优化
 
-* [ ] Poc接口增加vulners查询
+* [ ] Poc接口增加vulners查询, 还在解析, 进度有点慢
+
+## 9.注意事项
+
+****如要使用Struts2漏洞扫描，请把** [Struts2全漏洞扫描利用工具](https://github.com/HatBoy/Struts2-Scan) **里面的** `Struts2环境` **文件夹复制到机器人项目下的** `api/` **目录里面****
