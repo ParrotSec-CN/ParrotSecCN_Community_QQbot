@@ -245,20 +245,38 @@
 │    │    ├─ qq_group_api.py
 │    │    ├─ scan_api.py
 │    │    ├─ weblogicscan_api.py  # Weblogic扫描函数
-│    │    └─ poc  # Weblogic Poc
-│    │         ├─ __init__.py
-│    │         ├─ Console.py
-│    │         ├─ CVE_2014_4210.py
-│    │         ├─ CVE_2016_0638.py
-│    │         ├─ CVE_2016_3510.py
-│    │         ├─ CVE_2017_10271.py
-│    │         ├─ CVE_2017_3248.py
-│    │         ├─ CVE_2017_3506.py
-│    │         ├─ CVE_2018_2628.py
-│    │         ├─ CVE_2018_2893.py
-│    │         ├─ CVE_2018_2894.py
-│    │         ├─ CVE_2019_2725.py
-│    │         └─ CVE_2019_2729.py
+│    │    ├─ poc  # Weblogic Poc
+│    │    │    ├─ __init__.py
+│    │    │    ├─ Console.py
+│    │    │    ├─ CVE_2014_4210.py
+│    │    │    ├─ CVE_2016_0638.py
+│    │    │    ├─ CVE_2016_3510.py
+│    │    │    ├─ CVE_2017_10271.py
+│    │    │    ├─ CVE_2017_3248.py
+│    │    │    ├─ CVE_2017_3506.py
+│    │    │    ├─ CVE_2018_2628.py
+│    │    │    ├─ CVE_2018_2893.py
+│    │    │    ├─ CVE_2018_2894.py
+│    │    │    ├─ CVE_2019_2725.py
+│    │    │    └─ CVE_2019_2729.py
+│    │    ├─ Struts2scan_api.py  # Struts2扫描函数
+│    │    └─ Struts2环境
+│    │         ├─ 其他环境.txt
+│    │         ├─ S2-001.war
+│    │         ├─ S2-003.war
+│    │         ├─ S2-005.war
+│    │         ├─ S2-005_2.war
+│    │         ├─ S2-007.war
+│    │         ├─ S2-008.war
+│    │         ├─ S2-009.war
+│    │         ├─ S2-012.war
+│    │         ├─ S2-013.war
+│    │         ├─ S2-015.war
+│    │         ├─ S2-016.war
+│    │         ├─ S2-019.war
+│    │         ├─ S2-032.war
+│    │         ├─ S2-037.war
+│    │         └─ S2-045.war
 │    ├─ Secrets.py  # 相关密钥文件导入
 │    └─ run_qqbot.py  # 启动机器人
 ├─ requirements.txt # 依赖项
