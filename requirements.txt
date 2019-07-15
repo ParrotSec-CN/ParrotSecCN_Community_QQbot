@@ -7,3 +7,4 @@ pyyaml
 cfscrape
 bs4
 prettytable
+vulners

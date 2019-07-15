@@ -11,5 +11,9 @@ SECRETS = {
 
     "openweather": {
         "APPID": ""
+        },
+
+    "vulners": {
+        "APPKEY": ""
         }
     }

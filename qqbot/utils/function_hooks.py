@@ -76,6 +76,12 @@ def search_poc(usage_method, user_id, function_list, message, group_id):
     return str(msg)
 
 
+def query_vulners(usage_method, user_id, function_list, message, group_id):
+    search_key, keyword = message.split(' ')[2], message.split(' ')[3]
+    result = api.vulners_main(search_key, keyword)
+    return result
+
+
 def known_leak_query_website(usage_method, user_id, function_list, message, group_id):
     keyword, target = message.split(' ')[1], message.split(' ')[2]
     result = api.exploit_api(

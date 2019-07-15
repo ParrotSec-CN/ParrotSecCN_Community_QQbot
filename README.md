@@ -118,6 +118,10 @@
 
   **[qqbot/api/other_api.py](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/dev_Refactoring_Py3/qqbot/api/other_api.py)  # 66行**
 
+- 漏洞查询，需要用到[Vulners](https://vulners.com/userinfo)的api_key
+
+  **[qqbot/api/vulners_api.py](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/dev_Refactoring_Py3/qqbot/api/vulners_api.py)  # 6行**
+
 ## 5.启动机器人
 
 - **鉴于很多新手在用，目前改写成了shell脚本启动方式**
@@ -182,6 +186,10 @@
 - **共享SSR服务器：@机器人 py**
 
 - **共享SS服务器：@机器人 all-py**
+
+- **查询Vulners数据库已知关键字漏洞：@机器人 vulners db_search keyword**
+
+  Demo: `@机器人 vulners db_search keyword` *返回链接*
 
 - **Weblogic扫描检测：@机器人 web-logic-scan ip port**
 
@@ -259,6 +267,7 @@
 │    │    │    ├─ CVE_2018_2894.py
 │    │    │    ├─ CVE_2019_2725.py
 │    │    │    └─ CVE_2019_2729.py
+│    │    ├─ vulners_api.py  # Vulners扫描函数
 │    │    ├─ Struts2scan_api.py  # Struts2扫描函数
 │    │    └─ Struts2环境
 │    │         ├─ 其他环境.txt

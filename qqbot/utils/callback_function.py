@@ -10,6 +10,7 @@ QUERYMSG = {
     "search-forum": fh.search_forum,
     "py": fh.query_ssr,
     "all-py": fh.query_free_ss,
+    "vulners": fh.query_vulners,
     "天气": fh.query_weather,
     "show-poc": fh.show_poc,
     "search-poc": fh.search_poc,
