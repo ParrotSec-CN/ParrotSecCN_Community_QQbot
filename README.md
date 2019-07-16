@@ -1,4 +1,5 @@
 ## ParrotSecCN_Community_QQbot
+[![Python 3.5+](https://img.shields.io/badge/python-3.5+-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPLv2-red.svg)](https://raw.githubusercontent.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/dev_Refactoring_Py3/LICENSE) 
 
 ## 1.安装docker
 
