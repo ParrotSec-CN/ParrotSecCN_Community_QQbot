@@ -90,7 +90,7 @@ def known_leak_query_website(usage_method, user_id, function_list, message, grou
     return str(msg)
 
 
-def query_whatcms(message):
+def query_whatcms(usage_method, user_id, function_list, message, group_id):
     keyword, target = message.split(' ')[1], message.split(' ')[2]
     result = api.exploit_api(
         keyword=keyword, url=target)
