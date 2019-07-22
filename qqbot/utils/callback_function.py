@@ -27,7 +27,7 @@ QUERYMSG = {
     "protocols-default": fh.scan_protocols_default,
     "protocols-subnet": fh.scan_protocols_subnet,
     "protocols-vlan": fh.scan_protocols_vlan,
-    "ip":fh.ip_location
+    "ip": fh.ip_location
 }
 
 

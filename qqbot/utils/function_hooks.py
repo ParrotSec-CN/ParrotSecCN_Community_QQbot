@@ -164,8 +164,10 @@ def scan_protocols_vlan(usage_method, user_id, function_list, message, group_id)
             api.send_msg(result, 'user_id', user_id)
 
             return "相关工控扫描结果已私发!!!"
+
+
 def ip_location(usage_method, user_id, function_list, message, group_id):
     target = message.split(' ')[2]
     result = api.ipAddress(target)
-    msg=result
-    return(msg)
+    msg = result
+    return msg
