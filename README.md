@@ -220,6 +220,10 @@
 
   Demo: `@机器人 protocols-vlan 111.200.232.77 TO 111.200.234.222 1`
 
+- **IP地址定位：@机器人 ip ip_address**
+
+  Demo: `@机器人 ip 111.200.232.77`
+
 - **查询天气： @机器人 天气 ??市(区)**
 
   Demo: `@机器人 天气 北京市`
@@ -269,6 +273,7 @@
 │    │    │    ├─ CVE_2019_2725.py
 │    │    │    └─ CVE_2019_2729.py
 │    │    ├─ vulners_api.py  # Vulners扫描函数
+│    │    ├─ iplocation.py  # IP定位函数
 │    │    ├─ Struts2scan_api.py  # Struts2扫描函数
 │    │    └─ Struts2环境
 │    │         ├─ 其他环境.txt
@@ -315,4 +320,4 @@
 
 ## 9.注意事项
 
-****如要使用Struts2漏洞扫描，请把** [Struts2全漏洞扫描利用工具](https://github.com/HatBoy/Struts2-Scan) **里面的** `Struts2环境` **文件夹复制到机器人项目下的** `api/` **目录里面****
+**如要使用Struts2漏洞扫描，请把** [Struts2全漏洞扫描利用工具](https://github.com/HatBoy/Struts2-Scan) **里面的** `Struts2环境` **文件夹复制到机器人项目下的** `api/` **目录里面**
