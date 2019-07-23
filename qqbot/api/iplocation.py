@@ -3,7 +3,7 @@ import json
 import math
 # https://restapi.amap.com/v4/ip?key=8599324053ca7fd6b1245e997b45dd12&ip=60.208.131.66
 key = "8599324053ca7fd6b1245e997b45dd12"
-
+tx_key="4RYBZ-4TRHF-GDOJU-NS5TO-3PIX7-LRF5F"
 
 def qqMapTransBMap(lng, lat):
     x_pi = 3.14159265358979324 * 3000.0 / 180.0
@@ -16,6 +16,23 @@ def qqMapTransBMap(lng, lat):
     result = {"lng": lngs, "lat": lats}
     return result
 
+def qqMapgetIp(ip):
+    ip_address=ip
+    url="https://apis.map.qq.com/ws/location/v1/ip"
+    
+    if ip_address !='':
+        data={"key":tx_key,"ip":ip}
+        location_res=requests.get(url=url,params=data)
+        location_json=json.loads(location_res.text)
+        if location_json['status']==0:
+            lng=location_json['result']['location']['lng']
+            lat=location_json['result']['location']['lat']
+            gd_url="https://uri.amap.com/marker?position=%f,%f"%(lng,lat)
+            return "查询成功:点击查看%s"%(gd_url)
+        else:
+            return "ip地址不合法"
+    else:
+        return "请输入ip地址"
 
 def ipAddress(ip):
     ip_address = ip
