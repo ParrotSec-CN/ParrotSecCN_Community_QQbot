@@ -134,6 +134,15 @@ def my_msg():
                             return Response(
                                 json.dumps(msg), mimetype='application/json')
 
+                    # 给那货10天的机会而已
+                    for serious_violation in config_content['serious_violations']:
+                        if serious_violation in "".join(message.lower().split()):
+                            msg = {
+                                'reply': ', <): 我日你mmp呦, 10天够不够, 不够滚nmd！！！'}
+                            qq_group.group_ban(groupId, userId, miu_num=864000)
+                            return Response(
+                                json.dumps(msg), mimetype='application/json')
+
                     keyword = message.split(' ')[1]
 
                     if keyword not in function_keyword:

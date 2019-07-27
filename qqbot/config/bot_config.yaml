@@ -75,8 +75,21 @@ abuse_word: [
     "智障",
     "狗日的",
     "儿子",
+    "瓜皮",
+    "憨逼",
+    "憨批",
+    "憨憨",
     "废物",
     "煞笔"]
+
+serious_violations: [
+    "127.0.",
+    "localhost",
+    "192.168.1",
+    "192.168.0",
+    "1=1",
+    "reboot",
+    "init"]
 
 usage_method: "
 * 搜索论坛: @我 search-forum 学习资料\n
