@@ -1,5 +1,3 @@
-# -*- coding:utf-8 -*-
-
 from .hack_api import *
 
 
@@ -35,13 +33,11 @@ def exploit_api(url="",keyword="",search=0):
         return result
     else:
         if url:
-            if keyword == 'what-cms':
-                rsp = gwhatweb(url).whatweb()
-                return rsp
-
             obj = exploit(url)
-
-            if keyword == 'cms':
+            if keyword == 'whatcms':
+                rsp = gwhatweb(url).whatweb()
+                return rsp['result']
+            elif keyword == 'cms':
                 obj.cms()
                 return (obj.exploitpoc())
             elif keyword == 'information':

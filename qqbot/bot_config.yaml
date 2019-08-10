@@ -1,0 +1,60 @@
+url:
+    group_url: http://127.0.0.1:5700/send_group_msg
+    user_url: http://127.0.0.1:5700/send_private_msg
+    recall_url: http://127.0.0.1:5700/delete_msg
+    ban_url: http://127.0.0.1:5700/set_group_ban
+
+fuck_off: ['你说j2呢???', '不会用别瞎艾特', '什么玩意?你看看能help(-h;--help)不?', '???mdzz']
+
+fuck_reply: [
+    '，艾特我干嘛? 有事儿说事儿，没事儿滚去日站!!!   /菜刀/菜刀',
+    '，别瞎鸡儿艾特我!!!   /呸/呸/呸',
+    '，滚粗，白了否恩?!!   /白眼/白眼',
+    '，走开，嘤嘤嘤!!!   /讨厌/讨厌',
+    '，敲里吗，听见没有!!!   /炸弹/炸弹',
+    '，人家用小拳拳锤你胸口，哼!!!   /讨厌/讨厌',
+    '，艾特我干啥, 我在重构!!!   /努力',
+    '，去去去，一边玩儿去，滚蛋!!!   /滚粗',
+    '，葫芦娃，葫芦娃，一棵藤上七朵花!!!   /啦啦啦',
+    '，干啥小崽子!!!    /哼唧唧',
+    '，哪凉快哪待着!!!   /傲娇/傲娇']
+
+ban_word: [
+    "ssr",
+    "vpn",
+    "翻墙",
+    "黑产",
+    "暗网",
+    "习近平",
+    "酸酸乳",
+    "gfw"]
+
+usage_method: "
+查询已知Poc：@我 showpoc system\n
+查询已知Poc：@我 showpoc hardware\n
+扫描子网工控设备：@我 protocols 111.200.232.0 1  --> 默认扫描子网 /24 返回第一页查询\n
+扫描子网工控设备：@我 protocols 111.200.232.0 24 2  --> 扫描子网 /24 返回第二页查询\n
+扫描子网工控设备：@我 protocols 111.200.232.0 16 1  --> 扫描子网段 /16 返回第一页查询\n
+扫描子网工控设备：@我 protocols 111.200.232.77 TO 111.200.234.222 1  --> 扫描网段 返回第一页查询\n
+查询天气：@我 北京市天气\n
+查询天气：@我 朝阳区天气\n
+查询天气：@我 Beijing天气"
+
+function_list: "| 功能列表 |\n
+--------------------------------------------------------------\n
+找骂： 直接@ME\n
+搜索论坛: @ME searchforum keyword\n
+显示所有Poc：@ME showpoc keyword(cms;hardware;industrial;system;information)\n
+TCP端口扫描：@ME nmap host\n
+CMS识别：@ME whatcms host\n
+CMS漏洞扫描： @ME cms host\n
+信息搜集: @ME information host\n
+系统漏洞扫描： @ME system host\n
+物联网设备安全检测: @ME hardware host\n
+工控安全检测: @ME industrial host\n
+搜索POC： @ME search keywords\n
+搜索并使用POC进行安全检测： @ME search keywords host\n
+子网工控设备扫描(返回页内容)： @ME protocols subnet sub_num(16/24) pge_num\n
+查询天气： @ME ??市(区)天气\n
+使用方法： @ME 食用\n
+--------------------------------------------------------------"

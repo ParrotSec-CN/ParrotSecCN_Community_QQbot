@@ -1,2 +1,1 @@
-30 02 * * * /.../bin/python /.../spider/share-sjadowsocks.py >> /.../logs.log 2>&1
-35 02 * * * /.../bin/python /.../spider/free-ss_spider.py >> /.../logs.log 2>&1
+Nothing
