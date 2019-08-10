@@ -1,10 +1,11 @@
 # -*- coding:utf-8 -*-
+
 import json
 import yaml
 import requests
 
 
-yaml_config = open('bot_config.yaml')
+yaml_config = open('config/bot_config.yaml')
 group_content = yaml.safe_load(yaml_config)
 
 headers = {'Content-Type': 'application/json'}

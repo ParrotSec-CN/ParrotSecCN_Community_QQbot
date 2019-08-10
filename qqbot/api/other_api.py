@@ -1,81 +1,91 @@
 # -*- coding:utf-8 -*-
+
 import json
-import random
 import base64
+import random
 import requests
+import cfscrape
+import bs4
+from prettytable import PrettyTable
 from config import SECRETS
 
 
 # scan protocols device
 def scan_protocols(ip_link, page_num, sub_num="24", rule=True):
-    API_URL = "https://www.censys.io/api/v1/search/ipv4"
-    UID = SECRETS['censys_scan']['UID']
-    SECRET = SECRETS['censys_scan']['SECRET']
-    IP_TXT = ip_link if rule else (ip_link + "/" + sub_num)
+    if SECRETS['censys_scan']['UID'] and SECRETS['censys_scan']['SECRET']:
+        API_URL = "https://www.censys.io/api/v1/search/ipv4"
+        UID = SECRETS['censys_scan']['UID']
+        SECRET = SECRETS['censys_scan']['SECRET']
+        IP_TXT = ip_link if rule else (ip_link + "/" + sub_num)
 
-    data = {
-        "query": IP_TXT,
-        "page": int(page_num),
-        "fields": ["ip", "protocols", "location.country"],
-        "flatten": True
-    }
+        data = {
+            "query": IP_TXT,
+            "page": int(page_num),
+            "fields": ["ip", "protocols", "location.country"],
+            "flatten": True
+        }
 
-    res = requests.post(API_URL, data=json.dumps(data), auth=(UID, SECRET))
+        res = requests.post(API_URL, data=json.dumps(data), auth=(UID, SECRET))
 
-    results = res.json()
+        results = res.json()
 
-    if results['status'] == "ok":
-        if results['results']:
-            protocols_info = ""
-            for i in results['results']:
-                port_list = (", ".join(i['protocols']))
-                try:
-                    tt = "{}ip地址: {}, 国家: {}, 开放端口: {}{}".format(
-                        protocols_info, str(
-                            i['ip']), str(
-                            i['location.country']), port_list, '\n')
-                except BaseException:
-                    tt = "{}ip地址: {}, 开放端口: {}{}".format(
-                        protocols_info, str(i['ip']), port_list, '\n')
-                protocols_info = tt
-            return protocols_info
+        if results['status'] == "ok":
+            if results['results']:
+                protocols_info = ""
+                for i in results['results']:
+                    port_list = (", ".join(i['protocols']))
+                    try:
+                        tt = "{}ip地址: {}, 国家: {}, 开放端口: {}{}".format(
+                            protocols_info, str(
+                                i['ip']), str(
+                                i['location.country']), port_list, '\n')
+                    except BaseException:
+                        tt = "{}ip地址: {}, 开放端口: {}{}".format(
+                            protocols_info, str(i['ip']), port_list, '\n')
+                    protocols_info = tt
+                return protocols_info
+            else:
+                return "列表超出索引范围!"
         else:
-            return "列表超出索引范围!"
+            return "未得到任何返回值!"
     else:
-        return "未得到任何返回值!"
+        return "当前接口未提供censys_key!"
 
 
 # query ssr
-def ssr_work(file_name):
-    ssr_list = []
-    with open("../spider/" + file_name, 'r') as f:
-        for i in f.readlines():
-            ssr_list.append(i.strip().rstrip("\n"))
-
-    return ssr_list
+# def ssr_work(file_name):
+#     ssr_list = []
+#     with open("../spider/" + file_name, 'r') as f:
+#         for i in f.readlines():
+#             ssr_list.append(i.strip().rstrip("\n"))
+#
+#     return ssr_list
 
 
 # query_weather
 def query_weather(city_name):
-    link = "http://api.openweathermap.org/data/2.5/weather?q={}&appid={}" \
-           "&lang=zh_cn&units=metric".format(
-               city_name, SECRETS['openweather']['APPID'])
-    query_post = requests.get(link)
-    weather_info = query_post.json()
-    if weather_info['cod'] == 200:
-        city_weather = "查询城市：{}{}" \
-                       "当前天气：{}{}" \
-                       "当前温度：{}{}{}" \
-                       "最高温度：{}{}{}" \
-                       "最低温度：{}{}{}" \
-                       "风力：{}{}".format(weather_info['name'], "\n",
-                                        weather_info['weather'][0]['description'], "\n",
-                                        str(weather_info['main']['temp']), " ℃", "\n",
-                                        str(weather_info['main']['temp_max']), " ℃", "\n",
-                                        str(weather_info['main']['temp_min']), " ℃", "\n",
-                                        str(weather_info['wind']['speed']), " 级")
+    if SECRETS['openweather']['APPID']:
+        link = "http://api.openweathermap.org/data/2.5/weather?q={}&appid={}" \
+               "&lang=zh_cn&units=metric".format(
+                   city_name, SECRETS['openweather']['APPID'])
+        query_post = requests.get(link)
+        weather_info = query_post.json()
+        if weather_info['cod'] == 200:
+            city_weather = "查询城市：{}{}" \
+                           "当前天气：{}{}" \
+                           "当前温度：{}{}{}" \
+                           "最高温度：{}{}{}" \
+                           "最低温度：{}{}{}" \
+                           "风力：{}{}".format(weather_info['name'], "\n",
+                                            weather_info['weather'][0]['description'], "\n",
+                                            str(weather_info['main']['temp']), " ℃", "\n",
+                                            str(weather_info['main']['temp_max']), " ℃", "\n",
+                                            str(weather_info['main']['temp_min']), " ℃", "\n",
+                                            str(weather_info['wind']['speed']), " 级")
 
-        return city_weather
+            return city_weather
+    else:
+        return "当前接口未提供openweathermap_key!"
 
 
 user_agent = [
@@ -122,17 +132,17 @@ json_link = "https://shadowsocks-share.herokuapp.com/subscribeJson"
 
 
 def encode_ssr(ssr_info):
-    server_encode = "{}:{}:{}:{}:{}:".format(ssr_info['server'],
-                                             ssr_info['server_port'],
-                                             ssr_info['method'],
-                                             ssr_info['password'],
-                                             ssr_info['ssr_protocol'],
-                                             ssr_info['obfs'])
-    #passwd_encode = str(
+    server_encode = "{}:{}:{}:{}:{}:{}".format(ssr_info['server'],
+                                               ssr_info['server_port'],
+                                               ssr_info['password'],
+                                               ssr_info['method'],
+                                               ssr_info['ssr_protocol'],
+                                               ssr_info['obfs'])
+    # passwd_encode = str(
     #    (base64.b64encode((ssr_info['password'] + "?").encode('utf-8'))))
-    #param_encode = "obfsparam=&remarks=aHR0cHM6Ly9wYXJyb3RzZWMtY24ub3JnLw&group=UGFycm90c2VjLWNu"
-    #ssr_source_encode = server_encode + passwd_encode + "?" + param_encode
-    #ssr_encode = "ssr://" + \
+    # param_encode = "obfsparam=&remarks=aHR0cHM6Ly9wYXJyb3RzZWMtY24ub3JnLw&group=UGFycm90c2VjLWNu"
+    # ssr_source_encode = server_encode + passwd_encode + "?" + param_encode
+    # ssr_encode = "ssr://" + \
     #    str(base64.b64encode(ssr_source_encode.encode('utf-8')))
     return server_encode
 
@@ -142,9 +152,30 @@ def get_ssr_link():
         json_link, headers={
             "User-Agent": random.choice(user_agent)})
     json_encode = json.loads(json_info.text)
-    if "status" not in json_encode.keys():
+
+    try:
         ssr_link = encode_ssr(json_encode)
-    else:
+    except:
         ssr_link = "当前查询服务器没有可用SSR"
+
     return ssr_link
 
+
+def get_free_ss_link():
+    scraper = cfscrape.create_scraper()
+    soup = bs4.BeautifulSoup(scraper.get("https://www.youneed.win/free-ss").content,
+                             features="html.parser")
+    content = soup.tbody.get_text().strip("\n\n")
+    sslist = content.split("\n\n")
+
+    table = PrettyTable(["ip", "port", "update time", "country", "sslink"])
+    for text in sslist:
+        text = text.strip("\n")
+        tlist = text.split("\n")
+        ssconfig = tlist[3] + ":" + tlist[2] + "@" + tlist[0] + ":" + tlist[1]
+        ssurl = "ss://" + base64.b64encode(ssconfig.encode("utf8")).decode()
+        tlist.append(ssurl)
+        del tlist[2:4]
+        table.add_row(tlist)
+
+    return table

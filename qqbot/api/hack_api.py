@@ -1,8 +1,11 @@
 # -*- coding:utf-8 -*-
+
 import json
-import time
 import grequests
 import requests
+import zlib
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 class gwhatweb:
@@ -11,74 +14,25 @@ class gwhatweb:
         self.time = 0
 
     def whatweb(self):
-        url = 'http://whatweb.bugscaner.com/what/'
-        start = time.clock()
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:56.0) Gecko/20100101 Firefox/56.0',
-            'Referer': 'http://whatweb.bugscaner.com/look/'}
-        cocokies = {'saeut': 'CkMPHlqbqdBQWl9NBG+uAg=='}
-        new_url = self.url.strip(
-            '/').replace('http://', '').replace('https://', '')
-        data = {
-            'url': new_url,
-            'hash': '0eca8914342fc63f5a2ef5246b7a3b14_7289fd8cf7f420f594ac165e475f1479'}
-        content = json.loads(
-            requests.post(
-                url,
-                headers=headers,
-                data=data).text)
-        end = time.clock()
-        self.time = end - start
-        if content['cms']:
-            return {
-                'total': 1424,
-                'url': self.url,
-                'result': content['cms'],
-                'time': '%.3f s' % self.time}
+        response = requests.get(self.url, verify=False)
+        whatweb_dict = {"url": response.url, "text": response.text,
+                        "headers": dict(response.headers)}
+        whatweb_dict = json.dumps(whatweb_dict)
+        whatweb_dict = whatweb_dict.encode()
+        whatweb_dict = zlib.compress(whatweb_dict)
+        data = {"info": whatweb_dict}
+        result_infos = requests.post("http://whatweb.bugscaner.com/api.go", files=data)
+        content = result_infos.json()
+
+        if "CMS" in content.keys():
+            return content['CMS'][0]
+        elif "Message Boards" in content.keys():
+            return content['Message Boards'][0]
         else:
-            return {
-                'total': 1424,
-                'url': self.url,
-                'result': '未知CMS',
-                'time': '%.3f s' % self.time}
+            return '未知CMS'
 
-
-# whatweb("http://www.dedecms.com").scan() # return {'total': 1424, 'url':
-# 'http://www.dedecms.com', 'result': 'DedeCMS(织梦)', 'time': '5.364 s'}
-
-
-# 端口扫描
-class portscan:
-    def __init__(self, address, port):
-        # port should be [80,81,82,83] or [21,80,3306]
-        self.address = address
-        self.port = port
-        self.result = []
-
-    def scan(self):
-        tasks = [
-            grequests.post(
-                "http://tools.hexlt.org/api/portscan",
-                json={
-                    "ip": self.address,
-                    "port": port}) for port in self.port]
-        res = grequests.map(tasks, size=30)
-        for i in res:
-            result = i.json()
-            if result['status']:
-                self.result.append(result['port'])
-        return self.result
-
-
-'''
-
-portscan("localhost", [21, 80, 81, 443, 5000, 8000]).scan()  # return [80, 443, 8000]
-
-'''
 
 # 漏洞检测
-
-
 class exploit:
     def __init__(self, url="", keyword=""):
         self.url = url
