@@ -5,7 +5,10 @@ from config import SECRETS
 
 api_key = SECRETS['vulners']['APPKEY']
 
-vulners_api = vulners.Vulners(api_key=api_key)
+if api_key:
+    vulners_api = vulners.Vulners(api_key=api_key)
+else:
+    pass
 
 
 # 搜索数据库
