@@ -6,6 +6,9 @@ import random
 import requests
 import cfscrape
 import bs4
+import urllib
+import urllib.request
+from urllib.parse import urlencode
 from prettytable import PrettyTable
 from config import SECRETS
 
@@ -64,28 +67,41 @@ def scan_protocols(ip_link, page_num, sub_num="24", rule=True):
 
 # query_weather
 def query_weather(city_name):
-    if SECRETS['openweather']['APPID']:
-        link = "http://api.openweathermap.org/data/2.5/weather?q={}&appid={}" \
-               "&lang=zh_cn&units=metric".format(
-                   city_name, SECRETS['openweather']['APPID'])
-        query_post = requests.get(link)
-        weather_info = query_post.json()
-        if weather_info['cod'] == 200:
-            city_weather = "查询城市：{}{}" \
-                           "当前天气：{}{}" \
-                           "当前温度：{}{}{}" \
-                           "最高温度：{}{}{}" \
-                           "最低温度：{}{}{}" \
-                           "风力：{}{}".format(weather_info['name'], "\n",
-                                            weather_info['weather'][0]['description'], "\n",
-                                            str(weather_info['main']['temp']), " ℃", "\n",
-                                            str(weather_info['main']['temp_max']), " ℃", "\n",
-                                            str(weather_info['main']['temp_min']), " ℃", "\n",
-                                            str(weather_info['wind']['speed']), " 级")
+    appkey = SECRETS['juheweather']['APPKEY']
 
+    url = "http://op.juhe.cn/onebox/weather/query"
+    params = {
+        "cityname" : city_name,
+        "key" : appkey,
+        "dtype" : "", #返回数据的格式,xml或json，默认json
+    }
+    params = urlencode(params)
+    f = urllib.request.urlopen("%s?%s" % (url, params))
+ 
+    content = f.read().decode('UTF-8')
+    res = json.loads(content)
+    if res:
+        error_code = res["error_code"]
+        if error_code == 0:
+            weather_result = res['result']
+            city_weather = "查询地区：{}{}" \
+                           "最后更新时间：{}{}" \
+                           "温度：{}{}" \
+                           "天气状况：{}{}" \
+                           "湿度：{}{}" \
+                           "阴历：{}{}" \
+                           "风向/力：{}/{}".format(weather_result['data']['realtime']['city_name'], "\n", 
+                                                weather_result['data']['realtime']['time'][:-3], "\n",
+                                                weather_result['data']['realtime']['weather']['temperature'], "\n",
+                                                weather_result['data']['realtime']['weather']['info'], "\n",
+                                                weather_result['data']['realtime']['weather']['humidity'], "\n",
+                                                weather_result['data']['realtime']['moon'], "\n",
+                                                weather_result['data']['realtime']['wind']['direct'], weather_result['data']['realtime']['wind']['power'])
             return city_weather
+        else:
+            return "{}:{}".format(res["error_code"], res["reason"])
     else:
-        return "当前接口未提供openweathermap_key!"
+        return "request api error!!!"
 
 
 user_agent = [

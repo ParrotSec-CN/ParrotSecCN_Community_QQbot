@@ -109,19 +109,19 @@
 
 - Flask认证Key: secret_key [如何生成flask secret](https://www.jianshu.com/p/d0751d6b3cee)
 
-  **[qqbot/config/config.py](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/dev_Refactoring_Py3/qqbot/config/config.py)**
+  **[qqbot/config/config.py](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/master/qqbot/config/config.py)**
 
 - 子网工控设备端口扫描，需要用到[Censys](https://censys.io/account)的UID和SECRET
 
-  **[qqbot/api/other_api.py](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/dev_Refactoring_Py3/qqbot/api/other_api.py)  # 16 17行**
+  **[qqbot/api/other_api.py](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/master/qqbot/api/other_api.py)  # 18行**
 
-- 天气查询，需要用到[openweathermap.org](https://openweathermap.org/)的appid
+- 天气查询，需要用到[聚合科技-天气预报接口](https://www.juhe.cn/myData)的AppKey (当前已屏蔽, 如需启用, 去掉bot_config.yaml的注释)
 
-  **[qqbot/api/other_api.py](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/dev_Refactoring_Py3/qqbot/api/other_api.py)  # 66行**
+  **[qqbot/api/other_api.py](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/master/qqbot/api/other_api.py)  # 70行**
 
 - 漏洞查询，需要用到[Vulners](https://vulners.com/userinfo)的api_key
 
-  **[qqbot/api/vulners_api.py](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/dev_Refactoring_Py3/qqbot/api/vulners_api.py)  # 6行**
+  **[qqbot/api/vulners_api.py](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/master/qqbot/api/vulners_api.py)  # 6行**
 
 ## 5.启动机器人
 
@@ -224,13 +224,11 @@
 
   Demo: `@机器人 ip 111.200.232.77`
 
-- **查询天气： @机器人 天气 ??市(区)**
+- **查询天气： @机器人 天气 ??**
 
-  Demo: `@机器人 天气 北京市`
+  Demo: `@机器人 天气 北京`
 
-  Demo: `@机器人 天气 朝阳区`
-
-  Demo: `@机器人 天气 Beijing`
+  Demo: `@机器人 天气 朝阳`
 
 - **使用方法： `@机器人 食用`**
 
