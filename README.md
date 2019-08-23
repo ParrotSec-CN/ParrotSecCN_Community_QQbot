@@ -123,6 +123,10 @@
 
   **[qqbot/api/vulners_api.py](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/master/qqbot/api/vulners_api.py)  # 6行**
 
+- 邮件功能，需要用到[mail.qq.com](https://mail.qq.com/)的设置 - POP3/SMTP服务的密码
+
+  **[qqbot/api/send_mail_function.py](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/master/qqbot/api/send_mail_function.py)  # 15行**
+
 ## 5.启动机器人
 
 - **鉴于很多新手在用，目前改写成了shell脚本启动方式**
@@ -186,7 +190,9 @@
 
 - **共享SSR服务器：@机器人 py**
 
-- **共享SS服务器：@机器人 all-py**
+- **共享SS服务器：@机器人 all-py email-num**
+
+  Demo: `@机器人 all-py 212521306@qq.com`
 
 - **查询Vulners数据库已知关键字漏洞：@机器人 vulners db_search keyword**
 
@@ -254,6 +260,7 @@
 │    │    ├─ hack_api.py
 │    │    ├─ other_api.py
 │    │    ├─ qq_group_api.py
+│    │    ├─ send_email_function.py
 │    │    ├─ scan_api.py
 │    │    ├─ weblogicscan_api.py  # Weblogic扫描函数
 │    │    ├─ poc  # Weblogic Poc

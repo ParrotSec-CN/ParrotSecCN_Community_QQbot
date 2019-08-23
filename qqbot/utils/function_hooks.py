@@ -50,8 +50,9 @@ def query_ssr(usage_method, user_id, function_list, message, group_id):
 def query_free_ss(usage_method, user_id, function_list, message, group_id):
     ss_list = api.get_free_ss_link()
     str_info = str(ss_list)
-    api.send_msg(str_info[:3996], 'user_id', user_id)
-    return "相关服务器已私发!!!"
+    mail_info = api.send_email(message.split(' ')[2], str_info)
+    # api.send_msg(str_info[:3996], 'user_id', user_id)
+    return mail_info
 
 
 def query_weather(usage_method, user_id, function_list, message, group_id):

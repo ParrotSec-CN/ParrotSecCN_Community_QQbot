@@ -17,6 +17,11 @@ SECRETS = {
         "APPKEY": ""
         },
 
+    "qq_mail": {
+        "msg_from": "",
+        "passwd": ""
+        },
+
     "vulners": {
         "APPKEY": ""
         }

@@ -17,7 +17,7 @@ config_content = yaml.safe_load(bot_config)
 
 headers = {'Content-Type': 'application/json'}
 atMe, group = '[CQ:at,qq=212521306]', 160958474
-random_time = [1800, 7200, 21600, 43200, 86400]
+random_time = [1800, 7200, 21600, 43200]
 
 
 def new_topic(topic):
@@ -134,7 +134,7 @@ def my_msg():
                             return Response(
                                 json.dumps(msg), mimetype='application/json')
 
-                    # 给那货10天的机会而已
+                    # 发言违反关键词，禁言10天
                     for serious_violation in config_content['serious_violations']:
                         if serious_violation in "".join(message.lower().split()):
                             msg = {
@@ -145,11 +145,13 @@ def my_msg():
 
                     keyword = message.split(' ')[1]
 
+                    # 判断调用函数
                     if keyword not in function_keyword:
                         msg = {'reply': choice(fuckoff)}
                         return Response(
                             json.dumps(msg), mimetype='application/json')
 
+                    # 调用函数字典映射
                     # search_info = QueryMsg(1001)(keyword=keyword)
                     function_result = cf.QueryMsg(keyword)(usage_method=usage_method,
                                          function_list=function_list,
@@ -166,7 +168,7 @@ def my_msg():
 
         elif content['post_type'] == 'notice':
             if content['notice_type'] == 'group_increase':
-                msg = "欢迎大佬['{}']入群,请牢记渗透千万条,匿名第一条;搞事不规范,牢饭吃到早...!!!".format(str(content['user_id']))
+                msg = "欢迎大佬['{}']入群,请牢记: 渗透千万条, 匿名第一条; 搞事不规范, 牢饭吃到早!!!".format(str(content['user_id']))
                 return qq_group.send_msg(msg, 'group_id', groupId)
 
     res = {'msg': 'ok'}

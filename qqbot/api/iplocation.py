@@ -3,7 +3,8 @@ import json
 import math
 # https://restapi.amap.com/v4/ip?key=8599324053ca7fd6b1245e997b45dd12&ip=60.208.131.66
 key = "8599324053ca7fd6b1245e997b45dd12"
-tx_key="4RYBZ-4TRHF-GDOJU-NS5TO-3PIX7-LRF5F"
+tx_key = "4RYBZ-4TRHF-GDOJU-NS5TO-3PIX7-LRF5F"
+
 
 def qqMapTransBMap(lng, lat):
     x_pi = 3.14159265358979324 * 3000.0 / 180.0
@@ -16,23 +17,25 @@ def qqMapTransBMap(lng, lat):
     result = {"lng": lngs, "lat": lats}
     return result
 
+
 def qqMapgetIp(ip):
-    ip_address=ip
-    url="https://apis.map.qq.com/ws/location/v1/ip"
-    
-    if ip_address !='':
-        data={"key":tx_key,"ip":ip}
-        location_res=requests.get(url=url,params=data)
-        location_json=json.loads(location_res.text)
-        if location_json['status']==0:
-            lng=location_json['result']['location']['lng']
-            lat=location_json['result']['location']['lat']
-            gd_url="https://uri.amap.com/marker?position=%f,%f"%(lng,lat)
-            return "查询成功:点击查看%s"%(gd_url)
+    ip_address = ip
+    url = "https://apis.map.qq.com/ws/location/v1/ip"
+
+    if ip_address != '':
+        data = {"key": tx_key, "ip": ip}
+        location_res = requests.get(url=url, params=data)
+        location_json = json.loads(location_res.text)
+        if location_json['status'] == 0:
+            lng = location_json['result']['location']['lng']
+            lat = location_json['result']['location']['lat']
+            gd_url = "https://uri.amap.com/marker?position=%f,%f" % (lng, lat)
+            return "查询成功:点击查看%s" % (gd_url)
         else:
             return "ip地址不合法"
     else:
         return "请输入ip地址"
+
 
 def ipAddress(ip):
     ip_address = ip
@@ -52,13 +55,15 @@ def ipAddress(ip):
             province = location_json['data']['pcd']['province']
             time = location_json['data']['time']
             # print(location)
-            gd_location = "地址: {}{}{}, 纬度: {}, 经度: {}, 更新时间: {}".format(province, city, county, lng, lat, time)
+            gd_location = "地址: {}{}{}, 纬度: {}, 经度: {}, 更新时间: {}".format(
+                province, city, county, lng, lat, time)
             gd_url = "https://uri.amap.com/marker?position=%f,%f" % (lng, lat)
             bd_location = qqMapTransBMap(lng, lat)
             bd_url = "http://api.map.baidu.com/geocoder?location=%f,%f&coord_type=bd09ll&output=html&src=webapp.baidu.openAPIdemo" % (
                 bd_location["lat"], bd_location["lng"])
             # http://api.map.baidu.com/geocoder?location=30,120&coord_type=gcj02&output=html&src=webapp.baidu.openAPIdemo
-            result_info = "定位结果: {}{}点击查看具体位置(高德地图):{}{}{}点击查看具体位置(百度地图):{}{}".format(gd_location, '\n', '\n', gd_url, '\n', '\n', bd_url)
+            result_info = "定位结果: {}{}点击查看具体位置(高德地图):{}{}{}点击查看具体位置(百度地图):{}{}".format(
+                gd_location, '\n', '\n', gd_url, '\n', '\n', bd_url)
             return result_info
         else:
             return '查询无效(数据库无此ip/ip地址不合法/非中国ip地址/操你妈又瞎j8输数据不会用别nm用)'
