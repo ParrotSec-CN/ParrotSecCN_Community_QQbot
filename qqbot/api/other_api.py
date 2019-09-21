@@ -71,13 +71,13 @@ def query_weather(city_name):
 
     url = "http://op.juhe.cn/onebox/weather/query"
     params = {
-        "cityname" : city_name,
-        "key" : appkey,
-        "dtype" : "", #返回数据的格式,xml或json，默认json
+        "cityname": city_name,
+        "key": appkey,
+        "dtype": "",  # 返回数据的格式,xml或json，默认json
     }
     params = urlencode(params)
     f = urllib.request.urlopen("%s?%s" % (url, params))
- 
+
     content = f.read().decode('UTF-8')
     res = json.loads(content)
     if res:
@@ -90,13 +90,13 @@ def query_weather(city_name):
                            "天气状况：{}{}" \
                            "湿度：{}{}" \
                            "阴历：{}{}" \
-                           "风向/力：{}/{}".format(weather_result['data']['realtime']['city_name'], "\n", 
-                                                weather_result['data']['realtime']['time'][:-3], "\n",
-                                                weather_result['data']['realtime']['weather']['temperature'], "\n",
-                                                weather_result['data']['realtime']['weather']['info'], "\n",
-                                                weather_result['data']['realtime']['weather']['humidity'], "\n",
-                                                weather_result['data']['realtime']['moon'], "\n",
-                                                weather_result['data']['realtime']['wind']['direct'], weather_result['data']['realtime']['wind']['power'])
+                           "风向/力：{}/{}".format(weather_result['data']['realtime']['city_name'], "\n",
+                                               weather_result['data']['realtime']['time'][:-3], "\n",
+                                               weather_result['data']['realtime']['weather']['temperature'], "\n",
+                                               weather_result['data']['realtime']['weather']['info'], "\n",
+                                               weather_result['data']['realtime']['weather']['humidity'], "\n",
+                                               weather_result['data']['realtime']['moon'], "\n",
+                                               weather_result['data']['realtime']['wind']['direct'], weather_result['data']['realtime']['wind']['power'])
             return city_weather
         else:
             return "{}:{}".format(res["error_code"], res["reason"])
@@ -144,43 +144,110 @@ user_agent = [
     "Mozilla/6.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/8.0 Mobile/10A5376e Safari/8536.25",
 ]
 
-json_link = "https://shadowsocks-share.herokuapp.com/subscribeJson"
+json_link = "http://ss.pythonic.life/json"
 
 
-def encode_ssr(ssr_info):
-    server_encode = "{}:{}:{}:{}:{}:{}".format(ssr_info['server'],
-                                               ssr_info['server_port'],
-                                               ssr_info['password'],
-                                               ssr_info['method'],
-                                               ssr_info['ssr_protocol'],
-                                               ssr_info['obfs'])
-    # passwd_encode = str(
-    #    (base64.b64encode((ssr_info['password'] + "?").encode('utf-8'))))
-    # param_encode = "obfsparam=&remarks=aHR0cHM6Ly9wYXJyb3RzZWMtY24ub3JnLw&group=UGFycm90c2VjLWNu"
-    # ssr_source_encode = server_encode + passwd_encode + "?" + param_encode
-    # ssr_encode = "ssr://" + \
-    #    str(base64.b64encode(ssr_source_encode.encode('utf-8')))
+# SS加密规则
+# ss://method:password@server:port
+def encode_ss(ssr_info):
+    ss_source_link = "{}:{}@{}:{}".format(
+        ssr_info['method'],
+        ssr_info['password'],
+        ssr_info['server'],
+        ssr_info['server_port'])
+    ss_encode_link = "ss://{}".format(
+        (base64.b64encode(ss_source_link.encode('utf-8'))).decode())
+    return ss_encode_link
+
+
+# SSR加密规则
+# ssr://server:port:protocol:method:obfs:password_base64/?params_base64
+# password_base64 就是密码被 base64编码 后的字符串
+# params_base64 则是协议参数、混淆参数、备注及Group对应的参数值被 base64编码 后拼接而成的字符串
+# obfsparam=obfsparam_base64&protoparam=protoparam_base64&remarks=remarks_base64&group=group_base64
+def encode_ssr(
+        ssr_info,
+        obfs="",
+        obfsparam="",
+        protocol="origin",
+        protoparam=""):
+    passwd_encode = base64.b64encode(ssr_info['password'].encode()).decode()
+    # 因编码后有些会编码出"=="，再次编码并不会被识别，所以此处进行切割并拼接
+    passwd_encode = "".join(passwd_encode.split("=="))
+
+    # params_base64
+    encode_obfsparam = base64.b64encode(obfsparam.encode()).decode()
+    encode_protoparam = base64.b64encode(protoparam.encode()).decode()
+    encode_remarks = ""
+    encode_group = "UGFycm90U2VjLUNO"
+    params_encode = "obfsparam={}&protoparam={}&remarks={}&group={}".format(
+        encode_obfsparam, encode_protoparam, encode_remarks, encode_group)
+    # 因编码后有些会编码出"=="，再次编码并不会被识别，所以此处进行切割并拼接
+    params_encode = "".join(params_encode.split("=="))
+
+    server_str = "{}:{}:{}:{}:{}:{}/?{}".format(
+        ssr_info['server'],
+        ssr_info['server_port'],
+        protocol,
+        ssr_info['method'],
+        obfs,
+        passwd_encode,
+        params_encode)
+    server_encode = "ssr://{}".format(
+        base64.b64encode(server_str.encode()).decode())
+
     return server_encode
 
 
-def get_ssr_link():
+# 判断服务器类型
+def judging_server_type(ssr_info):
+    if all(["obfs" in ssr_info.keys(), "obfsparam" in ssr_info.keys()]):
+        encode_link = encode_ssr(
+            ssr_info,
+            obfs=ssr_info['obfs'],
+            obfsparam=ssr_info['obfsparam'])
+
+    elif all(["obfs" in ssr_info.keys(), "protocol" in ssr_info.keys()]):
+        encode_link = encode_ssr(
+            ssr_info,
+            obfs=ssr_info['obfs'],
+            protocol=ssr_info['protocol'])
+
+    elif all(["obfs" in ssr_info.keys(), "obfsparam" in ssr_info.keys(), "protocol" in ssr_info.keys(), "protoparam" in ssr_info.keys()]):
+        encode_link = encode_ssr(
+            ssr_info,
+            obfs=ssr_info['obfs'],
+            obfsparam=ssr_info['obfsparam'],
+            protocol=ssr_info['protocol'],
+            protoparam=ssr_info['protoparam'])
+
+    else:
+        encode_link = encode_ss(ssr_info)
+        return encode_link
+
+    return encode_link
+
+
+def get_server_link():
     json_info = requests.get(
         json_link, headers={
             "User-Agent": random.choice(user_agent)})
     json_encode = json.loads(json_info.text)
 
-    try:
-        ssr_link = encode_ssr(json_encode)
-    except:
-        ssr_link = "当前查询服务器没有可用SSR"
+    encode_server_link = judging_server_type(json_encode)
+    if encode_server_link:
+        pass
+    else:
+        encode_server_link = "当前查询服务器没有可用SSR"
 
-    return ssr_link
+    return encode_server_link
 
 
 def get_free_ss_link():
     scraper = cfscrape.create_scraper()
-    soup = bs4.BeautifulSoup(scraper.get("https://www.youneed.win/free-ss").content,
-                             features="html.parser")
+    soup = bs4.BeautifulSoup(
+        scraper.get("https://www.youneed.win/free-ss").content,
+        features="html.parser")
     content = soup.tbody.get_text().strip("\n\n")
     sslist = content.split("\n\n")
 

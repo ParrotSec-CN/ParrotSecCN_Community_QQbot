@@ -49,7 +49,6 @@ fuck_reply: [
     '，哪凉快哪待着!!!   /傲娇/傲娇']
 
 ban_word: [
-    "ssr",
     "vpn",
     "翻墙",
     "黑产",
@@ -57,7 +56,6 @@ ban_word: [
     "冰毒",
     "摇头丸",
     "暗网",
-    "习近平",
     "酸酸乳",
     "gfw"]
 
@@ -142,6 +140,5 @@ function_list: "| 功能列表 |\n
 * 子网段工控设备扫描： @ME protocols-subnet subnet sub_num(16/24) pge_num\n
 * 网段工控设备扫描： @ME protocols-vlan subnet TO subnet 1 pge_num\n
 * IP地址定位: @ME ip ip_address\n
-# * 查询天气： @ME 天气 ??\n
 * 使用方法： @ME 食用\n
 --------------------------------------------------------------"
