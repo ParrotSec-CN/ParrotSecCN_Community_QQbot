@@ -21,6 +21,7 @@ QUERYMSG = {
     "hardware": fh.known_leak_query_website,
     "industrial": fh.known_leak_query_website,
     "what-cms": fh.query_whatcms,
+    "phpstudy-scan": fh.phpstudy_scan,
     "nmap": fh.nmap_scan_port,
     "web-logic-scan": fh.web_logic_scan,
     "poc-search-url": fh.poc_search_url,

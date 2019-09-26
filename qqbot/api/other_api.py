@@ -155,7 +155,7 @@ def encode_ss(ssr_info):
         ssr_info['password'],
         ssr_info['server'],
         ssr_info['server_port'])
-    ss_encode_link = "ss://{}".format(
+    ss_encode_link = "[][]://{}".format(
         (base64.b64encode(ss_source_link.encode('utf-8'))).decode())
     return ss_encode_link
 
@@ -193,7 +193,7 @@ def encode_ssr(
         obfs,
         passwd_encode,
         params_encode)
-    server_encode = "ssr://{}".format(
+    server_encode = "[][][]://{}".format(
         base64.b64encode(server_str.encode()).decode())
 
     return server_encode

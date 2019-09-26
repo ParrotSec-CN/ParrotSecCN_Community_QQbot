@@ -173,3 +173,10 @@ def ip_location(usage_method, user_id, function_list, message, group_id):
     result = api.ipAddress(target)
     msg = result
     return msg
+
+
+def phpstudy_scan(usage_method, user_id, function_list, message, group_id):
+    target = message.split(' ')[2]
+    result = api.poc.phpstudy_poc(target)
+    msg = result
+    return msg

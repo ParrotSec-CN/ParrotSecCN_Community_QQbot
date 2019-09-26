@@ -25,6 +25,7 @@ function_keyword: [
     "hardware",
     "industrial",
     "what-cms",
+    "phpstudy-scan",
     "web-logic-scan",
     "nmap",
     "poc-search-url",
@@ -101,8 +102,9 @@ usage_method: "
 * 物联网设备安全检测: @我 hardware www.exploit-db.com\n
 * 工控安全检测: @我 industrial www.exploit-db.com\n
 * 搜索POC： @我 search-poc discuz\n
-* 查询可用SSR： @我 py\n
-* 查询全部可用SS： @我 all-py 212521306@qq.com\n
+* 查询可用[][][]： @我 py\n
+* 查询全部可用[][]： @我 all-py 212521306@qq.com\n
+* phpstudy扫描： @我 phpstudy-scan http://hello_world.com/\n
 * 查询Vulners数据库已知关键字漏洞： @我 vulners db_search wordpress\n
 * Struts2漏洞扫描(UTF-8编码)： @我 struts2-scan https://www.exploit-db.com:8899/index.action\n
 * Struts2漏洞使用代理扫描(UTF-8编码)： @我 struts2-scan https://www.exploit-db.com:8899/index.action http://8.8.8.8:8899\n
@@ -129,8 +131,9 @@ function_list: "| 功能列表 |\n
 * 物联网设备安全检测: @ME hardware host\n
 * 工控安全检测: @ME industrial host\n
 * 搜索POC： @ME search-poc keywords\n
-* 查询可用S/S/R： @我 py\n
-* 查询全部可用S/S： @我 all-py email-num\n
+* 查询可用[][][]： @我 py\n
+* 查询全部可用[][]： @我 all-py email-num\n
+* phpstudy扫描： @我 phpstudy-scan host\n
 * 查询Vulners数据库已知关键字漏洞： @我 vulners db_search keyword\n
 * Struts2漏洞扫描(UTF-8编码)： @我 struts2-scan host\n
 * Struts2漏洞使用代理扫描(UTF-8编码)： @我 struts2-scan host proxy_ip\n

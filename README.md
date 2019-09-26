@@ -93,7 +93,7 @@
 ## 3.配置flask
 - 填好你的机器人QQ号，以及QQ群号码
 
-  `atMe, group = '[CQ:at,qq=212521306]', 160958474  # 19行`
+  `atMe, group = '[CQ:at,qq=212521306]', 160958474  # run_qqbot.py 19行`
 
 - 配置flask端口，端口是你docker启动后CQHTTP_POST_URL的端口
 
@@ -198,9 +198,13 @@
 
   Demo: `@机器人 vulners db_search keyword` *返回链接*
 
-- **Weblogic扫描检测：@机器人 web-logic-scan ip port**
+- **Weblogic扫描：@机器人 web-logic-scan ip port**
 
   Demo: `@机器人 web-logic-scan 111.200.232.78 3389`
+
+- **phpstudy后门扫描：@机器人 phpstudy-scan host**
+
+  Demo: `@机器人 phpstudy-scan https://www.baidu.com/`
 
 - **Struts2漏洞扫描(UTF-8编码)： @机器人 struts2-scan host**
 
@@ -263,7 +267,7 @@
 │    │    ├─ send_email_function.py
 │    │    ├─ scan_api.py
 │    │    ├─ weblogicscan_api.py  # Weblogic扫描函数
-│    │    ├─ poc  # Weblogic Poc
+│    │    ├─ poc  # Poc相关
 │    │    │    ├─ __init__.py
 │    │    │    ├─ Console.py
 │    │    │    ├─ CVE_2014_4210.py
@@ -276,7 +280,8 @@
 │    │    │    ├─ CVE_2018_2893.py
 │    │    │    ├─ CVE_2018_2894.py
 │    │    │    ├─ CVE_2019_2725.py
-│    │    │    └─ CVE_2019_2729.py
+│    │    │    ├─ CVE_2019_2729.py
+│    │    │    └─ phpstudy_poc.py  # phpstudy后门扫描
 │    │    ├─ vulners_api.py  # Vulners扫描函数
 │    │    ├─ iplocation.py  # IP定位函数
 │    │    ├─ Struts2scan_api.py  # Struts2扫描函数
@@ -315,6 +320,8 @@
 
 * [x] Copy了 **rabbitmask提供的** [Weblogicscan](https://github.com/rabbitmask/WeblogicScan)
 
+* [x] Copy了 **rabbitmask提供的** [PHPStudy_BackDoor](https://github.com/rabbitmask/PHPStudy_BackDoor), 只用到了Poc
+
 * [x] Copy了 **HatBoy的** [Struts2全漏洞扫描利用工具](https://github.com/HatBoy/Struts2-Scan), 只用到了漏洞扫描函数
 
 * [ ] 重构阶段做测试
@@ -326,3 +333,31 @@
 ## 9.注意事项
 
 **如要使用Struts2漏洞扫描，请把** [Struts2全漏洞扫描利用工具](https://github.com/HatBoy/Struts2-Scan) **里面的** `Struts2环境` **文件夹复制到机器人项目下的** `api/` **目录里面**
+
+## 10.调试方法
+
+```
+修改 run_qqbot.py 19行 为你的QQ和QQ群
+
+修改 run_qqbot.py 最后一行 开放监听和端口
+app.run(host="0.0.0.0", port=9002)
+
+屏蔽 qqbot/api/__init__.py 第一行代码
+
+启动
+python run_qqbot.py
+
+根据打印的错误log进行调试
+```
+
+## 11.添加功能
+
+```
+函数脚本放在qqbot/api文件夹里面，然后在qqbot/api/__init__.py添加from .xxxx import xxxx
+
+函数调用逻辑写在qqbot/utils/function_hooks.py
+
+字典映射写在qqbot/utils/callback_function.py，一一对应
+
+最后修改qqbot/config/bot_config.yaml，在function_keyword里面添加字典映射的功能
+```
