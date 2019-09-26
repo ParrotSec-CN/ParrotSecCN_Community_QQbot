@@ -234,11 +234,10 @@ def get_server_link():
             "User-Agent": random.choice(user_agent)})
     json_encode = json.loads(json_info.text)
 
-    encode_server_link = judging_server_type(json_encode)
-    if encode_server_link:
-        pass
-    else:
-        encode_server_link = "当前查询服务器没有可用SSR"
+    try:
+        encode_server_link = judging_server_type(json_encode)
+    except BaseException:
+        encode_server_link = "当前查询接口没有可用服务器(或者它凉了。。。)"
 
     return encode_server_link
 
