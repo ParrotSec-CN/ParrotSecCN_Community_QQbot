@@ -44,8 +44,7 @@ def search_forum(usage_method, user_id, function_list, message, group_id):
 
 def query_ssr(usage_method, user_id, function_list, message, group_id):
     ssr_list = api.get_server_link()
-    server_link = "免费订阅地址：http://ss.pythonic.life/subscribe\n\n{}".format(ssr_list)
-    return server_link
+    return ssr_list
 
 
 def query_free_ss(usage_method, user_id, function_list, message, group_id):
