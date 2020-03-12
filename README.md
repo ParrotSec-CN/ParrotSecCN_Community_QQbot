@@ -117,7 +117,7 @@
 
 - 天气查询，需要用到[聚合科技-天气预报接口](https://www.juhe.cn/myData)的AppKey (当前已屏蔽, 如需启用, 去掉bot_config.yaml的注释)
 
-  **[qqbot/api/other_api.py](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/master/qqbot/api/other_api.py)  # 70行**
+  **[qqbot/api/other_api.py](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/master/qqbot/api/other_api.py)  # 60行**
 
 - 漏洞查询，需要用到[Vulners](https://vulners.com/userinfo)的api_key
 
@@ -143,9 +143,13 @@
 
   `./run_service.sh pip`
 
-- **安装完pip环境之后，会提示手动应用Python环境，和安装环境**
+- **安装完pip环境之后，会提示手动应用Python环境**
 
-  **输入并执行给出的代码，应用以及安装Python环境**
+  `source /home/xxxxxx/venv-py3`
+
+  **安装Python环境**
+
+  `pip install requirements.txt`
 
 - **启动机器人**
 
@@ -188,11 +192,7 @@
 
 - **搜索并使用POC进行安全检测：`@机器人 poc-search-url keywords host`**
 
-- **共享SSR服务器：@机器人 py**
-
-- **共享SS服务器：@机器人 all-py email-num**
-
-  Demo: `@机器人 all-py 212521306@qq.com`
+- **共享v2ray/SSR服务器：@机器人 py**
 
 - **查询Vulners数据库已知关键字漏洞：@机器人 vulners db_search keyword**
 
