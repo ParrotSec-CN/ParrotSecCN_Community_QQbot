@@ -363,4 +363,4 @@ python run_qqbot.py
 ```
 
 ## 12.搭建流程
-<iframe src="//player.bilibili.com/player.html?aid=95801466&cid=163549427&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+[https://www.bilibili.com/video/av95801466/](https://www.bilibili.com/video/av95801466/)
