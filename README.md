@@ -361,3 +361,6 @@ python run_qqbot.py
 
 最后修改qqbot/config/bot_config.yaml，在function_keyword里面添加字典映射的功能
 ```
+
+## 12.搭建流程
+<iframe src="//player.bilibili.com/player.html?aid=95801466&cid=163549427&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
