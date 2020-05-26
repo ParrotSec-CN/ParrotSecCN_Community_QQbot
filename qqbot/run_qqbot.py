@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from gevent import monkey
+
 monkey.patch_all()
 
 import json
@@ -65,7 +66,7 @@ def handle(event, myjson):
     # 修改文章
     elif event == 'topic_edited':
         title, create_user = myjson['topic']['title'], \
-                myjson['topic']['created_by']['username']
+                             myjson['topic']['created_by']['username']
         url = "https://parrotsec-cn.org/t/{}/{}".format(myjson['topic']['slug'], myjson['topic']['id'])
         msg = '某位大佬 修改了 {} 的主题 "{}" {} {}'.format(create_user, title, "\n", url)
         return qq_group.send_msg(msg, 'group_id', group)
@@ -94,9 +95,9 @@ def my_msg():
     print("------------------Print running log---------------------")
 
     fuckoff, usage_method, function_list, function_keyword = config_content['fuck_off'], \
-                                           config_content['usage_method'], \
-                                           config_content['function_list'], \
-                                           config_content['function_keyword']
+                                                             config_content['usage_method'], \
+                                                             config_content['function_list'], \
+                                                             config_content['function_keyword']
     content = request.json
 
     try:
@@ -109,6 +110,11 @@ def my_msg():
         if content['post_type'] == 'message':
             try:
                 message = content['message']
+                if "我爱你" in "".join(message.lower().split()):
+                    msg = {
+                        'reply': ', 滚蛋，今天不是520，信不信我给你进小黑屋?'}
+                    return Response(
+                        json.dumps(msg), mimetype='application/json')
                 # 判断违禁词
                 for ban_word in config_content['ban_word']:
                     if ban_word in "".join(message.lower().split()):
@@ -154,10 +160,10 @@ def my_msg():
                     # 调用函数字典映射
                     # search_info = QueryMsg(1001)(keyword=keyword)
                     function_result = cf.QueryMsg(keyword)(usage_method=usage_method,
-                                         function_list=function_list,
-                                         message=message,
-                                         user_id=userId,
-                                         group_id=groupId)
+                                                           function_list=function_list,
+                                                           message=message,
+                                                           user_id=userId,
+                                                           group_id=groupId)
                     if function_result:
                         msg = {'reply': function_result}
                         return Response(
@@ -176,4 +182,4 @@ def my_msg():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=9002)
