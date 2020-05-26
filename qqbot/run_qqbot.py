@@ -100,6 +100,13 @@ def my_msg():
                                                              config_content['function_keyword']
     content = request.json
 
+    # Message forwarding
+    try:
+        requests.post("http://127.0.0.1:11234",headers = {'Content-Type': 'application/json'},data=json.dumps(content))
+        print (content)
+    except Exception as e:
+        print(e)
+
     try:
         groupId = content['group_id']
     except BaseException:
