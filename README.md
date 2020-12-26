@@ -1,13 +1,16 @@
 ## ParrotSecCN_Community_QQbot
 [![Python 3.5+](https://img.shields.io/badge/Python-3.5+-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/License-GPLv2-red.svg)](https://raw.githubusercontent.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/dev_Refactoring_Py3/LICENSE) [![Parrot-CN](https://img.shields.io/badge/Parrot-CN-yellow.svg)](https://parrotsec-cn.org/) [![AresX](https://img.shields.io/badge/AresX-Blog-yellow.svg)](https://ares-x.com/) [![Hexman](https://img.shields.io/badge/Hexman-Blog-yellow.svg)](https://www.hexlt.org/) [![Gray.Ad](https://img.shields.io/badge/Gray.Ad-Blog-yellow.svg)](https://trojanazhen.top/)
 
-~~因酷Q作者抗不住压力弃坑之后，依赖酷Q的组件目前已无法使用，So只能更换新的框架~~
+*因酷Q作者抗不住压力弃坑之后，依赖酷Q的组件目前已无法使用，So只能更换新的框架*
 
 > **之前酷Q内集成QQ协议组件和消息转发的http_api组件现被更选到以下组件**
 
 [1. QQ协议组件 - Go-cqhttp](https://github.com/Mrs4s/go-cqhttp)
+
 [2. 消息转发组件 - nonebot2](https://github.com/nonebot/nonebot2)
+
 [3. 待更新的本项目机器人](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot.git)
+
 [4. Tg互联，待沟通测试，暂无]()
 
 ## 1.更新服务器shell环境为zh_CN.UTF-8
@@ -25,6 +28,7 @@ dpkg-reconfigure locales
 [nonebot2文档](https://v2.nonebot.dev/guide/creating-a-plugin.html)
 
 > **安装Python依赖**
+
 `apt install build-essential libncursesw5-dev libgdbm-dev libc6-dev zlib1g-dev libsqlite3-dev tk-dev libssl-dev openssl libffi-dev -y`
 
 > **下载并安装独立的Python3.7.9**
@@ -43,6 +47,7 @@ make altinstall
 
 ```
 python3.7 --version
+
 pip3.7 -V
 ```
 
@@ -70,6 +75,8 @@ if __name__ == "__main__":
 `python3.7 bot.py`
 
 ## 3.QQ协议组件 - Go-cqhttp
+
+[go-cqhttp_Api文档](https://github.com/Mrs4s/go-cqhttp/blob/master/docs/cqhttp.md)
 
 ```
 wget https://github.com/Mrs4s/go-cqhttp/releases/download/v0.9.36/go-cqhttp-v0.9.36-linux-amd64
