@@ -6,6 +6,7 @@ monkey.patch_all()
 
 import json
 import yaml
+import requests
 import api.qq_group_api as qq_group
 
 from random import choice
@@ -100,41 +101,43 @@ def my_msg():
                                                              config_content['function_keyword']
     content = request.json
 
-    # Message forwarding
+    # Tg Message forwarding
     try:
-        requests.post("http://127.0.0.1:11234",headers = {'Content-Type': 'application/json'},data=json.dumps(content))
-        print (content)
+        requests.post("http://127.0.0.1:11234", headers={'Content-Type': 'application/json'}, data=json.dumps(content))
+        print(content)
     except Exception as e:
         print(e)
 
     try:
         groupId = content['group_id']
+        userId = content['user_id']
+        atPeople = '[CQ:at,qq=' + str(userId) + ']'
     except BaseException:
         groupId = False
-    userId = content['user_id']
+        userId = False
 
     if groupId and groupId == group:
         if content['post_type'] == 'message':
             try:
                 message = content['message']
-                if "我爱你" in "".join(message.lower().split()):
-                    msg = {
-                        'reply': ', 滚蛋，今天不是520，信不信我给你进小黑屋?'}
-                    return Response(
-                        json.dumps(msg), mimetype='application/json')
                 # 判断违禁词
                 for ban_word in config_content['ban_word']:
                     if ban_word in "".join(message.lower().split()):
                         msg = {
-                            'reply': ', big brother is watching you! 恭喜你小伙计中奖了！！！'}
+                            'reply': atPeople + ', big brother is watching you! 恭喜你小伙计中奖了！！！'}
                         qq_group.group_ban(groupId, userId, miu_num=choice(random_time))
                         return Response(
                             json.dumps(msg), mimetype='application/json')
                 # 直接@我
                 if atMe in message:
+                    if "我爱你" in "".join(message.lower().split()):
+                        msg = {
+                            'reply': atPeople + ', 滚蛋，今天不是520，信不信我给你进小黑屋?'}
+                        return Response(
+                            json.dumps(msg), mimetype='application/json')
                     if "".join((message.split())) == atMe:
                         reply = config_content['fuck_reply']
-                        msg = {'reply': choice(reply)}
+                        msg = {'reply': atPeople + choice(reply)}
                         return Response(
                             json.dumps(msg), mimetype='application/json')
 
@@ -142,7 +145,7 @@ def my_msg():
                     for abuse_word in config_content['abuse_word']:
                         if abuse_word in "".join(message.lower().split()):
                             msg = {
-                                'reply': ', 骂我? 小伙计你内心很浮躁嘛! 送你个大奖，不用谢！'}
+                                'reply': atPeople + ', 骂我? 小伙计你内心很浮躁嘛! 送你个大奖，不用谢！'}
                             qq_group.group_ban(groupId, userId, miu_num=choice(random_time))
                             return Response(
                                 json.dumps(msg), mimetype='application/json')
@@ -151,7 +154,7 @@ def my_msg():
                     for serious_violation in config_content['serious_violations']:
                         if serious_violation in "".join(message.lower().split()):
                             msg = {
-                                'reply': ', <): 我日你mmp呦, 10天够不够, 不够滚nmd！！！'}
+                                'reply': atPeople + ', <): 我日你mmp呦, 10天够不够, 不够滚nmd！！！'}
                             qq_group.group_ban(groupId, userId, miu_num=864000)
                             return Response(
                                 json.dumps(msg), mimetype='application/json')
@@ -160,7 +163,7 @@ def my_msg():
 
                     # 判断调用函数
                     if keyword not in function_keyword:
-                        msg = {'reply': choice(fuckoff)}
+                        msg = {'reply': atPeople + choice(fuckoff)}
                         return Response(
                             json.dumps(msg), mimetype='application/json')
 
@@ -172,7 +175,7 @@ def my_msg():
                                                            user_id=userId,
                                                            group_id=groupId)
                     if function_result:
-                        msg = {'reply': function_result}
+                        msg = {'reply': atPeople + function_result}
                         return Response(
                             json.dumps(msg), mimetype='application/json')
 
@@ -181,7 +184,7 @@ def my_msg():
 
         elif content['post_type'] == 'notice':
             if content['notice_type'] == 'group_increase':
-                msg = "欢迎大佬['{}']入群,请牢记: 渗透千万条, 匿名第一条; 搞事不规范, 牢饭吃到早!!!".format(str(content['user_id']))
+                msg = "欢迎大佬{}入群,请牢记: 渗透千万条, 匿名第一条; 搞事不规范, 牢饭吃到早!!!".format(atPeople)
                 return qq_group.send_msg(msg, 'group_id', groupId)
 
     res = {'msg': 'ok'}
