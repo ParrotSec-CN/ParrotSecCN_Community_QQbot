@@ -457,19 +457,33 @@ python run_qqbot.py
 ## 13.相关参考文档
 [go-cqhttp新增API](https://github.com/Mrs4s/go-cqhttp/blob/master/docs/cqhttp.md)
 
+- ```
+  # 回复群内消息
+  http://127.0.0.1:5700/send_group_msg?group_id=160958474&message=[CQ:reply,id=409839449]????
+  ```
+
 [cqhttp接口调用](https://github.com/howmanybots/onebot/blob/master/v11/specs/api/public.md)
+
+- ```
+  send_private_msg 发送私聊消息
+  send_group_msg 发送群消息
+  delete_msg 撤回消息
+  set_group_ban 群组单人禁言
+  set_group_add_request 处理加群请求／邀请
+  
+  # @群成员格式，在message字段加上[CQ:at,qq=qq号]，如下：
+  代码：message=[CQ:at,qq=212521306]，你好啊
+  实际：@212521306，你好啊
+  ```
 
 [http快速调试](https://github.com/howmanybots/onebot/blob/master/v11/specs/communication/http.md)
 
-```
-# 格式
-http://127.0.0.1:5700/send_private_msg?user_id=[接收者qq号]&message=[发送的信息]
+- ```
+  # 格式
+  http://127.0.0.1:5700/send_private_msg?user_id=[接收者qq号]&message=[发送的信息]
 
-# 回复群内消息
-http://127.0.0.1:5700/send_group_msg?group_id=160958474&message=[CQ:reply,id=409839449]????
-
-# @群成员并发送消息
-http://127.0.0.1:5700/send_group_msg?group_id=160958474&message=[CQ:at,qq=212521306]????
-```
+  # @群成员并发送消息
+  http://127.0.0.1:5700/send_group_msg?group_id=160958474&message=[CQ:at,qq=212521306]????
+  ```
 
 [post http url及配置文件格式](https://github.com/Mrs4s/go-cqhttp/blob/master/docs/config.md)
