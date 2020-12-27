@@ -1,105 +1,156 @@
 ## ParrotSecCN_Community_QQbot
 [![Python 3.5+](https://img.shields.io/badge/Python-3.5+-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/License-GPLv2-red.svg)](https://raw.githubusercontent.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/dev_Refactoring_Py3/LICENSE) [![Parrot-CN](https://img.shields.io/badge/Parrot-CN-yellow.svg)](https://parrotsec-cn.org/) [![AresX](https://img.shields.io/badge/AresX-Blog-yellow.svg)](https://ares-x.com/) [![Hexman](https://img.shields.io/badge/Hexman-Blog-yellow.svg)](https://www.hexlt.org/) [![Gray.Ad](https://img.shields.io/badge/Gray.Ad-Blog-yellow.svg)](https://trojanazhen.top/)
 
-## 1.安装docker
+*因酷Q作者抗不住压力弃坑之后，依赖酷Q的组件目前已无法使用，So只能更换新的框架*
 
-**安装Docker**
+> **之前酷Q内集成QQ协议组件和消息转发的http_api组件现被更选到以下组件**
 
-`wget -qO- https://get.docker.com/ | sh`
+[1. QQ协议组件和消息转发 - Go-cqhttp](https://github.com/Mrs4s/go-cqhttp)
 
-**下载Docker coolq**
+[2. 待更新的本项目机器人](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot.git)
 
-`docker pull richardchien/cqhttp:latest`
+[3. 机器人 - nonebot2](https://github.com/nonebot/nonebot2)
 
-**创建coolq文件夹**
+[4. Tg互联，待沟通测试，暂无]()
 
-`mkdir coolq`
+## 1.更新服务器字符集为zh_CN.UTF-8
 
-## 2.配置 服务器 和 coolq
-**相关外部访问的端口记得在服务器的控制面板开启**
+```
+dpkg-reconfigure locales
 
-- [酷Q Air for docker](https://cqhttp.cc/docs/4.7/#/Docker)
+选中zh-cn.utf-8
 
-  ```
-  # docker部署coolq，所有操作都要sudo权限
+然后重启shell
+```
 
-  docker run -ti --rm --name cqhttp-test -v $(pwd)/coolq:/home/user/coolq -e VNC_PASSWD=12345678 -p 9000:9000 -p 127.0.0.1:5700:5700 -e COOLQ_ACCOUNT=212521306 -e CQHTTP_POST_URL=http://127.0.0.1:9002/ -e CQHTTP_SERVE_DATA_FILES=no richardchien/cqhttp:latest
+## 2.QQ协议组件和消息转发 - Go-cqhttp
 
-  # 参数说明
-  -v $(pwd)/coolq:/home/user/coolq \  # 将宿主目录挂载到容器内用于持久化酷Q的程序文件
+[go-cqhttp_Api文档](https://github.com/Mrs4s/go-cqhttp/blob/master/docs/cqhttp.md)
 
-  -p 9000:9000 \  # noVNC端口(这端口意思类似端口转发，docker指定9000端口，如果要更改的话，可以改为7878:9000，意思是把docker的9000端口转发到服务器的7878端口)，用于从浏览器登陆服务器，控制酷Q
+```
+wget https://github.com/Mrs4s/go-cqhttp/releases/download/v0.9.36/go-cqhttp-v0.9.36-linux-amd64
+mkdir go_to_qq && mv go-cqhttp-v0.9.36-linux-amd64 ./go_to_qq
+cd go_to_qq
 
-  -p 5700:5700 \  # HTTP API 插件开放的端口(用于监听QQ群消息，HTTP API指定端口)
+# 首次启动会生成默认的配置文件
+./go-cqhttp-v0.9.36-linux-amd64
+```
 
-  -e COOLQ_ACCOUNT=212521306 \ # 要登录的 QQ 账号，可选但建议填
+`vi config.hjson`
 
-  -e CQHTTP_POST_URL=http://127.0.0.1:9002/ \  # 相当于request api，把群里的信息上报(访问)到地址，如果提示端口占用，那么就相应得修改此参数的端口值
-
-  -e CQHTTP_SERVE_DATA_FILES=no \  # 不允许通过 HTTP 接口访问酷 Q 数据文件
-  ```
-
-- 相关注意事项
-  - 嘤嘤机器人的flask后台，用于监听qq数据的api接口是http://127.0.0.1:9002/msg
-
-  - 详见代码 `qqbot/run_qqbot.py` 的[93行](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/dev_Refactoring_Py3/qqbot/run_qqbot.py)
-
-  - 所以你启动docker的时候CQHTTP_POST_URL要改为下面的内容(或者docker启动后再修改coolq/app/io.github.richardchien.coolqhttpapi/config里面的ini文件或json文件)
-
-  - CQHTTP_POST_URL=http://127.0.0.1:9002/msg
-
-- 我的相关config配置文件 (ini文件会自动生成，再自行创建一个json配置文件)
-
-  - `你的QQ号.ini`
-    ```
-    [你的QQ号]
-    host=0.0.0.0
-    port=5700
-    use_http=yes
-    post_url=http://内网ip:9002/msg
-    post_message_format=string
-    ```
-
-  - `你的QQ号.json`
-    ```
-    {
-        "host": "0.0.0.0",
-        "port": 5700,
-        "use_http": true,
-        "ws_host": "0.0.0.0",
-        "ws_port": 6700,
-        "use_ws": false,
-        "post_url": "http://127.0.0.1:9002/msg",
-        "ws_reverse_url": "",
-        "ws_reverse_api_url": "",
-        "ws_reverse_event_url": "",
-        "ws_reverse_reconnect_interval": 3000,
-        "ws_reverse_reconnect_on_code_1000": true,
-        "use_ws_reverse": false,
-        "post_url": "",
-        "access_token": "",
-        "secret": "",
-        "post_message_format": "string",
-        "serve_data_files": false,
-        "update_source": "github",
-        "update_channel": "stable",
-        "auto_check_update": false,
-        "auto_perform_update": false,
-        "show_log_console": false,
-        "log_level": "info"
+```
+... ...
+{
+    // QQ号
+    uin: 123456789
+    // QQ密码
+    password: "woshimima"
+... ...
+    http_config: {
+        // 是否启用正向HTTP服务器
+        enabled: true
+        // 服务端监听地址
+        host: 0.0.0.0
+        // 服务端监听端口
+        port: 5700
+        // 反向HTTP超时时间, 单位秒
+        // 最小值为5，小于5将会忽略本项设置
+        timeout: 0
+        // 反向HTTP POST地址列表
+        // 格式: 
+        // {
+        //    地址: secret
+        // }
+        post_urls: {"127.0.0.1:9002/msg": ""}
     }
-    ```
+... ...
+    ws_reverse_servers: [
+        // 可以添加多个反向WS推送
+        {
+            // 是否启用该推送
+            enabled: true
+            // 反向WS Universal 地址
+            // 注意 设置了此项地址后下面两项将会被忽略
+            // 留空请使用 ""
+            reverse_url: ws://127.0.0.1:7788/cqhttp/ws
+... ...
+```
 
-## 3.配置flask
-- 填好你的机器人QQ号，以及QQ群号码
+> **上述配置中，反向HTTP POST是鸟群机器人的配置，反向ws是nonebot2机器人的配置**
 
-  `atMe, group = '[CQ:at,qq=212521306]', 160958474  # run_qqbot.py 19行`
+**开启QQ设备锁**
 
-- 配置flask端口，端口是你docker启动后CQHTTP_POST_URL的端口
+`手机QQ --> 左上角头像 --> 设置 --> 帐号安全 --> 登录设备管理 --> 启用“登录保护”`
 
-  - CQHTTP_POST_URL配置的端口不是占用此端口，而是数据请求此端口
+**再次启动Go-cqhttp**
 
-  - 比如我docker配置的CQHTTP_POST_URL端口是9002，那么我flask的启动端口就是9002
+`./go-cqhttp-v0.9.36-linux-amd64`
+
+*启动顺利的话，选2用手机扫码登录; 启动不顺利就多试几次。*
+
+## 3.机器人 - nonebot2
+
+[nonebot2文档](https://v2.nonebot.dev/guide/creating-a-plugin.html)
+
+> **安装Python依赖**
+
+`apt install build-essential libncursesw5-dev libgdbm-dev libc6-dev zlib1g-dev libsqlite3-dev tk-dev libssl-dev openssl libffi-dev -y`
+
+> **下载并安装独立的Python3.7.9**
+
+*因nonebot2基于Py3.7特性开发，so，要装一个独立的Python3.7环境*
+
+```
+curl -O https://www.python.org/ftp/python/3.7.9/Python-3.7.9.tar.xz
+tar -Jxvf Python-3.7.9.tar.xz
+cd Python-3.7.9 && ./configure --enable-optimizations
+make -j 1
+make altinstall
+```
+
+> **验证新装的Python版本**
+
+```
+python3.7 --version
+
+pip3.7 -V
+```
+
+> **安装nonebot2**
+
+`pip3.7 install nonebot2`
+
+> **创建项目及启动**
+
+`vi bot.py`
+
+```
+import nonebot
+from nonebot.adapters.cqhttp import Bot as CQHTTPBot
+
+nonebot.init()
+driver = nonebot.get_driver()
+driver.register_adapter("cqhttp", CQHTTPBot)
+nonebot.load_builtin_plugins()
+
+if __name__ == "__main__":
+    nonebot.run(port=7788)
+```
+
+`python3.7 bot.py`
+
+> **测试Go-cqhttp和nonebot2的联动性**
+
+*Go-cqhttp启动正常，nonebot2的bot.py会打印类似如下信息*
+
+```
+09-14 21:31:16 [INFO] uvicorn | ('127.0.0.1', 12345) - "WebSocket /cqhttp/ws" [accepted]
+09-14 21:31:16 [INFO] nonebot | WebSocket Connection from CQHTTP Bot 你的QQ号 Accepted!
+```
+
+**用另外的QQ发送消息给机器人QQ测试是否正常运行**
+
+`/echo 你好啊`
 
 ## 4.外部导入相关密码，验证Key
 
@@ -316,19 +367,21 @@
 
 ## 8.相关迭代...
 
-* [x] Py2转Py3
-
-* [x] Copy了 **rabbitmask提供的** [Weblogicscan](https://github.com/rabbitmask/WeblogicScan)
-
-* [x] Copy了 **rabbitmask提供的** [PHPStudy_BackDoor](https://github.com/rabbitmask/PHPStudy_BackDoor), 只用到了Poc
-
-* [x] Copy了 **HatBoy的** [Struts2全漏洞扫描利用工具](https://github.com/HatBoy/Struts2-Scan), 只用到了漏洞扫描函数
+* [ ] go-cqhttp语法修复
 
 * [ ] 重构阶段做测试
 
 * [ ] 逻辑代码优化
 
 * [ ] Poc接口增加vulners查询, 还在解析, 进度有点慢
+
+* [ ] 审视了一下nonebot2的代码量，项目结构，异步，发现后期改可以，目前还是用鸟的机器人
+
+* [x] Copy了 **rabbitmask提供的** [Weblogicscan](https://github.com/rabbitmask/WeblogicScan)
+
+* [x] Copy了 **rabbitmask提供的** [PHPStudy_BackDoor](https://github.com/rabbitmask/PHPStudy_BackDoor), 只用到了Poc
+
+* [x] Copy了 **HatBoy的** [Struts2全漏洞扫描利用工具](https://github.com/HatBoy/Struts2-Scan), 只用到了漏洞扫描函数
 
 ## 9.注意事项
 
@@ -362,5 +415,28 @@ python run_qqbot.py
 最后修改qqbot/config/bot_config.yaml，在function_keyword里面添加字典映射的功能
 ```
 
-## 12.搭建流程
-[https://www.bilibili.com/video/av95801466/](https://www.bilibili.com/video/av95801466/)
+## 12.待修复项
+
+* [ ] @某人
+* [ ] 回复消息
+* [ ] 搜索论坛
+* [ ] 查询已知Poc
+* [ ] TCP端口扫描
+* [ ] CMS识别
+* [ ] CMS漏洞扫描
+* [ ] 信息搜集
+* [ ] 系统漏洞扫描
+* [ ] 物联网设备安全检测
+* [ ] 工控安全检测
+* [ ] 搜索POC
+* [ ] 查询可用v2ray/ssr
+* [ ] phpstudy扫描
+* [ ] 查询Vulners数据库已知关键字漏洞
+* [ ] Struts2漏洞扫描(UTF-8编码)
+* [ ] Struts2漏洞使用代理扫描(UTF-8编码)
+* [ ] 搜索并使用POC进行安全检测
+* [ ] Weblogic检测
+* [ ] 子网工控设备扫描
+* [ ] 子网段工控设备扫描
+* [ ] 网段工控设备扫描
+* [ ] IP地址定位
