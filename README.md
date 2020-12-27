@@ -88,6 +88,18 @@ cd go_to_qq
 
 *启动顺利的话，选2用手机扫码登录; 启动不顺利就多试几次。*
 
+> **当机器人所进群组过多，只想过滤某单一群消息**
+
+**在go-cqhttp同级目录下新建filter.json文件,开启事件过滤器**
+
+```
+{
+    "group_id": {
+        ".in": [160958474]
+    }
+}
+```
+
 ## 3.机器人 - nonebot2
 
 [nonebot2文档](https://v2.nonebot.dev/guide/creating-a-plugin.html)
@@ -419,7 +431,7 @@ python run_qqbot.py
 
 * [x] @群成员
 * [ ] 撤回群员消息，并禁言群成员
-* [ ] 通过正确flag，自动通过加群请求
+* [ ] 自动通过正确flag的加群请求
 * [ ] 搜索论坛
 * [ ] 查询已知Poc
 * [ ] TCP端口扫描
@@ -441,3 +453,23 @@ python run_qqbot.py
 * [ ] 子网段工控设备扫描
 * [ ] 网段工控设备扫描
 * [x] IP地址定位
+
+## 13.相关参考文档
+[go-cqhttp新增API](https://github.com/Mrs4s/go-cqhttp/blob/master/docs/cqhttp.md)
+
+[cqhttp接口调用](https://github.com/howmanybots/onebot/blob/master/v11/specs/api/public.md)
+
+[http快速调试](https://github.com/howmanybots/onebot/blob/master/v11/specs/communication/http.md)
+
+```
+# 格式
+http://127.0.0.1:5700/send_private_msg?user_id=[接收者qq号]&message=[发送的信息]
+
+# 回复群内消息
+http://127.0.0.1:5700/send_group_msg?group_id=160958474&message=[CQ:reply,id=409839449]????
+
+# @群成员并发送消息
+http://127.0.0.1:5700/send_group_msg?group_id=160958474&message=[CQ:at,qq=212521306]????
+```
+
+[post http url及配置文件格式](https://github.com/Mrs4s/go-cqhttp/blob/master/docs/config.md)
