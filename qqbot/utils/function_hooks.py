@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 
+import re
 import json
 import requests
 import api
@@ -101,17 +102,26 @@ def query_whatcms(usage_method, user_id, function_list, message, group_id):
 
 def nmap_scan_port(usage_method, user_id, function_list, message, group_id):
     target = message.split(' ')[2]
+    request_url = "https://api.hackertarget.com/nmap/?q={target}".format(
+                target=target.replace(
+                    "http:", "").replace(
+                    "https:", "").replace(
+                    "/", ""))
     try:
-        request_url = "https://api.hackertarget.com/nmap/?q={target}".format(
-                    target=target.replace(
-                        "http:", "").replace(
-                        "https:", "").replace(
-                        "/", ""))
-        response_content = requests.get(request_url).content
+        response_content = requests.get(request_url, timeout=3).content
         response_str = str(response_content, encoding='utf-8')
-    except BaseException:
-        return "输入有误!!!"
-    return response_str.strip().lstrip("\n").strip("\n")
+    except:
+        return "啊哦，nmap请求完犊子了!!!"
+
+    if "Error" in response_str:
+        return "地址输入有误!!!!"
+    else:
+        re_str = re.findall(r'\d+\/\w+\W+\w+\W+\S+', response_str)
+
+        response_str = "PORT     STATE    SERVICE\n"
+        for i in re_str:
+            response_str = response_str + "\n" + i
+        return response_str
 
 
 def struts2_scan(usage_method, user_id, function_list, message, group_id):
