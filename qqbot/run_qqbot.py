@@ -93,8 +93,6 @@ def my_json():
 
 @app.route('/msg', methods=['POST'])
 def my_msg():
-    print("------------------Print running log---------------------")
-
     fuckoff, usage_method, function_list, function_keyword = config_content['fuck_off'], \
                                                              config_content['usage_method'], \
                                                              config_content['function_list'], \
@@ -130,11 +128,6 @@ def my_msg():
                             json.dumps(msg), mimetype='application/json')
                 # 直接@我
                 if atMe in message:
-                    if "我爱你" in "".join(message.lower().split()):
-                        msg = {
-                            'reply': atPeople + ', 滚蛋，今天不是520，信不信我给你进小黑屋?'}
-                        return Response(
-                            json.dumps(msg), mimetype='application/json')
                     if "".join((message.split())) == atMe:
                         reply = config_content['fuck_reply']
                         msg = {'reply': atPeople + choice(reply)}
