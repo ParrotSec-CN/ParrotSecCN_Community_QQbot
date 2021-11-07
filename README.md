@@ -9,9 +9,7 @@
 
 [2. 待更新的本项目机器人](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot.git)
 
-[3. 机器人 - nonebot2](https://github.com/nonebot/nonebot2)
-
-[4. Tg互联，待沟通测试，暂无]()
+[3. Tg互联，待沟通测试，暂无]()
 
 ## 1.更新服务器字符集为zh_CN.UTF-8
 
@@ -28,15 +26,16 @@ dpkg-reconfigure locales
 [go-cqhttp_Api文档](https://github.com/Mrs4s/go-cqhttp/blob/master/docs/cqhttp.md)
 
 ```
-wget https://github.com/Mrs4s/go-cqhttp/releases/download/v0.9.36/go-cqhttp-v0.9.36-linux-amd64
-mkdir go_to_qq && mv go-cqhttp-v0.9.36-linux-amd64 ./go_to_qq
-cd go_to_qq
+wget https://github.com/Mrs4s/go-cqhttp/releases/download/xxxxxxxxxxxxxxxxxxxxxxxx
+mkdir cqhttp && mv go-cqhttp cqhttp
+cd cqhttp
 
 # 首次启动会生成默认的配置文件
-./go-cqhttp-v0.9.36-linux-amd64
+# 新版go-cqhttp选择http
+./go-cqhttp
 ```
 
-`vi config.hjson`
+`vi config.yml`
 
 ```
 ... ...
@@ -46,37 +45,40 @@ cd go_to_qq
     // QQ密码
     password: "woshimima"
 ... ...
-    http_config: {
-        // 是否启用正向HTTP服务器
-        enabled: true
-        // 服务端监听地址
-        host: 0.0.0.0
-        // 服务端监听端口
-        port: 5700
-        // 反向HTTP超时时间, 单位秒
-        // 最小值为5，小于5将会忽略本项设置
-        timeout: 0
-        // 反向HTTP POST地址列表
-        // 格式: 
-        // {
-        //    地址: secret
-        // }
-        post_urls: {"127.0.0.1:9002/msg": ""}
-    }
-... ...
-    ws_reverse_servers: [
-        // 可以添加多个反向WS推送
-        {
-            // 是否启用该推送
-            enabled: true
-            // 反向WS Universal 地址
-            // 注意 设置了此项地址后下面两项将会被忽略
-            // 留空请使用 ""
-            reverse_url: ws://127.0.0.1:7788/cqhttp/ws
+# 连接服务列表
+servers:
+  # 添加方式，同一连接方式可添加多个，具体配置说明请查看文档
+  #- http: # http 通信
+  #- ws:   # 正向 Websocket
+  #- ws-reverse: # 反向 Websocket
+  #- pprof: #性能分析服务器
+  # HTTP 通信设置
+  - http:
+      # 服务端监听地址
+      host: 127.0.0.1
+      # 服务端监听端口
+      port: 5700
+      # 反向HTTP超时时间, 单位秒
+      # 最小值为5，小于5将会忽略本项设置
+      timeout: 5
+      # 长轮询拓展
+      long-polling:
+        # 是否开启
+        enabled: false
+        # 消息队列大小，0 表示不限制队列大小，谨慎使用
+        max-queue-size: 2000
+      middlewares:
+        <<: *default # 引用默认中间件
+      # 反向HTTP POST地址列表
+      post:
+      #- url: '' # 地址
+      #  secret: ''           # 密钥
+      - url: 127.0.0.1:9002/msg # 地址
+      #  secret: ''          # 密钥
 ... ...
 ```
 
-> **上述配置中，反向HTTP POST是鸟群机器人的配置，反向ws是nonebot2机器人的配置**
+> **上述配置中，反向HTTP POST url是鸟群机器人的配置**
 
 **开启QQ设备锁**
 
@@ -84,9 +86,9 @@ cd go_to_qq
 
 **再次启动Go-cqhttp**
 
-`./go-cqhttp-v0.9.36-linux-amd64`
+`./go-cqhttp`
 
-*启动顺利的话，选2用手机扫码登录; 启动不顺利就多试几次。*
+*手机扫码登录，启动不顺利就多试几次*
 
 > **当机器人所进群组过多，只想过滤某单一群消息**
 
@@ -100,71 +102,7 @@ cd go_to_qq
 }
 ```
 
-## 3.机器人 - nonebot2
-
-[nonebot2文档](https://v2.nonebot.dev/guide/creating-a-plugin.html)
-
-> **安装Python依赖**
-
-`apt install build-essential libncursesw5-dev libgdbm-dev libc6-dev zlib1g-dev libsqlite3-dev tk-dev libssl-dev openssl libffi-dev -y`
-
-> **下载并安装独立的Python3.7.9**
-
-*因nonebot2基于Py3.7特性开发，so，要装一个独立的Python3.7环境*
-
-```
-curl -O https://www.python.org/ftp/python/3.7.9/Python-3.7.9.tar.xz
-tar -Jxvf Python-3.7.9.tar.xz
-cd Python-3.7.9 && ./configure --enable-optimizations
-make -j 1
-make altinstall
-```
-
-> **验证新装的Python版本**
-
-```
-python3.7 --version
-
-pip3.7 -V
-```
-
-> **安装nonebot2**
-
-`pip3.7 install nonebot2`
-
-> **创建项目及启动**
-
-`vi bot.py`
-
-```
-import nonebot
-from nonebot.adapters.cqhttp import Bot as CQHTTPBot
-
-nonebot.init()
-driver = nonebot.get_driver()
-driver.register_adapter("cqhttp", CQHTTPBot)
-nonebot.load_builtin_plugins()
-
-if __name__ == "__main__":
-    nonebot.run(port=7788)
-```
-
-`python3.7 bot.py`
-
-> **测试Go-cqhttp和nonebot2的联动性**
-
-*Go-cqhttp启动正常，nonebot2的bot.py会打印类似如下信息*
-
-```
-09-14 21:31:16 [INFO] uvicorn | ('127.0.0.1', 12345) - "WebSocket /cqhttp/ws" [accepted]
-09-14 21:31:16 [INFO] nonebot | WebSocket Connection from CQHTTP Bot 你的QQ号 Accepted!
-```
-
-**用另外的QQ发送消息给机器人QQ测试是否正常运行**
-
-`/echo 你好啊`
-
-## 4.外部导入相关密码，验证Key
+## 3.外部导入相关密码，验证Key
 
 **Secrets文件做了处理，逻辑做了修改，不添加Key也没问题**
 
@@ -190,9 +128,9 @@ if __name__ == "__main__":
 
   **[qqbot/api/send_mail_function.py](https://github.com/ParrotSec-CN/ParrotSecCN_Community_QQbot/blob/master/qqbot/api/send_mail_function.py)  # 15行**
 
-## 5.启动机器人
+## 4.启动机器人
 
-- **鉴于很多新手在用，目前改写成了shell脚本启动方式**
+- **鉴于一键使用，目前改写成了shell脚本启动方式**
 
 - **给shell脚本添加可执行权限**
 
@@ -206,15 +144,15 @@ if __name__ == "__main__":
 
   `./run_service.sh pip`
 
-- **安装完pip环境之后，会提示手动应用Python环境**
+- **安装完pip环境之后，会提示手动应用Py venv环境**
 
   `source /home/xxxxxx/venv-py3`
 
-  **安装Python环境**
+  **安装Py环境**
 
   `pip install requirements.txt`
 
-- **启动机器人**
+- **启动机器人（默认配置是9002端口，如若修改，则需修改shell脚本的gunicorn端口）**
 
   `./run_service.sh start`
 
@@ -222,7 +160,7 @@ if __name__ == "__main__":
 
   `./run_service.sh stop`
 
-## 6.已有功能
+## 5.已有功能
 - **搜索论坛:@机器人 search-forum keyword**
 
   Demo: `@机器人 search-forum 学习资料`
@@ -305,13 +243,11 @@ if __name__ == "__main__":
 
 - **使用方法： `@机器人 食用`**
 
-## 7.目录说明
+## 6.目录说明
 
 <pre><code>.
 ├─ LICENSE
 ├─ README.md
-├─ cron
-│    └─ spider.cron  # 定时SSR服务器爬虫 (已作废)
 ├─ qqbot
 │    ├─ config
 │    │    ├─ __init__.py
@@ -366,18 +302,12 @@ if __name__ == "__main__":
 │    │         ├─ S2-037.war
 │    │         └─ S2-045.war
 │    ├─ Secrets.py  # 相关密钥文件导入
-│    └─ run_qqbot.py  # 启动机器人
-├─ requirements.txt # 依赖项
-├─ run_service.sh # Shell一键启动脚本
-└─ spider (当前SSR爬取用了函数，此文件夹作废)
-       ├─ doub.spider.py
-       ├─ free-ss_spider.py
-       ├─ share-shadowsocks.py
-       ├─ ss_pythonic_spider.py
-       └─ ss_ssr.txt  # share-shadowsocks的ss/ssr链接写入
+│    └─ run_qqbot.py  # 机器人主启动文件
+├─ requirements.txt  # 依赖项
+└─ run_service.sh  # Shell一键启动脚本
 </code></pre>
 
-## 8.相关迭代...
+## 7.相关迭代...
 
 * [ ] go-cqhttp语法修复
 
@@ -395,11 +325,11 @@ if __name__ == "__main__":
 
 * [x] Copy了 **HatBoy的** [Struts2全漏洞扫描利用工具](https://github.com/HatBoy/Struts2-Scan), 只用到了漏洞扫描函数
 
-## 9.注意事项
+## 8.注意事项
 
 **如要使用Struts2漏洞扫描，请把** [Struts2全漏洞扫描利用工具](https://github.com/HatBoy/Struts2-Scan) **里面的** `Struts2环境` **文件夹复制到机器人项目下的** `api/` **目录里面**
 
-## 10.调试方法
+## 9.调试方法
 
 ```
 修改 run_qqbot.py 19行 为你的QQ和QQ群
@@ -415,7 +345,7 @@ python run_qqbot.py
 根据打印的错误log进行调试
 ```
 
-## 11.添加功能
+## 10.添加功能
 
 ```
 函数脚本放在qqbot/api文件夹里面，然后在qqbot/api/__init__.py添加from .xxxx import xxxx
@@ -427,7 +357,7 @@ python run_qqbot.py
 最后修改qqbot/config/bot_config.yaml，在function_keyword里面添加字典映射的功能
 ```
 
-## 12.待更新并修复项
+## 11.待更新并修复项
 
 * [x] @群成员
 * [x] ~~撤回群员消息，并禁言群成员~~ *撤回群成员消息，未找到有效实现，禁言接口未起作用*
@@ -454,7 +384,7 @@ python run_qqbot.py
 * [ ] 网段工控设备扫描
 * [x] IP地址定位
 
-## 13.相关参考文档
+## 12.相关参考文档
 [go-cqhttp新增API](https://github.com/Mrs4s/go-cqhttp/blob/master/docs/cqhttp.md)
 
 - ```
