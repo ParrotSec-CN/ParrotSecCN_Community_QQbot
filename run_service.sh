@@ -22,7 +22,7 @@ ENV_DIR="${CURRRNT_DIR_PATH}/venv-Py3"
 function install_linux_package()
 {
     echo -e "${Info} --> 安装Linux包"
-    apt -y install python3-pip python3-dev python3-venv nodejs-legacy
+    apt -y install python3-pip python3-dev python3-venv nodejs-legacy build-essential libssl-dev libffi-dev libxml2 libxml2-dev libxslt1-dev zlib1g-dev
 }
 
 function install_py_env()
@@ -43,10 +43,10 @@ function install_py_env()
         echo -e "cd ${CURRRNT_DIR_PATH}"
         cd ${CURRRNT_DIR_PATH}
         
-        echo -e "${Info} --> 请手动应用Python环境，命令如下："
+        echo -e "${Info} --> 请手动应用Py环境，命令如下："
         echo "source ${ENV_DIR}/bin/activate"
     
-        echo -e "${Info} --> 再手动安装机器人项目依赖包，命令如下："
+        echo -e "${Info} --> 在Py环境内手动安装机器人项目依赖包，命令如下："
         echo "pip install -r requirements.txt"
     fi
 }
@@ -63,8 +63,8 @@ function usage_exit()
 ################################################################################
 
 LOGDIR="/root/logs"
-LOGFILE="${LOGDIR}/qq_bot_logs.log"
-ACCESSLOG="${LOGDIR}/qq_bot_access_logs.log"
+LOGFILE="${LOGDIR}/qq_bot.log"
+ACCESSLOG="${LOGDIR}/qq_bot_access.log"
 
 mkdir -p $LOGDIR
 
@@ -78,11 +78,17 @@ case "$1" in
     start)
         cd ${CURRRNT_DIR_PATH}/qqbot
         gunicorn -b 0.0.0.0:9002 -k gevent -w 4 -D --log-file $LOGFILE --access-logfile $ACCESSLOG run_qqbot:app
-        echo -e "${Info} --> gunicorn gevent 4线程已启动!"
+        if [ `ps -aux | grep "run_qqbot" | grep -v grep | awk '{print $2}' | wc -l` = 5 ]
+        then
+                echo -e "${Info} --> gunicorn gevent 4线程已启动!"
+        else
+                echo -e "${Info} --> 线程启动失败，请手动排查"
+                echo -e "${Info} --> tail -f /root/logs/qq_bot_access.log"
+        fi
         ;;
     stop)
         ps -aux | grep "run_qqbot" | grep -v grep | awk '{print $2}' | xargs kill -9
-        echo -e "${Info} --> 进程已关闭!"
+        echo -e "${Info} --> 进程已杀死!"
         ;;
     *)
         usage_exit
